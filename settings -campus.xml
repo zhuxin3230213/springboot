@@ -6,7 +6,7 @@
 			<!--This sends everything else to /public -->
 			<id>nexus</id>
 			<mirrorOf>*</mirrorOf>
-			<url>http://192.168.3.234:8081/nexus/content/groups/public/</url>
+			<url>http://192.168.3.234:8081/nexus/content/groups/public/</url><!--需要修改成搭建的nexus服务器地址-->
 		</mirror>
     </mirrors>
   <profiles>
