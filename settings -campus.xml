@@ -1,0 +1,59 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<settings> 
+<localRepository>E:\apache-maven-3.5.4</localRepository><!--需要改成自己的maven的本地仓库地址-->
+    <mirrors>
+        <mirror>
+			<!--This sends everything else to /public -->
+			<id>nexus</id>
+			<mirrorOf>*</mirrorOf>
+			<url>http://192.168.3.234:8081/nexus/content/groups/public/</url>
+		</mirror>
+    </mirrors>
+  <profiles>
+    <profile>
+       <id>nexus</id> 
+        <repositories>
+            <repository>
+                <id>nexus</id>
+                <name>local private nexus</name>
+                <url>http://maven.oschina.net/content/groups/public/</url>
+                <releases>
+                    <enabled>true</enabled>
+                </releases>
+                <snapshots>
+                    <enabled>true</enabled>
+                </snapshots>
+            </repository>
+        </repositories>
+        
+        <pluginRepositories>
+            <pluginRepository>
+            <id>nexus</id>
+            <name>local private nexus</name>
+            <url>http://maven.oschina.net/content/groups/public/</url>
+            <releases>
+                <enabled>true</enabled>
+            </releases>
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
+            </pluginRepository>
+        </pluginRepositories>
+    </profile></profiles>
+	<activeProfiles>
+    <activeProfile>nexus</activeProfile>
+  </activeProfiles>  
+	<servers>
+		<server>  
+			<id>releases</id>  
+			<username>admin</username>  
+			<password>admin123</password>  
+	    </server>  
+	    <server>  
+		    <id>snapshots</id>  
+			<username>admin</username>  
+			<password>admin123</password>  
+		</server> 
+	</servers>
+	
+</settings>
