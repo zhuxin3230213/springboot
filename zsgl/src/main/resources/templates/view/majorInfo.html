@@ -1,0 +1,152 @@
+<!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-4.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>院系专业详情</title>
+    <link href="/static/css/common.css" rel="stylesheet">
+    <link href="/static/css/main_style_new.css" rel="stylesheet">
+    <link href="/static/favicon.ico" rel="icon" type="image/x-icon">
+    <script src="https://cdn.bootcss.com/jquery/2.2.4/jquery.min.js"></script>
+    <script src="/static/js/common.js"></script>
+    <link href="/static/css/index.css" rel="stylesheet">
+    <script th:inline="javascript">
+        $(function() {
+            $('#yx').mouseover(function() {
+                $('.yxjs').show();
+                $('.zyjs').hide();
+                $('#yxp').show();
+                $('#zyp').hide();
+            })
+
+            $('#zy').mouseover(function() {
+                $('.yxjs').hide();
+                $('.zyjs').show();
+                $('#zyp').show();
+                $('#yxp').hide();
+            })
+
+            $('.gyleft').hover(function() {
+            }, function() {
+                $('.yxjs').hide();
+                $('.zyjs').hide();
+                $('#yxp').hide();
+                $('#zyp').hide();
+            })
+
+            //加载招生专业
+            var listDeptAndMajor = [[${listDeptAndMajor}]];
+            var liHtml = "";
+            listDeptAndMajor.forEach(function(item){
+                var major = item.children;
+                if(major.length>0){
+                    major.forEach(function(majorItem){
+                        if(majorItem.status == 1){//status为1代表本专业招生
+                            liHtml += '<li><h3><a href="/content/content_detail/'+majorItem.id+'">'+majorItem.name+'</a></h3></li>';
+                        }
+                    })
+                }
+            });
+            $(".zyjsin ul").append(liHtml);
+
+            //页脚位置调整
+            var winHeight = window.screen.height;
+            var contentHeight = $('.deptAndMajor').height();
+            var marginTop = 0;
+            if(winHeight > 100+contentHeight){
+                marginTop = winHeight - (100 + contentHeight)-207;//页脚高度207px
+                if(marginTop<50){
+                    marginTop = 50;
+                }
+            }else{
+                marginTop = 50;
+            }
+            $('#footer').css('margin-top', marginTop);
+        })
+    </script>
+</head>
+<body>
+    <div id="header" th:utext="${header}"></div>
+
+    <div class="deptAndMajor">
+        <div class="welcomePic">
+            <img src="/static/images/pageHeaderBg.jpg">
+        </div>
+        <div class="aio">
+            <div class="gyleft">
+                <div class="ko">
+                    <ul>
+                        <h1>学科专业</h1>
+                        <li id="yx"><a class="">院系设置<span id="yxp" style="display: none;"></span></a></li>
+                        <li id="zy"><a class="">招生专业<span id="zyp" style="display: none;"></span></a></li>
+                    </ul>
+                </div>
+
+                <div class="yxjs">
+                    <div class="yxjsin">
+                        <ul class="ul1">
+                            <li th:each="listDept:${listDeptAndMajor}">
+                               <a th:href="@{'/content/content_detail/'+${listDept.id}}" th:text="${listDept.name}">专业01</a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="zyjs">
+                    <div class="zyjsin">
+                        <ul class="ul1"></ul>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="gyright">
+                <div class="gyright_head1"><a th:href="@{/content/welcome}">首页</a>&gt;<a th:href="@{/fap/facps}">学科专业</a>
+                </div>
+
+                <ul class="xuke1" id="xk1">
+                    <!--<li th:if="${iterStat.index<=(Math.ceil(iterStat/3)-1)}" th:each="listDept,iterStat:${listDeptAndMajor}">-->
+                    <li th:if="${iterStat.index<=4}" th:each="listDept,iterStat:${listDeptAndMajor}">
+                        <div>
+                            <h1><b><a th:href="@{'/content/content_detail/'+${listDept.id}}" th:text="${listDept.name}" style="color:#E60012"></a></b></h1>
+                            <ul>
+                                <li th:each="major:${listDept.children}">
+                                    <a th:href="@{'/content/content_detail/'+${major.id}}" th:text="${major.name}"></a>
+                                </li>
+                            </ul>
+                        </div>
+                    </li>
+                </ul>
+
+                <ul class="xuke1" id="xk2">
+                    <li th:if="${iterStat.index>4 && iterStat.index<=9}" th:each="listDept,iterStat:${listDeptAndMajor}">
+                        <div>
+                            <h1><b><a th:href="@{'/content/content_detail/'+${listDept.id}}" th:text="${listDept.name}" style="color:#E60012"></a></b></h1>
+                            <ul>
+                                <li th:each="major:${listDept.children}">
+                                    <a th:href="@{'/content/content_detail/'+${major.id}}" th:text="${major.name}"></a>
+                                </li>
+                            </ul>
+                        </div>
+                    </li>
+                </ul>
+
+                <ul class="xuke1 xkn" style="margin-right:0px;" id="xk3">
+                    <li th:if="${iterStat.index>9}" th:each="listDept,iterStat:${listDeptAndMajor}">
+                        <div>
+                            <h1><b><a th:href="@{'/content/content_detail/'+${listDept.id}}" th:text="${listDept.name}" style="color:#E60012"></a></b></h1>
+                            <ul>
+                                <li th:each="major:${listDept.children}">
+                                    <a th:href="@{'/content/content_detail/'+${major.id}}" th:text="${major.name}"></a>
+                                </li>
+                            </ul>
+                        </div>
+                    </li>
+                </ul>
+
+            </div>
+        </div>
+    </div>
+
+    <div id="footer" th:utext="${footer}"></div>
+</body>
+</html>

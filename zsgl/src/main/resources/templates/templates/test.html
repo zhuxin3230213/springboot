@@ -1,0 +1,62 @@
+<header th:fragment="head(listMenu)">
+    <div id="showNav">
+        <div class="header">
+            <img src="/static/images/logo.png" width="238px" style="float:left;margin-left:2%;margin-top:20px;">
+
+            <ul id="firstMenu">
+                <li th:each="firstMenu:${listMenu}">
+                    <a th:href="@{${firstMenu.url}}" th:text="${firstMenu.name}" target="_blank"></a>
+                    <ul class="secondMenu">
+                        <li th:each="secondMenu:${firstMenu.children}" th:if="${not #lists.isEmpty(firstMenu.children)}">
+                            <a th:href="@{${secondMenu.url}}" th:text="${secondMenu.name}" target="_blank"></a>
+                        </li>
+                    </ul>
+                </li>
+            </ul>
+
+            <div class="nav">
+                <input id="searchAll" class="searchAll" name="searchAll" placeholder="Search..." value="">
+                <img id="searchIcon" src="/static/images/search-icon.png"/>
+            </div>
+        </div>
+    </div>
+
+</header>
+
+<footer th:fragment="foot(config)">
+    <div>
+    <div class="footer">
+        <div class="footer_mask">
+            <div class="wrapper">
+                <div class="footer_title">
+                    <h4>联系我们</h4>
+                    <div class="clear"></div>
+                </div>
+                <div class="footer_content"  th:object="${config}">
+                    <div class="contact">
+                        <h5>联系电话：<span th:text="*{tel}"></span></h5><br>
+                        <h5>电子邮箱：<span th:text="*{email}"></span></h5>
+                    </div>
+                    <div class="address">
+                        <h5>地址：<span th:text="*{address}"></span></h5><br>
+                        <h5>邮编：<span th:text="*{post}"></span></h5>
+                    </div>
+                    <div class="link">
+                        <h5>传真：<span th:text="*{fax}"></span></h5><br>
+                        <h5>网址：<span th:text="*{netAddress}"></span></h5>
+                    </div>
+                    <div class="weibo">
+                        <h5><a href="*{weibo}" target="view_window"><img src="/static/images/sina_wb.png" title="微博" height="30px" style="vertical-align: text-bottom;"></a></h5>
+                        <h5><a href="*{weibo}" target="view_window"><img src="/static/images/weixin.png" title="微信" height="30px" style="vertical-align: text-top;"> </a> </h5>
+                    </div>
+                    <div class="clear"></div>
+                </div>
+                <div class="clear"></div>
+                <div class="copyright">
+                    © 2018 西安冠铭科技股份有限公司 版权所有<br>Copyright © 2012-2018 www.gmuni.cn All Rights Reserved
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>
+</footer>

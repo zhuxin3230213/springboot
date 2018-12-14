@@ -1,0 +1,69 @@
+@charset "utf-8";
+
+/* CSS Document */
+
+body, div, dl, dt, dd, ul, ol, li, h1, h2, h3, h4, h5, h6, pre, form, fieldset, input, textarea, p, blockquote, th, td,img{padding:0;margin:0;}
+ol, ul{list-style:none;}
+
+/*== 页面属性 == */
+
+.aio{ width:998px; margin:auto; margin-top:20px;}
+.gyleft{ width:205px; float:left; margin-right:30px;}
+
+.ko{background-color:#f9f9f9; border:1px solid #dcdcdc; margin-bottom:10px;border-radius: 5px; width:205px; float:left}
+.ko ul{ width:205px; padding-bottom:5px; float:left}
+.ko ul h1{ line-height:81px; padding-left:27px; color:#434343; font-size:24px;}
+.ko ul li{ line-height:40px; border-top:1px solid #dcdcdc; width:205px;}
+.ko ul li a{color:#313131;  font-size:16px; padding-left:27px; cursor:pointer;}
+.ko ul li a:hover{ color:#e60012;}
+.ko ul li span{ float:right; width:10px; height:10px; margin-top:17px; margin-right:10px; *margin-top:-24px; background:url(../images/redsanjiao.png) no-repeat;}
+
+/** 学科专业页面样式-start **/
+.deptAndMajor{overflow-x:hidden;padding-top:0;margin-bottom:50px;}
+
+.gyright{ width:752px; float:left;}
+.gyright_head{ width:752px; float:left; margin-bottom:10px; }
+.gyright_head a{ color:#434343; font-size:12px;padding-left:5px; padding-right:5px;}
+.gyright_head a:hover{ text-decoration:underline;}
+.gyright_head1{ width:750px; float:left; margin-bottom:10px; padding-bottom:13px;color:#29629B;}
+.gyright_head1 a{ color:#434343; font-size:12px;padding-left:5px; padding-right:5px;}
+.gyright_head1 a:hover{ text-decoration:underline;}
+.gyright table{ width:710px;}
+.gyright .tdright{ padding-right:10px; width:100px; text-align:right; }
+
+.xuke1{ width:240px; float:left;  margin-right:13px}
+.xuke1 .xkn{ width:240px; float:left;  margin-right:0px;}
+.xuke1 li{ margin-top:10px; float:left; width:240px;}
+.xuke1 div{ width:240px;border:1px solid #dedede; float:left;}
+.xuke1 div h1{ height:60px; width:239px; float:left; border-bottom:1px solid #dedede; line-height:50px; font-weight:normal;}
+.xuke1 div h1 b{ padding-left:20px; color:#e60012; font-size:16px;font-weight:normal;}
+.xuke1 div ul{ width:208px; margin-left:20px;  _margin-left:10px;float:left; padding-bottom:10px;}
+.xuke1 div ul h2{ height:38px; width:200px; border-bottom:1px solid #dedede; line-height:38px; color:#313131; font-size:16px;}
+.xuke1 div ul li{width:208px; line-height:20px;}
+.xuke1 div ul li a{ color:#313131; font-size:14px;}
+.xuke1 div ul li a:hover{ color:#e60012; text-decoration:underline}
+
+.yxjs{float:left;background:#fff;border:1px solid #ccc;position:absolute; margin-left:205px; _margin-left:5px; *margin-left:5px;margin-top:20px; *margin-top:-500px; _margin-top:-465px;z-index:2;display:none;}
+.yxjsin{float:left;margin:20px 0 0 30px;_margin-left:20px;}
+.yxjs ul{float:left;width:160px;}
+.yxjs .ul1{ width:585px;}
+.yxjs ul li{ float:left; width:190px;margin-bottom:15px;}
+.yxjs ul li h3{ color:#e60012; font-size:18px;}
+.yxjs ul li a{ color:#313131; font-size:14px;}
+.yxjs ul li a:hover{ color:#e60012; text-decoration:underline}
+.yxjs .loc{ text-align:right; width:550px; cursor:pointer}
+
+.zyjs{float:left;background:#fff;border:1px solid #ccc;position:absolute; margin-left:205px; _margin-left:5px; *margin-left:5px; margin-top:95px; *margin-top:-550px; _margin-top:-515px;z-index:2;display:none;}
+.zyjsin{float:left;margin:15px 0 15px 30px;_margin-left:20px;}
+.zyjs ul{float:left;width:160px;}
+.zyjs .ul1{ width:585px;}
+.zyjs ul li{ float:left; width:190px;}
+.zyjs ul li h3{ color:#fc5474; font-size:14px; line-height:30px;}
+.zyjs ul li a{color:#313131; font-size:14px;}
+.zyjs ul li a:hover{ color:#fc5474; text-decoration:underline}
+.zyjs .loc{ text-align:right; width:840px; cursor:pointer; margin-top:10px;}
+.majorDetailHeight{min-height: 395px; padding-top:0;}
+
+/** 学科专业页面样式-end **/
+
+/*== 附页公用左侧 == */

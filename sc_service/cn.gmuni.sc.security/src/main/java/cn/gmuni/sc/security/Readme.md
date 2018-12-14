@@ -1,0 +1,1 @@
+WebSecurityConfigurerAdapter => Filter => Provider => Filter.successfulAuthentication

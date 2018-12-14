@@ -1,0 +1,57 @@
+<!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-4.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+    <title>吹风机付款成功</title>
+    <link type="text/css" rel="stylesheet" href="../static/app/css/net_pay_success.css">
+    <script src="../static/app/js/simJQ-1.4.min.js"></script>
+    <script>
+        $(function(){
+            var payType = GetQueryString("payType")
+            var cash = GetQueryString("cash")
+
+            if(payType == 'wallet'){
+                $("#walletShow").show()
+                $("#alipayShow").hide()
+                $("#walletValue").text(cash)
+            }else{
+                $("#walletShow").hide()
+                $("#alipayShow").show()
+                $("#alipayValue").text(cash)
+            }
+        })
+        function GetQueryString(name) {
+            var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)", "i");
+            var r = window.location.search.substr(1).match(reg);
+            var context = "";
+            if (r != null)
+                context = r[2];
+            reg = null;
+            r = null;
+            return context == null || context == "" || context == "undefined" ? "" : context;
+        }
+    </script>
+</head>
+<body>
+    <div id="walletShow" class="net_pay_success_wrap" style="display:none">
+        <img th:src="@{/app/image/icon_yue.png}" class="net_pay_success_icon">
+        <span class="net_pay_success_label">付款成功</span>
+        <span class="net_pay_success_money" id="walletValue">1</span>
+        <div class="net_pay_success_way">
+            <span>付款方式</span>
+            <span>我的钱包</span>
+        </div>
+    </div>
+
+    <div id="alipayShow" class="net_pay_success_wrap" style="display:none">
+        <img th:src="@{/app/image/zhifubao.png}" class="net_pay_success_icon">
+        <span class="net_pay_success_label">付款成功</span>
+        <span class="net_pay_success_money" id="alipayValue">1</span>
+        <div class="net_pay_success_way">
+            <span>付款方式</span>
+            <span>支付宝</span>
+        </div>
+    </div>
+</body>
+</html>

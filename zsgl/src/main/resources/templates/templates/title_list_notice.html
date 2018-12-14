@@ -1,0 +1,101 @@
+<!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-4.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+	<meta charset="utf-8">
+	<title>公告/咨询/报考指南标题列表</title>
+	<link href="/static/css/main_style_new.css" rel="stylesheet">
+	<link href="/static/css/list_style_new.css" rel="stylesheet">
+	<link href="/static/pagination/pagination.css" rel="stylesheet">
+	<link href="/static/favicon.ico" rel="icon" type="image/x-icon">
+	<style>
+		.pagination>li>a{color:#205a82;}
+		.pagination>.active>a, .pagination>.active>a:focus, .pagination>.active>a:hover{background:#205a82;border-color:#205a82;}
+	</style>
+	<script src="https://cdn.bootcss.com/jquery/2.2.4/jquery.min.js"></script>
+	<script src="/static/pagination/pagination.js"></script>
+	<script src="/static/js/main.js"></script>
+	<script src="/static/js/common.js"></script>
+	<link href="/static/css/index.css" rel="stylesheet">
+	<script th:inline="javascript">
+        var type = [[${type}]];
+        pageTotal = [[${pageTotal}]];
+        $(function(){
+            url = "/content/pnrPage?type="+type+"&currentPage=";
+            pagination();
+
+            footerPosition();
+        })
+
+        //加载表格数据
+        function loadData(data){
+            $(".listItem ul").html("");
+            var data = data.data.content;
+            var liHtml = '<li></li>';
+            $(data).each(function(index,item){
+                liHtml += '<li>' +
+								'<div class="listItemLeft"><a href="/content/content_detail_notice/'+item.id+'">'+item.title+'</a></div>'+
+								'<div class="listItemRight"><span>['+item.createTime.slice(0,10)+']</span></div>'+
+								'<div class="clear"></div>'+
+					      '</li>';
+            });
+            $(".listItem ul").append(liHtml);
+        }
+	</script>
+</head>
+<body>
+<div id="header" th:utext="${header}"></div>
+
+<div class="listContent" style="padding-top:0;">
+	<div class="welcomePic">
+		<img src="/static/images/pageHeaderBg.jpg">
+	</div>
+	<div class="wrapper">
+		<div class="listLeft">
+			<div class="hotListBanner">
+				<span>热点信息</span>
+			</div>
+			<div class="hotList">
+				<ul>
+					<li></li>
+					<li th:each="hotInfo:${hots}">
+						<a th:href="@{'/content/content_detail_hots/'+${hotInfo.id}+'/'+${hotInfo.type}}" th:text="${hotInfo.title}"></a>
+					</li>
+				</ul>
+			</div>
+		</div>
+		<div class="listRight">
+			<a th:href="@{/content/welcome}">网站首页</a>  &gt;  <tem th:text="${module}">点击的模块名称</tem></span>
+			<div class="listBanner" th:text="${module}">
+				点击的模块名称
+			</div>
+			<div class="list">
+				<div class="listItem">
+					<ul>
+						<li></li>
+						<li th:each="titleList:${noticeTitleLists}">
+							<div class="listItemLeft">
+								<a th:href="@{'/content/content_detail_notice/'+${titleList.id}}" th:text="${titleList.title}"></a>
+							</div>
+							<div class="listItemRight">
+								<span>[<tem th:text="${#strings.substring(titleList.createTime,0,10)}">2018-05-21</tem>]</span>
+								<!--<span th:text="'['+${titleList.createTime}+']'"></span>-->
+							</div>
+							<div class="clear"></div>
+						</li>
+					</ul>
+				</div>
+				<!-- 分页开始 -->
+				<div class="text-center">
+					<ul class="pagination" id="page">
+					</ul>
+				</div>
+				<!-- 分页结束 -->
+			</div>
+		</div>
+		<div class="clear"></div>
+	</div>
+</div>
+
+<div id="footer" th:utext="${footer}"></div>
+</body>
+</html>

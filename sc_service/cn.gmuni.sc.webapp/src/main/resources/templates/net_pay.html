@@ -1,0 +1,117 @@
+<!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-4.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" id="net_pay_view" content="width=device-width,initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+    <title>充值缴费</title>
+    <link type="text/css" rel="stylesheet" th:href="@{/app/css/net_pay.css}">
+    <script th:src="@{/app/js/zepto.min.js}"></script>
+</head>
+<body>
+<div class="net_pay_main_container">
+    <form action="/networkPay/prepay" id="pay_form" method="post">
+        <div class="net_pay_account_container">
+            <input id="net_pay_account_input" name="account" th:value="${data}" placeholder="请输入账号"/>
+        </div>
+        <div class="net_pay_jin_e_container">
+            <input id="net_pay_jin_e" name="net_pay_jin_e" style="display: none;" value="40"/>
+            <input id="net_pay_package_code" name="net_pay_package_code" style="display: none;" th:value="${info.packageCode}"/>
+            <label class="net_pay_select_jin_e_tip_label" th:text="选择金额"></label>
+            <div class="net_pay_jin_e_container_inner_line_div">
+                <div class="net_pay_select_jin_e_container net_pay_select_jin_e_container_select" th:value="40" onclick="selectPayValue(this)">
+                    <label class="net_pay_select_jin_e_detail net_pay_select_jin_e_detail_select" th:text="40元"/>
+                </div>
+                <div class="net_pay_select_jin_e_container" th:value="80" onclick="selectPayValue(this)">
+                    <label class="net_pay_select_jin_e_detail" th:text="80元"/>
+                </div>
+                <div class="net_pay_select_jin_e_container" th:value="120" onclick="selectPayValue(this)">
+                    <label class="net_pay_select_jin_e_detail" th:text="120元"/>
+                </div>
+            </div>
+            <div class="net_pay_jin_e_container_inner_line_div" style="margin-top:40px;">
+                <div class="net_pay_select_jin_e_container" th:value="160" onclick="selectPayValue(this)">
+                    <label class="net_pay_select_jin_e_detail" th:text="40元"/>
+                </div>
+                <div class="net_pay_select_jin_e_container" th:value="custom" onclick="selectPayValue(this)">
+                    <label id="net_pay_custom_jin_e_label" class="net_pay_select_jin_e_detail" th:text="自定义"/>
+                    <input id="net_pay_custom_jin_e" name="custom_jin_e" type="number" placeholder="请输入" style="display:none;"/>
+                </div>
+            </div>
+            <label class="net_pay_select_jin_e_tip_label net_pay_select_jin_e_tip_desc">网络缴费是以目前每月的费用为基准，乘以使用时长/月数，等于缴费总金额。</label>
+        </div>
+        <div class="net_pay_select_payment_way_tip_container">
+            <label class="net_pay_select_payment_way_tip" th:text="付款方式"/>
+        </div>
+        <!--<div class="net_pay_select_payment_way_container">-->
+            <!--<img class="payment_way_img" src="/app/image/WeChat.png"/>-->
+            <!--<div class="net_pay_payment_way_desc_container">-->
+                <!--<label class="net_pay_select_payment_way_detail" th:text="微信"/>-->
+                <!--<label class="net_pay_select_payment_way_detail_desc" th:text="推荐使用微信支付"/>-->
+            <!--</div>-->
+            <!--<input class="net_pay_payment_radio" type="radio" name="paymentWay" value="wei_chat" checked/>-->
+        <!--</div>-->
+        <div class="net_pay_select_payment_way_container">
+            <img class="payment_way_img" src="/app/image/zhifubao.png"/>
+            <div class="net_pay_payment_way_desc_container">
+                <label class="net_pay_select_payment_way_detail" th:text="支付宝"/>
+                <label class="net_pay_select_payment_way_detail_desc" th:text="数亿用户都在用，安全可托付"/>
+            </div>
+            <input class="net_pay_payment_radio" type="radio" name="paymentWay" value="alipay" checked/>
+        </div>
+    </form>
+    <button id="submit_payment_info" onclick="doPay()">立即充值</button>
+</div>
+</body>
+<script type="text/javascript">
+    var form = document.getElementById('pay_form');
+    var jin_e = document.getElementById('net_pay_jin_e');
+    function selectPayValue(target){
+        var container_list = document.getElementsByClassName("net_pay_select_jin_e_container");
+        for (var i = 0; i < container_list.length; i++) {
+            container_list[i].classList.remove("net_pay_select_jin_e_container_select");
+            container_list[i].getElementsByTagName("label")[0].classList.remove("net_pay_select_jin_e_detail_select");
+        }
+        target.classList.add("net_pay_select_jin_e_container_select");
+        target.getElementsByTagName("label")[0].classList.add("net_pay_select_jin_e_detail_select");
+        jin_e.value = target.getAttribute("value");
+        if(target.getAttribute("value") == 'custom'){
+            target.getElementsByTagName("label")[0].style.display="none";
+            target.getElementsByTagName("input")[0].style.display="block";
+        }else{
+            document.getElementById("net_pay_custom_jin_e").style.display="none";
+            document.getElementById("net_pay_custom_jin_e_label").style.display="block";
+        }
+    }
+    function doPay(){
+        var account = document.getElementById('net_pay_account_input').value;
+        if (account.trim().length == 0) {
+            alert('账号格式错误！');
+            return;
+        }
+        if(jin_e.value == "custom"){
+            var customInput = document.getElementById('net_pay_custom_jin_e').value;
+            if(!(Number.parseInt(customInput) === Number.parseFloat(customInput)) || Number.parseFloat(customInput) < 0){
+                alert('请输入整数的缴费金额');
+                return;
+            }
+        }
+            $.ajax({
+                url: "/networkPay/checkNetAccountExist",
+                type: "POST",
+                dataType:'json',
+                data: JSON.stringify({'account': account}),
+                contentType: "application/json",
+                success: function (data) {
+                    if (data && data.data && data.data.exist == 't') {
+                        form.submit();
+                    } else {
+                        alert("账号不存在，请检查");
+                    }
+                },
+                error: function () {
+
+                }
+            });
+    }
+</script>
+</html>

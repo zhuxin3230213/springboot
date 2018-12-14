@@ -1,0 +1,245 @@
+/*整体*/
+body {
+	margin: 0 auto;
+	font-family: 微软雅黑;
+	min-width: 1350px;
+}
+* {
+	margin: 0;
+	padding: 0;
+}
+.wrapper {
+	width: 80%;
+	margin: 0 auto;
+	max-width: 1080px;
+}
+.clear {
+	clear: both;
+	overflow: hidden;
+	height: 0px;
+}
+
+/*头部样式*/
+.big-bg{
+	position: absolute;
+	width: 100%;
+	min-width: 1024px;
+	min-height: 138px;
+	z-index: -1000;
+}
+
+.header {
+	width: 100%;
+	height: 100px;
+	background-color: #2267b1;
+}
+.header_wrapper {
+	max-width: 1350px;
+	margin: 0 auto;
+}
+.logo {
+	width: 30%;
+	float: left;
+	margin: 25px 4% auto 3%;
+}
+.logo > a > img {
+	width: auto;
+	height: 50px;
+}
+.search {
+	position: relative;
+	float: right;
+	width: 220px;
+	height: 30px;
+	margin: 50px 0px 0 0;
+	background-color: white;
+}
+.search input {
+	width: 170px;
+	padding: 5px;
+	border: medium none;
+	background-color: white;
+	box-shadow: none;
+	vertical-align: top;
+	color: #9D9D9D;
+	font-family: 'Microsoft YaHei';
+}
+
+.search input:focus{
+	color: #000;
+	outline: none;
+}
+
+.search button {
+	float: right;
+	cursor: pointer;
+	width: 32px;
+	height: 30px;
+	margin: 0px;
+	padding: 0px;
+	border: none;
+	font-size: 14px;
+	color: #FFFFFF;
+	background-color: #2B90D9;
+}
+.search button:hover {
+	color: #FFF;
+	background-color: #282C37;
+}
+
+/*底部样式*/
+.footer {
+	float:left;
+	width: 100%;
+	height: auto;
+	/*height:200px;*/
+	color: #FFF;
+	line-height: 15px;
+	background: url('../images/footer_background.png') no-repeat center center;
+	-webkit-background-size: 100% 100%;
+	-moz-background-size: 100% 100%;
+	-o-background-size: 100% 100%;
+	background-size: 100% 100%;
+}
+.footer_mask{
+	/*background-color: rgba(34,103,177,0.5);*/
+	background:#002147;
+	opacity:.5;
+}
+.footer_title{
+	padding: 10px 0 10px 0;
+ }
+ .footer_content{
+ }
+.footer h4 {
+	line-height: 20px;
+	font-family: 'Microsoft YaHei';
+	font-size: 16px;
+	margin-top: 5px;
+	margin-bottom: 5px;
+}
+.footer h5 {
+	line-height: 20px;
+	font-family: 'Microsoft YaHei';
+	font-size: 14px;
+	font-weight: lighter;
+	margin-top: 5px;
+	margin-bottom: 5px;
+}
+.footer .contact {
+	float: left;
+	width: 30%;
+}
+.footer .address {
+	float: left;
+	width: 30%;
+}
+.footer .link {
+	float: left;
+	width: 37%;
+}
+.footer .weibo {
+	float: left;
+	width: 3%;
+}
+.footer .copyright {
+	border-top: 1px solid #E3E3E3;
+	font-weight: lighter;
+	margin-top: 10px;
+	padding: 15px;
+	font-size: 12px;
+	text-align: center;
+	letter-spacing: 1.5px;
+	line-height: 20px;
+}
+.footer a:link, .footer a:visited {
+	font-size: 16px;
+	color: #FFF;
+	text-decoration: none;
+}
+.footer a:hover, .footer a:active {
+	font-size: 16px;
+	color: #FFF;
+	text-decoration: none;
+}
+
+/*返回顶部样式*/
+.backTop {
+	position: fixed;
+	width: 50px;
+	height: 50px;
+	right: 111px;
+	bottom: 237px;
+	background: url(../image/backTop.png) no-repeat;
+	opacity: .5;
+	filter: alpha(opacity=50);
+}
+.backTop:link, .backTop:visited {
+	opacity: .5;
+	filter: alpha(opacity=50);
+}
+.backTop:hover, .backTop:active {
+	opacity: 1;
+	filter: alpha(opacity=100);
+}
+
+/*历年招生计划及分数模版*/
+.planScore{
+	margin-top:20px;
+}
+.planScore ul{
+	margin-top:10px;
+}
+.planScore li{
+	list-style: none;
+	display: inline-block;
+	margin-left: 10px;
+	margin-top: 2px;
+}
+.planScore li a{
+	display: block;
+	height: 27px;
+	line-height: 27px;
+	border-radius:5px;
+	padding: 0 10px;
+	color: #428bca;
+	text-align: center;
+	cursor: pointer;
+}
+.planScore li a:hover{
+	background: #428bca;
+	color: #fff;
+	text-decoration: none;
+}
+.planScore span{
+	color: #333 !important;
+}
+.planScoreContent{
+	width: 100%;
+	margin-top: 30px;
+}
+.changeColor{
+	background: #428bca !important;
+	color: #fff !important;
+}
+#historyPlan,#historyScore{
+	width: 100%;
+	table-layout:fixed;
+	border-collapse: collapse;
+}
+#historyPlan th,#historyScore th,#historyPlan td,#historyScore td{
+	height: 45px;
+	text-align: center;
+	border: 1px solid #ddd;
+	background: #f9f9f9;
+	font-weight: normal;
+	color: #333;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+	padding: 0 10px;
+}
+#historyPlan td,#historyScore td{
+	height: 30px;
+	background: #fff;
+}

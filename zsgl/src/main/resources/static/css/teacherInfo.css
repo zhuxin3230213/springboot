@@ -1,0 +1,238 @@
+/* CSS Library1.9*/
+body{font-family: "Hiragino Sans GB";}
+
+.teacherList{
+    width:75%;
+    /*background:url("../../static/images/slide3.png");*/
+}
+.teacherFlag{
+    margin-left: 3%;
+    margin-bottom: 15px;
+    padding-top: 20px;
+    color: #81593d;
+}
+.searchLine{
+    margin-bottom:20px;
+}
+.searchLine ul{
+    display:block;
+    height:45px;
+    line-height:45px;
+    border-bottom:1px dashed #81593d;
+}
+.teacherHonour{
+    display: inline-block;
+    margin-left: 20px;
+    padding: 0 10px;
+    color: #666;
+    text-align: center;
+    cursor: pointer;
+}
+.teacherHonour:hover{
+    height: 30px;
+    line-height: 30px;
+    border-radius:5px;
+    background: #81593d;
+    color: #fff;
+}
+.changeColor{
+    height: 30px;
+    line-height: 30px;
+    border-radius:5px;
+    background: #81593d !important;
+    color: #fff;
+}
+
+#searchForm{
+    width:75%;
+    margin:auto;
+    /*background:#fff;*/
+}
+
+.teacherInfo{
+    background-color:#fff;
+    padding:0;
+}
+.teacherInfo img{
+    border:1px solid #81593d;
+}
+.row{
+    margin:0;
+    background:#fff;
+}
+.teacherInfo .row>div{
+    height:170px;
+    padding:7px 7px;
+}
+.teacherInfo>.row:hover{
+    background-color:#81593d;
+    color:#fff;
+}
+.teacherInfo>.row:hover div a,.teacherInfo>.row:hover div li{
+    color:#fff;
+}
+.teacherInfo li{
+    font-size:14px;
+    line-height:24px;
+    color:#666;
+    margin-top:5px;
+}
+.teacherInfo a{
+    color:#81593d;
+    cursor:pointer;
+}
+.teacherInfo li div.teacherName{
+    font-size:22px;
+    margin:0px 0px 10px 0px;
+}
+
+/**分页样式**/
+.pagination>li>a, .pagination>li>span,.pagination>li>a:hover,.pagination>li>span:hover {
+    color: #835a1e;
+}
+.pagination>.active>a, .pagination>.active>span, .pagination>.active>a:hover, .pagination>.active>span:hover, .pagination>.active>a:focus, .pagination>.active>span:focus {
+    background-color: #81593d;
+    border-color: #81593d;
+}
+
+/**搜索框**/
+.teacherSearchInput {
+    /*background-color: #ffeedb;*/
+    padding: 10px 30px;
+}
+.glyphicon{
+    top: 0;
+    line-height:1.43;
+}
+
+
+/**正文部分**/
+div {margin: auto;position: relative; word-wrap:break-word;}
+@media (min-width: 1800px) {
+    .container {width: 1470px;}
+}
+.form-horizontal .control-label {
+    padding-top: 0px;
+}
+.form-body{
+    padding-bottom:0;
+}
+.form-horizontal{
+    font-size:14px;
+}
+.form-horizontal .radio, .form-horizontal .checkbox, .form-horizontal .radio-inline, .form-horizontal .checkbox-inline{
+    padding-top:4px;
+}
+.form-horizontal>.row{
+    margin-bottom:15px;
+    padding:0 15px;
+}
+.form-horizontal .form-btn{
+    border-top:1px solid #ddd;
+    background-color:#fff;
+    padding:20px 0;
+    margin-bottom:0;
+}
+#content{
+    padding:30px;
+    padding-top:40px;
+    background-color:#fff;
+}
+.abs .teacherPhoto{
+    width:116px;
+    border:1px solid #b4b4b4;
+    padding:5px;
+    margin-top:10px;
+    background-color:#fff;
+}
+.bgImg{
+    background-position:top center;
+    height:284px;
+    padding: 40px 30px 30px;
+}
+.bgImg .bgImgName{
+    position:absolute;
+    left:170px;
+    bottom:10px;
+    color:#fff;
+}
+.bgImg .bgImgName h1,.bgImg .bgImgName p{
+    display:inline-block;
+    background:rgba(0, 0, 0, 0.5) none repeat scroll 0 0 !important;
+    filter:Alpha(opacity=90);
+    background:#000;
+    padding:5px 15px;
+}
+.bgImg .bgImgName h1{
+    font-size:42px;
+    font-weight:lighter;
+    margin-bottom:2px;
+}
+.bgImg .bgImgName p{
+    font-size:22px;
+    font-weight:lighter;
+    width:750px;
+}
+.bgImg .teacherPhoto{
+    position:absolute;
+    left:30px;
+    bottom:-25px;
+    display:inline-block;
+    border:1px solid #b4b4b4;
+    padding:5px;
+    z-index:1000;
+    background-color:#fff;
+}
+.bgImg .teacherPhoto img{
+    width:100px;
+}
+.bgImg .teacherPhoto .pic-txt{
+    margin-top:5px;
+    text-align:center;
+}
+.panels{
+    width:100%;
+}
+.panels .panels-heading{
+    padding:10px 0;
+}
+.panels .panels-heading>h3{
+    margin:0;
+}
+.panels .panels-heading>span{
+    margin-left:15px;
+}
+.panels .panels-body{
+    clear:both;
+    padding:15px 0;
+    color:#555;
+}
+.panels-body div>p{
+    margin:0px 0px;
+    padding-top:3px;
+    line-height:30px;
+}
+.panels-body>div,.panels-body>div>div {
+    line-height:30px;
+}
+.form-group-sm>div, .form-group-sm>label{
+    margin:0px 0px;
+    line-height:24px;
+}
+.form-group-sm>div>p.form-control-static{
+    padding-top:0px;
+    padding-bottom:0px;
+    margin:0px 0px;
+    line-height:24px;
+}
+.panels-body .form-group-sm{
+    margin:0px;
+    padding:0px;
+}
+.panels-body .edit .form-group-sm{
+    margin:5px 0px;
+    padding:0px;
+}
+.panels-body .form-group-sm .col-sm-2,.panels-body .form-group-sm .col-sm-5,.panels-body .form-group-sm .col-sm-3{
+    padding-left:0px;
+}

@@ -1,0 +1,193 @@
+<!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-4.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>名师风采导航</title>
+    <link href="https://cdn.bootcss.com/bootstrap/3.1.1/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/static/css/common.css" rel="stylesheet">
+    <link href="/static/css/main_style_new.css" rel="stylesheet">
+    <link href="/static/css/teacherInfo.css" rel="stylesheet">
+    <link href="/static/pagination/pagination.css" rel="stylesheet">
+    <link href="/static/favicon.ico" rel="icon" type="image/x-icon">
+    <style>
+        .welcomePic {
+            width: 100%;
+            height: auto;
+        }
+        .welcomePic > img{
+            width: 100%;
+            height: 100%;
+        }
+    </style>
+    <script src="https://cdn.bootcss.com/jquery/2.2.4/jquery.min.js"></script>
+    <script src="/static/pagination/pagination.js"></script>
+    <script src="/static/js/main.js"></script>
+    <script src="/static/js/common.js"></script>
+    <link href="/static/css/index.css" rel="stylesheet">
+    <script th:inline="javascript">
+        var searchValue = "",jobTitleName="",awardsName="";
+        pageTotal = [[${totalPage}]];
+
+        $(function(){
+            $(".teacherHonour").click(function(){
+                var hasCls = $(this).hasClass("changeColor");
+                $(this).parent().find("li").removeClass("changeColor");
+                if(!hasCls){
+                    $(this).addClass("changeColor");
+                }
+                searchValue = $("input[name='teacherSearch']").val("");//选择职称或荣誉时，清空搜索框
+
+                searchTeacher();
+            });
+
+            //分页
+            url = "/fast/titleHonor?title="+jobTitleName+"&honor="+awardsName+"&name="+searchValue+"&currentPage=";
+            pagination();
+
+            //按回车搜索
+            $("#teacherSearch").keyup(function(e){
+                if(e.keyCode == 13){
+                    searchTeacher();
+                }
+            });
+        });
+
+        //查询方法
+        function searchTeacher(){
+            searchValue = $("input[name='teacherSearch']").val();
+            jobTitleNameSelected = $(".searchLine ul:first").find("li[class~='changeColor']");
+            if(jobTitleNameSelected.length>0){
+                jobTitleName = jobTitleNameSelected.attr("code");
+            }else{
+                jobTitleName = "";
+            }
+            jobTitleName =="any" ? jobTitleName = "" : jobTitleName = jobTitleName;
+
+            awardsNameSelected = $(".searchLine ul:last").find("li[class~='changeColor']");
+            if(awardsNameSelected.length>0){
+                awardsName = awardsNameSelected.attr("code");
+            }else{
+                awardsName = "";
+            }
+            awardsName =="any" ? awardsName = "" : awardsName = awardsName;
+
+            var currentPage="";
+            $.ajax({
+                url:"/fast/titleHonor?"+$.param({title:jobTitleName,honor:awardsName,name:searchValue,currentPage:currentPage}),
+                dataType:'json',
+                async:true ,
+                type:"GET" ,
+                success:function(result){
+                    pageTotal = result.data.totalPages;
+                    //筛选后进行二次分页
+                    url = "/fast/titleHonor?title="+jobTitleName+"&honor="+awardsName+"&name="+searchValue+"&currentPage=";
+                    pagination();
+                    loadData(result);
+                }
+            });
+        }
+
+        //加载教师数据
+        function loadData(data){
+            $(".teacherAppend").html("");
+            var divHtml="";
+            var teacherInfo = data.data.content;
+            $(teacherInfo).each(function(index,item){
+                divHtml += '<div class="col-xs-4 teacherInfo">'+
+                                '<div class="row">'+
+                                    '<div class="col-xs-5 text-center"><a href="/fast/teacherDetail/'+item.id+'" target="_blank"><img height="135" width="105" src="'+(item.avatars==""?"/static/images/teacher_default.png":item.avatars)+'"></a></div>'+
+                                    '<div class="col-xs-5">'+
+                                        '<ul>'+
+                                        '<li><div class="teacherName"><a href="/fast/teacherDetail/'+item.id+'" target="_blank">'+item.name+'</a></div></li>'+
+                                        '<li><strong>学院：</strong>'+(item.Fname==null?"":item.Fname)+'</li>'+
+                                        '<li><strong>学位：</strong>'+(item.Dname==null?"":item.Dname)+'</li>'+
+                                        '<li><strong>职称：</strong>'+(item.Aname==null?"":item.Aname)+'</li>'+
+                                        '</ul>'+
+                                    '</div>'+
+                                '</div>'+
+                            '</div>';
+            });
+            $(".teacherAppend").append(divHtml);
+        }
+    </script>
+</head>
+<body>
+    <div id="header" th:utext="${header}"></div>
+
+    <div class="teacherIntroduce">
+        <div class="welcomePic">
+            <img src="/static/images/pageHeaderBg.jpg">
+        </div>
+
+        <div class="teacherList">
+
+            <!--<form name="searchForm" id="searchForm">-->
+                <h3 class="teacherFlag">教师查询</h3>
+                <h3 class=""></h3>
+
+                <div class="searchLine">
+                    <ul>
+                        <li style="display:inline-block;margin-left:3%;font-weight:bold;color:#222;">职称</li>
+                        <li class="teacherHonour" code="any">不限</li>
+                        <li class="teacherHonour" th:each="listTitle:${listTitle}" th:attr="code=${listTitle.code}" th:text="${listTitle.title}"></li>
+                    </ul>
+                    <ul>
+                        <li style="display:inline-block;margin-left:3%;font-weight:bold;color:#222;">荣誉</li>
+                        <li class="teacherHonour" code="any">不限</li>
+                        <li class="teacherHonour" th:each="listHonor:${listHonor}" th:attr="code=${listHonor.code}"  th:text="${listHonor.honor}"></li>
+                    </ul>
+                </div>
+                <div class="teacherSearchInput">
+                    <div class="row">
+                        <div class="col-xs-6"></div>
+                        <div class="col-xs-6">
+                            <div class="input-group">
+                                <input type="text" class="form-control" name="teacherSearch" id="teacherSearch" placeholder="请输入姓名">
+                                <span class="input-group-btn">
+								    <button class="btn btn-default glyphicon glyphicon-search" onclick="searchTeacher()" type="button"></button>
+							    </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row teacherAppend" style="height:345px;">
+
+                    <div class="col-xs-4 teacherInfo" th:each="teacherInfo:${teacherInfos}">
+                        <div class="row">
+                            <div class="col-xs-5 text-center">
+                                <a th:href="@{'/fast/teacherDetail/'+${teacherInfo.id}}" target="_blank">
+                                    <img height="135" width="105" th:src="${teacherInfo.avatars} =='' ? '/static/images/teacher_default.png':${teacherInfo.avatars}">
+                               </a>
+                            </div>
+                            <div class="col-xs-5">
+                                <ul>
+                                    <li>
+                                        <div class="teacherName">
+                                            <a th:href="@{'/fast/teacherDetail/'+${teacherInfo.id}}" th:text="${teacherInfo.name}" target="_blank">教师姓名</a>
+                                        </div>
+                                    </li>
+                                    <li><strong>学院：</strong><tmp th:text="${teacherInfo.Fname}">所属学院</tmp></li>
+                                    <li><strong>学位：</strong><tmp th:text="${teacherInfo.Dname}">学位</tmp></li>
+                                    <li><strong>职称：</strong><tmp th:text="${teacherInfo.Aname}">职称</tmp></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+                <!-- 分页 -->
+                <div class="text-center">
+                    <ul class="pagination" id="page">
+                    </ul>
+                </div>
+
+            <!--</form>-->
+        </div>
+    </div>
+
+    <div id="footer" th:utext="${footer}"></div>
+
+</body>
+</html>

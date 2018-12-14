@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.gmuni.enrollment.subject.mapper.SubjectMapper">
+    <resultMap id="dept" type="cn.gmuni.org.model.Department">
+        <id column="ID" jdbcType="VARCHAR" property="id"/>
+        <result column="name" jdbcType="VARCHAR" property="name"/>
+        <result column="simple_name" jdbcType="VARCHAR" property="simpleName"/>
+        <result column="code" jdbcType="VARCHAR" property="code"/>
+        <result column="parent_id" jdbcType="VARCHAR" property="parentId"/>
+        <result column="type" jdbcType="VARCHAR" property="type"/>
+        <result column="remark" jdbcType="VARCHAR" property="remark"/>
+        <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
+        <result column="status" jdbcType="CHAR" property="status"/>
+        <result column="dLevel" jdbcType="DECIMAL" property="dlevel"/>
+        <result column="dLevel_code" jdbcType="VARCHAR" property="dlevelCode"/>
+        <result column="faculty" jdbcType="VARCHAR" property="faculty"/>
+        <result column="sort" jdbcType="VARCHAR" property="sort"/>
+    </resultMap>
+    <resultMap id="subject" type="cn.gmuni.enrollment.subject.model.Subject">
+        <id column="ID" jdbcType="VARCHAR" property="id"/>
+        <result column="deptId" jdbcType="VARCHAR" property="deptId"/>
+        <result column="type" jdbcType="VARCHAR" property="type"/>
+        <result column="status" jdbcType="VARCHAR" property="status"/>
+        <result column="sort" jdbcType="VARCHAR" property="sort"/>
+        <result column="introduction" jdbcType="VARCHAR" property="introduction"/>
+    </resultMap>
+
+    <select id="selectUnSubjetedDept" resultMap="dept">
+    SELECT ID, NAME, simple_name, CODE, parent_id, TYPE, remark, create_time, STATUS,dLevel, dLevel_code,faculty
+    FROM pf_gmuni_department WHERE faculty IN ('xy','xk') AND ID NOT IN (SELECT deptId FROM zs_gmuni_faculty_professional)
+    </select>
+    <!--查询所有删除掉的学科专业ID-->
+    <select id="selectAllDeleteSubIds" resultType="java.util.Map">
+        SELECT
+          p.id
+        FROM
+          zs_gmuni_faculty_professional p WHERE NOT EXISTS
+          (SELECT
+            d.id
+          FROM
+            pf_gmuni_department d
+          WHERE d.id = p.`deptId`)
+    </select>
+    <!--通过ID删除学科专业信息-->
+    <delete id="deleteSubjectByIds" parameterType="java.lang.String">
+        DELETE FROM zs_gmuni_faculty_professional where ID in
+        <foreach item="item" collection="list" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </delete>
+    <!--通过学科专业ID及中间表删除对应的专业介绍-->
+    <delete id="deleteArticleByIds" parameterType="java.lang.String">
+        DELETE gc,ct
+        FROM zs_gmuni_content gc left join zs_gmuni_update_click_through ct on gc.id = ct.article_id
+        WHERE gc.id IN (SELECT article_id FROM zs_gmuni_profession_content WHERE pro_id IN
+        <foreach item="item" collection="list" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+        )
+    </delete>
+    <delete id="deleteMiddleByIds" parameterType="java.lang.String">
+        delete gc,ct
+        from zs_gmuni_profession_content  gc left join zs_gmuni_update_click_through ct on gc.article_id = ct.article_id
+        where gc.pro_id in
+        <foreach item="item" collection="list" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </delete>
+    <delete id="deleteEnrollmentPlan" parameterType="java.lang.String">
+        delete from zs_gmuni_enrollment_plan where fap_id in
+        <foreach item="item" collection="list" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </delete>
+    <insert id="insertSubjects" parameterType="cn.gmuni.enrollment.subject.model.Subject">
+        insert into zs_gmuni_faculty_professional (ID, deptId, type, status, sort,introduction) values
+        <foreach collection="list" item="item" separator=",">
+            (#{item.id,jdbcType=VARCHAR},#{item.deptId,jdbcType=VARCHAR},#{item.type,jdbcType=VARCHAR},
+            #{item.status,jdbcType=VARCHAR},#{item.sort,jdbcType=VARCHAR},#{item.introduction,jdbcType=VARCHAR})
+        </foreach>
+    </insert>
+    <update id="updateSubjects" parameterType="cn.gmuni.enrollment.subject.model.Subject">
+        update zs_gmuni_faculty_professional
+        <trim prefix="set" suffixOverrides=",">
+            <trim prefix="type =case" suffix="end,">
+                <foreach collection="list" item="item">
+                    <if test="item.type!=null">
+                        when id=#{item.id} then #{item.type}
+                    </if>
+                </foreach>
+            </trim>
+            <trim prefix="status =case" suffix="end,">
+                <foreach collection="list" item="item">
+                    <if test="item.status!=null">
+                        when id=#{item.id} then #{item.status}
+                    </if>
+                </foreach>
+            </trim>
+            <trim prefix="introduction =case" suffix="end,">
+                <foreach collection="list" item="item">
+                    <if test="item.introduction!=null">
+                        when id=#{item.id} then #{item.introduction}
+                    </if>
+                </foreach>
+            </trim>
+        </trim>
+        <where>
+            <foreach collection="list" separator="or" item="cus">
+                id = #{cus.id}
+            </foreach>
+        </where>
+    </update>
+    <select id="listAllSubject" resultType="java.util.Map">
+        SELECT fp.id AS id, fp.deptid AS deptId,fp.type AS type,fp.status AS status, fp.sort AS sort, d.name AS name,
+        d.faculty AS faculty,d.dLevel_code AS dlevel_code,d.sort as sort,fp.introduction as introduction,d.code as code
+        FROM zs_gmuni_faculty_professional fp INNER JOIN pf_gmuni_department d ON fp.deptId = d.id order by d.sort
+    </select>
+    <insert id="insertProContentIds" parameterType="cn.gmuni.enrollment.subject.model.ProContent">
+       insert into zs_gmuni_profession_content(id,article_id,pro_id) values(
+         #{id,jdbcType=VARCHAR},
+         #{articleId,jdbcType=VARCHAR},
+         #{proId,jdbcType=VARCHAR}
+       )
+    </insert>
+    <select id="getArticleBySubId" parameterType="java.lang.String"
+            resultType="cn.gmuni.maintenance.model.InfoContent">
+       select id,title,content,author,create_time,
+        source,parent_code,keywords,cover,attachment,
+        update_time,sort,top,description,image_ids
+        from zs_gmuni_content
+        where id = (select article_id from zs_gmuni_profession_content where pro_id = #{id,jdbcType=VARCHAR})
+    </select>
+</mapper>

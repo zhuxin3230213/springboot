@@ -1,0 +1,51 @@
+<!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-4.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <!--账号报停-->
+    <meta charset="UTF-8">
+    <title>欢迎使用</title>
+    <script  type="text/javascript" src="https://cdn.bootcss.com/zepto/1.2.0/zepto.js"></script>
+</head>
+<body>
+    <div>
+        <button id="open" onclick="openDryer()" >打开</button>
+        <button id="close" onclick="closeDryer()" >关闭</button>
+    </div>
+</body>
+<script>
+function openDryer() {
+    $.ajax({
+        url: "/hairDryer/open",
+        method: "post",
+        data: {'usbPort': "com3","serialNumber":"0110"},
+        success: function (data) {
+            if (data && data.msg) {
+                alert(data.msg);
+            } else {
+                alert("出现异常");
+            }
+        },
+        error: function () {
+
+        }
+    });
+}
+function closeDryer() {
+    $.ajax({
+        url: "/hairDryer/close",
+        method: "post",
+        data: {'usbPort': "com3","serialNumber":"0110"},
+        success: function (data) {
+            if (data && data.msg) {
+                alert(data.msg);
+            } else {
+                alert("出现异常");
+            }
+        },
+        error: function () {
+
+        }
+    });
+}
+</script>
+</html>

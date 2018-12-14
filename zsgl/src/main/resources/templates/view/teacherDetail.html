@@ -1,0 +1,121 @@
+<!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-4.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <!--<meta name="description" th:attr="content=${teacherInfo.description}">
+    <meta name="keywords" th:attr="content=${#strings.replace(teacherInfo.keywords,'|',',')}">-->
+    <title>名师风采正文</title>
+    <link href="https://cdn.bootcss.com/bootstrap/3.1.1/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/static/css/lib/font-awesome.min.css" rel="stylesheet">
+    <link href="/static/css/common.css" rel="stylesheet">
+    <link href="/static/css/teacherInfo.css" rel="stylesheet">
+    <link href="/static/css/main_style_new.css" rel="stylesheet">
+    <link href="/static/favicon.ico" rel="icon" type="image/x-icon">
+    <script src="https://cdn.bootcss.com/jquery/2.2.4/jquery.min.js"></script>
+    <script src="/static/js/common.js"></script>
+    <script>
+        $(function(){
+            //页脚位置调整
+            var winHeight = window.screen.height;
+            var contentHeight = $('.teacherIntroduce').height();
+            var marginTop = 0;
+            if(winHeight > 100+contentHeight){
+                marginTop = winHeight - (100 + contentHeight)-207;//页脚高度207px
+                if(marginTop<50){
+                    marginTop = 50;
+                }
+            }else{
+                marginTop = 50;
+            }
+            $('#footer').css('margin-top', marginTop);
+        });
+    </script>
+</head>
+<body>
+    <div class="teacherIntroduce">
+        <div class="container bgImg" style="background:url('/static/images/03.png');">
+            <div class="teacherPhoto">
+                <img id="teacherPhoto" width="105" th:src="${teacherInfo.avatars} =='' ? '/static/images/teacher_default.png':${teacherInfo.avatars}">
+            </div>
+            <span class="bgImgName"><h1 th:text="${teacherInfo.name}">朱欣</h1><br>
+                <p>个人主页 &nbsp;<a th:href="${teacherInfo.homepage}" th:text="${teacherInfo.homepage}">http://baidu.com</a></p>
+            </span>
+        </div>
+
+        <div class="container">
+            <div id="content">
+                <div class="panels" style="">
+                    <div class="panels-heading">
+                        <h3 class="pull-left">基本信息 <font color="#aaa" size="4">The basic information</font></h3>
+                    </div>
+                    <div class="panels-body">
+                        <form class="form-horizontal" name="form-basic">
+                            <div class="form-group form-group-sm">
+                                <label class="col-sm-1 control-label">姓名:</label>
+                                <div class="col-sm-2">
+                                    <p class="form-control-static" th:text="${teacherInfo.name}">朱欣</p>
+                                </div>
+                                <label class="col-sm-2 control-label">学院:</label>
+                                <div class="col-sm-2">
+                                    <p class="form-control-static" th:text="${teacherInfo.Fname}">计算机学院</p>
+                                </div>
+                            </div>
+                            <div class="form-group form-group-sm">
+                                <label class="col-sm-1 control-label">学历:</label>
+                                <div class="col-sm-2">
+                                    <p class="form-control-static" th:text="${teacherInfo.Ename}">博士研究生毕业</p>
+                                </div>
+                                <label class="col-sm-2 control-label">学位:</label>
+                                <div class="col-sm-2">
+                                    <p class="form-control-static" th:text="${teacherInfo.Dname}">工学副博士</p>
+                                </div>
+                            </div>
+                            <div class="form-group form-group-sm">
+                                <label class="col-sm-1 control-label">职称:</label>
+                                <div class="col-sm-2">
+                                    <p class="form-control-static" th:text="${teacherInfo.Aname}">教授</p>
+                                </div>
+                                <label class="col-sm-2 control-label">职务:</label>
+                                <!--<div class="col-sm-2">
+                                    <p class="form-control-static" th:text="${teacherInfo.jobPost}">12312123</p>
+                                </div>-->
+                            </div>
+                            <div class="form-group form-group-sm">
+                                <label class="col-sm-1 control-label">学科:</label>
+                                <div class="col-sm-5">
+                                    <p class="form-control-static" th:text="${teacherInfo.Sname}">软件工程</p>
+                                </div>
+                            </div>
+                            <div class="form-group form-group-sm">
+                                <label class="col-sm-1 control-label">邮箱:</label>
+                                <div class="col-sm-3">
+                                    <p class="form-control-static" th:text="${teacherInfo.e_mail}">123123123</p>
+                                </div>
+                                <label class="col-sm-1 control-label">电话:</label>
+                                <div class="col-sm-2">
+                                    <p class="form-control-static" th:text="${teacherInfo.telephone}">123123123</p>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+                <div class="panels" th:if="${not #lists.isEmpty(module.teacherIntroduction)}">
+                    <div class="panels-heading">
+                        <h3 class="pull-left">综合介绍 <font color="#aaa" size="4">General Introduction</font></h3>
+                    </div>
+                    <div class="panels-body">
+                        <div style="margin:10px;">
+                            <p th:utext="${module.teacherIntroduction}">
+                                Content
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="footer" th:utext="${footer}"></div>
+</body>
+</html>

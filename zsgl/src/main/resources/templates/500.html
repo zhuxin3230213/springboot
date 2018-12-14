@@ -1,0 +1,64 @@
+<!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-4.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>服务器端错误</title>
+    <link href="/static/favicon.ico" rel="icon" type="image/x-icon">
+    <style>
+        .listContent {
+            background-color: rgb(240, 242, 245);
+            margin-bottom: 30px;
+        }
+        .main {
+            width: 1000px;
+            height: 100%;
+            text-align: center;
+            margin: 0 auto;
+        }
+        .main div{
+            float: left;
+        }
+        .footer {
+            width: 100%;
+            text-align: center;
+            position: fixed;
+            bottom: 30px;
+        }
+        .text {
+            color: rgba(0, 0, 0, 0.45);
+            font-size: 20px;
+            line-height: 28px;
+            margin-bottom: 16px;
+        }
+        .returnBtn{
+            margin-top: 30px;
+            width: 100px;
+            height: 45px;
+            border-radius: 5px;
+            border: 1px solid #479eff;
+            background: #479eff;
+            cursor: pointer;
+        }
+        .returnBtn a{
+            color: #fff;
+            text-decoration: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="listContent">
+        <div class="main">
+            <div><img src="/static/images/500.svg" style="margin-top:250px"></div>
+            <div style="margin-top:250px">
+                <div style="margin-left:150px">
+                    <p class="text">500 - 抱歉，服务器出错了！</p>
+                    <button class="returnBtn"><a th:href="@{/content/welcome}">返回首页</a></button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="footer">
+        冠铭科技 @ 2018
+    </div>
+</body>
+</html>

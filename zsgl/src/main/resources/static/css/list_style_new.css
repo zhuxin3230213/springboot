@@ -1,0 +1,223 @@
+.listContent {
+	width: 100%;
+	padding-top: 3px;
+	/*background: url(../image/bg.png) repeat-x top;*/
+}
+.welcomePic {
+	width: 100%;
+	height: auto;
+	/*margin: 10px 0 10px 0;*/
+	/*background: url(../image/welcome_new.png);*/
+}
+.welcomePic > img{
+	width: 100%;
+	height: 100%;
+}
+.listLeft {
+	float: left;
+	width: 30%;
+	margin: 40px 0px 30px 0px;
+}
+.hotListBanner {
+	width: 100%;
+	border: 1px solid #E3E3E3;
+	padding: 5px 0;
+	background: url(../images/titleLineBg.png);
+	color: #fff;
+}
+.hotListBanner > img {
+	height: 30px;
+	width: auto;
+	vertical-align: text-bottom;
+	padding-left: 20px;
+}
+.hotListBanner span {
+	padding-left: 25px;
+	line-height: 35px;
+	font-size: 18px;
+}
+.hotList {
+	width: 100%;
+	border: 1px solid #E3E3E3;
+	margin-top: -1px;
+	border-bottom: none;
+}
+.hotList ul {
+	list-style-type: none;
+	margin-top: 7px;
+	background: url(../images/sub_09.gif) repeat-x top;
+}
+.hotList li {
+	list-style-type: none;
+	color: #888888;
+	font-size: 13px;
+	line-height: 39px;
+	/*border-bottom: 1px dashed #E3E3E3;*/
+	border-bottom: 1px solid #e2e2e2;
+	padding-left: 25px;
+	/*background: url(../image/list.jpg) no-repeat scroll 10px 12px transparent;*/
+}
+.hotList li a {
+	display: block;
+	color: #205a82 !important;
+	line-height: 39px;
+	zoom: 1;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+.hotList ul li a:link, .hotList ul li a:visited {
+	text-decoration: none;
+	color: #888888;
+}
+.hotList ul li a:hover, .hotList ul li a:active {
+	text-decoration: none;
+	color: #003595;
+}
+.listRight {
+	float: left;
+	width: 65%;
+	margin: 40px 0px 30px 5%;
+}
+.listRight span {
+	/* position: relative; */
+	/* float: right; */
+	right: 10px;
+	color: #8E8C8B;
+	font-size: 15px;
+	font-weight: normal;
+}
+.listRight span a:link, .listRight span a:visited {
+	text-decoration: none;
+	color: #888888;
+}
+.listRight span a:hover, .listRight span a:active {
+	text-decoration: underline;
+	color: #888888;
+}
+.listBanner {
+	width: 100%;
+	font-size: 32px;
+	color: #342342;
+	font-family: '微软雅黑','黑体';
+	font-weight: normal;
+	border-bottom: 1px solid #ccc;
+	line-height: 60px;
+	padding: 7px 0;
+}
+.list {
+	width: 100%;
+	/*padding: 10px*/
+}
+.listItem {
+	width: 100%;
+}
+.listItem ul {
+	list-style-type: none;
+	margin-top: 5px;
+}
+.listItem li {
+	list-style-type: none;
+	color: #888888;
+	font-size: 15px;
+	line-height: 35px;
+	border-bottom: 1px dashed #E3E3E3;
+	padding-left: 23px;
+	/*background: url(../images/list.jpg) no-repeat scroll 10px 17px transparent;*/
+}
+.listItem ul li a:link, .listItem ul li a:visited {
+	text-decoration: none;
+	color: #333;
+	font-size: 14px;
+}
+.listItem ul li a:hover, .listItem ul li a:active {
+	text-decoration: none;
+	color: #003595;
+}
+.listItem span {
+	/*position: relative;*/
+	/*float: right;*/
+	/*padding-right: 23px;*/
+	font-size: 13px;
+	color: #A3A3A3;
+}
+.listItemLeft {
+	float: left;
+	width: 87%;
+	overflow:hidden;
+	white-space:nowrap;
+	text-overflow:ellipsis;
+}
+.listItemRight {
+	float: right;
+	width: 13%;
+	text-align: center;
+}
+.page {
+	width: 650px;
+	text-align: center;
+	margin-top: 40px;
+	font-size: 18px;
+	font-weight: bold;
+}
+.page a {
+	border: #7B8F9E 2px solid;
+	padding: 2px 5px;
+	margin: 2px;
+	color: #5C737C;
+	text-decoration: none;
+	font-size: 18px;
+}
+.page a:hover {
+	border: #7B8F9E 2px solid;
+	color:#5C737C;
+}
+.page a:active {
+	border: #7B8F9E 2px solid;
+	color:#5C737C;
+}
+.page span.current {
+	border: solid 2px #7B8F9E;
+	padding: 2px 5px;
+	font-weight: bold;
+	font-size: 18px;
+	margin: 2px;
+	color: #fff;
+	background-color: #677C84;
+}
+.page span.disabled {
+	border: #7B8F9E 2px solid;
+	padding: 2px 5px;
+	margin: 2px;
+	color: #A8BBC1;
+	font-size: 18px;
+}
+
+/** 奖优助学 **/
+.wrapper {
+	width: 80%;
+	margin: 0 auto;
+	max-width: 1080px;
+}
+.clear {
+	clear: both;
+	overflow: hidden;
+	height: 0px;
+}
+.excellentNav,.awardsList li{
+	margin-top: 20px;
+}
+.awardsList{
+	margin-top: 45px;
+}
+.awardsList ul{
+	list-style:circle;
+	margin-left: 3%;
+}
+.awardsList li a{
+	color: #333;
+}
+.awardsList li a:hover{
+	color: #003595;
+	text-underline: none;
+}

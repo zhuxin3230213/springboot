@@ -1,0 +1,78 @@
+<!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-4.dtd">
+<html xmlns:gm="" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout" layout:decorator="layout/layout">
+<head>
+    <link gm:href="index">
+    <link gm:href="news">
+</head>
+<body id="index-body">
+<div layout:fragment="content">
+    <div th:replace="layout/commonTop :: carouse('最新动态',
+                                                    'bg_news_top.png',
+                                                    '多年来，我们致力于扎根行业，深入场景进行产品设计和创新，为行业用户构建端到端的解决方案，为客户网络创造新价值。')">
+    </div>
+
+    <div th:replace="layout/breadNav :: nav('首页,最新动态','/pageindex,/pagenews-news')"></div>
+
+    <div class="news-content">
+        <div>
+            <span class="item-header-text">行业最新动态<div class="global-bottomLine"></div></span>
+        </div>
+        <div class="news-content-detail">
+            <div class="container">
+                <div class="row news-row">
+                    <div class="col-md-2 news-time">
+                        <div class="news-time-date">06</div>
+                        <div class="news-time-year">2018/6</div>
+                    </div>
+                    <div class="col-md-10 news-title">
+                        <h4><a th:href="@{/pagenews-news_01}">陕西服装工业学院智慧校园网竣工验收</a></h4>
+                        <p>2018年6月05日，西安冠铭科技有限公司与陕西服装工业学院合作智慧校园网竣工验收。</p>
+                    </div>
+                </div>
+                <div class="row news-row">
+                    <div class="col-md-2 news-time">
+                        <div class="news-time-date">01</div>
+                        <div class="news-time-year">2018/6</div>
+                    </div>
+                    <div class="col-md-10 news-title">
+                        <h4><a th:href="@{/pagenews-news_02}">陕西科技大学镐京学院智慧校园网竣工验收</a></h4>
+                        <p>2018年5月31日，西安冠铭科技有限公司与陕西科技大学镐京学院合作智慧校园网竣工验收。</p>
+                    </div>
+                </div>
+                <div class="row news-row">
+                    <div class="col-md-2 news-time">
+                        <div class="news-time-date">29</div>
+                        <div class="news-time-year">2017/12</div>
+                    </div>
+                    <div class="col-md-10 news-title">
+                        <h4><a th:href="@{/pagenews-news_03}">陕西高校信息化专家来蒲城县指导工作!</a></h4>
+                        <p>12月27日，陕西高校信息化专家一行来蒲城县指导“互联网+政务服务”和电子政务等信息化工作。副县长张武军出席会议。县电子政务办、行政办...</p>
+                    </div>
+                </div>
+                <div class="row news-row">
+                    <div class="col-md-2 news-time">
+                        <div class="news-time-date">30</div>
+                        <div class="news-time-year">2017/10</div>
+                    </div>
+                    <div class="col-md-10 news-title">
+                        <h4><a th:href="@{/pagenews-news_04}">陕西高校信息化面临哪些难题？</a></h4>
+                        <p>伴随着移动通信技术的不断发展和创新，高校校园建设有着改头换面式的创新。在以前的数字化校园建设当中，其主要是侧重于信息化教育的建设...</p>
+                    </div>
+                </div>
+                <div class="row news-row" style="border-bottom: none;">
+                    <div class="col-md-2 news-time">
+                        <div class="news-time-date">16</div>
+                        <div class="news-time-year">2017/9</div>
+                    </div>
+                    <div class="col-md-10 news-title">
+                        <h4><a th:href="@{/pagenews-news_05}">陕西高校信息化建设要从这几方面着手</a></h4>
+                        <p>高校信息化在学校教育教学管理中的应用，大致是这样一个基本发展趋势，首先，是管理方式的变革，比如无纸化办公、排课系统、学籍管理系统...</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+</body>
+</html>

@@ -1,0 +1,59 @@
+<!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-4.dtd">
+<html xmlns:gm="" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout" layout:decorator="layout/layout">
+<head>
+    <link gm:href="index">
+    <link gm:href="aboutus">
+    <link gm:href="album">
+    <script type="text/javascript" src="http://api.map.baidu.com/api?key=&v=1.1&services=true"></script>
+    <script src="/static/js/aboutus.js"></script>
+    <script>
+        $(function(){
+            initMap("dituContent");
+
+            //接收跳转参数，从子菜单调到相应tab页
+            var param=location.href;
+            var type=param.split('?')[1].split("=")[1];
+            $('#myTab a[href="#'+type+'"]').tab('show');
+        });
+    </script>
+</head>
+<body id="index-body">
+<div layout:fragment="content">
+    <div th:replace="layout/commonTop :: carouse('关于冠铭',
+                                                    'aboutus/bg_top.png',
+                                                    '西安冠铭科技股份有限公司成立于2015年，是一家专业从事陕西校园网络，陕西高校信息化，陕西智慧校园，陕西无线WiFi覆盖的应用和服务的公司。')">
+    </div>
+
+    <div th:replace="layout/breadNav :: nav('首页,关于冠铭,公司简介','/pageindex,/pageaboutus-introduction,/pageaboutus-introduction')"></div>
+
+    <div class="container aboutus-content">
+       <div class="aboutus-nav">
+           <ul class="aboutus-nav-ul nav nav-pills nav-stacked" id="myTab">
+               <li class="aboutus-nav-li active"><a href="#tab-introduction" data-toggle="tab">公司简介</a></li>
+               <li class="aboutus-nav-li"><a href="#tab-album" data-toggle="tab">企业相册</a></li>
+               <li class="aboutus-nav-li"><a href="#tab-recruit" data-toggle="tab">招贤纳士</a></li>
+               <li class="aboutus-nav-li aboutus-nav-li-last"><a href="#tab-contact" data-toggle="tab">联系我们</a></li>
+           </ul>
+       </div>
+        <div class="tab-content">
+            <div class="tab-pane active" id="tab-introduction" th:include="/aboutus/aboutus_introduction :: introduction"></div>
+            <div class="tab-pane" id="tab-album" th:include="/aboutus/aboutus_album :: album"></div>
+            <div class="tab-pane" id="tab-recruit" th:include="/aboutus/aboutus_recruit :: recruit"></div>
+            <div class="tab-pane" id="tab-contact" th:include="/aboutus/aboutus_contact :: contact"></div>
+        </div>
+    </div>
+
+    <script src="/static/js/lib/album.js"></script>
+    <script>
+        $(".slideanim").each(function(){
+            var pos = $(this).offset().top;
+
+            var winTop = $(window).scrollTop();
+            if (pos < winTop + 600) {
+                $(this).addClass("upSlide");
+            }
+        });
+    </script>
+</div>
+</body>
+</html>

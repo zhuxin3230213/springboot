@@ -1,0 +1,72 @@
+<!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-4.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>找不到页面</title>
+    <link href="/static/favicon.ico" rel="icon" type="image/x-icon">
+    <style>
+        .listContent {
+            background-color: rgb(240, 242, 245);
+            margin-bottom: 30px;
+        }
+        .main {
+            width: 1000px;
+            height: 100%;
+            text-align: center;
+            margin: 0 auto;
+        }
+        .main div{
+            float: left;
+        }
+        .footer {
+            width: 100%;
+            text-align: center;
+            position: fixed;
+            bottom: 30px;
+        }
+        .text {
+            color: #333;
+            font-size: 30px;
+            line-height: 28px;
+            margin-bottom: 16px;
+        }
+        .returnText{
+            margin-top: 50px;
+            color: #777;
+        }
+    </style>
+    <script src="https://cdn.bootcss.com/jquery/2.2.4/jquery.min.js"></script>
+    <script>
+        $(function(){
+            setTimeout(function(){
+                window.location = "/content/welcome";
+            },5000);
+        })
+
+        var n = 5;
+        if(n>0){
+            setInterval(function(){
+                n--;
+                $(".returnText span").text(n+"s");
+            },1000);
+        }
+    </script>
+</head>
+<body>
+    <div class="listContent">
+        <div class="main">
+            <div><img src="/static/images/404.svg" style="margin-top:175px"></div>
+            <div style="margin-top:275px">
+                <div style="margin-left:100px">
+                    <p class="text">404 - 抱歉，您访问的页面不存在!</p>
+                    <p class="returnText" style="margin-top:50px;">系统将在 <span style="color:red;">5s</span> 后返回首页。</p>
+                    <!--<button class="returnBtn"><a th:href="@{/content/welcome}">返回首页</a></button>-->
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="footer">
+        冠铭科技 @ 2018
+    </div>
+</body>
+</html>

@@ -1,0 +1,180 @@
+<!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-4.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+	<meta charset="utf-8">
+	<title>招生首页</title>
+	<link href="https://cdn.bootcss.com/bootstrap/3.1.1/css/bootstrap.min.css" rel="stylesheet">
+	<link href="/static/css/main_style_new.css" rel="stylesheet">
+	<link href="/static/pagination/pagination.css" rel="stylesheet">
+    <link rel="icon" type="image/x-icon" href="/static/favicon.ico">
+	<style type="text/css">
+		.carousel {
+            height: 500px;
+            margin-bottom: 20px;
+        }
+        .carousel .item {
+            height: 500px;
+            background-color: #000;
+        }
+        .carousel .item img {
+            width: 100%;
+            height: 100% !important;
+        }
+		#page{
+			float: right;
+			width: 160px;
+			margin:0;
+			padding-top: 5px;
+			border:none;
+		}
+		#page li a{
+			width: 20px;
+			height: 25px;
+			line-height: 12px;
+			overflow: hidden;
+			font-size: 12px;
+            padding-left: 9px;
+            padding-right: 16px;
+		}
+		.pagination>li>a{
+			color:#205a82;
+		}
+		.pagination>.active>a, .pagination>.active>a:focus, .pagination>.active>a:hover{
+			background:#205a82;
+			border-color:#205a82;
+		}
+	</style>
+	<script src="https://cdn.bootcss.com/jquery/2.2.4/jquery.min.js"></script>
+	<script src="https://cdn.bootcss.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
+	<script src="/static/pagination/paginationII.js"></script>
+	<script src="/static/js/main.js"></script>
+    <script src="/static/js/common.js"></script>
+	<link href="/static/css/index.css" rel="stylesheet">
+	<script th:inline="javascript">
+        pageTotal = 2;//热点信息显示前十条，共两页
+		$(function(){
+			$('#ad-carousel').carousel();
+
+			//热点信息模块分页
+            url = "/content/hotsPage?currentPage=";
+            pagination();
+
+            //加载常用链接
+            var links = [[${contactUrls}]];//菜单code
+            var linkArr = links.value;
+            var liHtml = "";
+            if(linkArr!=""){
+				linkArr = JSON.parse(linkArr);
+				linkArr.forEach(function(item,index){
+					if(index<5){
+						liHtml += '<li><a href="'+item.url+'" target="_blank">'+item.name+'</a></li>';
+					}
+				});
+            }
+            $(".linkList ul").append(liHtml);
+		});
+
+        //加载表格数据
+        function loadData(data){
+            $(".hotsStyleList").html("");
+            var data = data.data.content;
+            var liHtml = '';
+            $(data).each(function(index,item){
+                liHtml += '<li><a href="/content/content_detail_hots/'+item.id+'/'+item.type+'" target="_blank">'+item.title+'</a></li>';
+            });
+            $(".hotsStyleList").append(liHtml);
+        }
+	</script>
+</head>
+<body>
+	<div id="header" th:utext="${header}"></div>
+
+	<div id="ad-carousel" class="carousel slide" data-ride="carousel">
+	    <ol class="carousel-indicators">
+			<li data-target="#ad-carousel" th:attr="class=${iterStat.index==0?'active':''},data-slide-to=${iterStat.index}" th:each="listSlide,iterStat:${listSlides}"></li>
+	    </ol>
+	    <div class="carousel-inner">
+			<div th:attr="class='item '+${iterStat.index==0?'active':''}"  th:each="listSlide,iterStat:${listSlides}">
+				<a th:href="@{'/content/moduleContent/'+${listSlide.articleId}+'/'+${listSlide.module}+'/'+${listSlide.type}}">
+					<img th:attr="src=@{'/filePath/'+${listSlide.cover}+'?'+${listSlide.lastModified}},alt=${listSlide.title}">
+				</a>
+			</div>
+	    </div>
+	    <a class="left carousel-control" href="#ad-carousel" data-slide="prev">
+	    	<span class="glyphicon glyphicon-chevron-left"></span>
+	    </a>
+	    <a class="right carousel-control" href="#ad-carousel" data-slide="next">
+	    	<span class="glyphicon glyphicon-chevron-right"></span>
+	    </a>
+	</div>
+
+
+	<div class="ind">
+	    <div class="indRow">
+	    	<div class="stustyle">
+		    	<div class="bt"><span><img src="/static/images/icon_main_gonggao.png"><a th:href="@{'/content/title_list_notice/0'}">网站公告</a></span>
+		    		<ul>
+						<li th:each="notice:${getPosts}"><a th:href="@{'/content/content_detail_notice/'+${notice.id}}" th:text="${notice.title}" target="_blank"></a></li>
+					</ul>
+		    	</div>
+				<p class="showMore"><a th:href="@{'/content/title_list_notice/0'}">Show More >></a></p>
+	     	</div>
+
+			<div class="stustyle applyGuide">
+				<div class="bt"><span><img src="/static/images/icon_main_zhinan.png"><a th:href="@{'/content/title_list_notice/2'}">报考指南</a></span>
+					<ul>
+						<li th:each="applyGuide:${getRegulation}"><a th:href="@{'/content/content_detail_notice/'+${applyGuide.id}}" th:text="${applyGuide.title}" target="_blank"></a></li>
+					</ul>
+				</div>
+				<div class="go"><p class="showMore"><a th:href="@{'/content/title_list_notice/2'}">Show More >></a></p></div>
+			</div>
+
+			<div class="stustyle publicInfo">
+				<div class="bt"><span><img src="/static/images/icon_main_xinxi.png">信息公开专栏</span>
+					<ul>
+						<li><span></span><a th:href="@{/content/title_list/2000}" target="_blank">招生政策</a></li>
+						<li><span></span><a th:href="@{/history/plan/2002}" target="_blank">历年分数</a></li>
+						<li><span></span><a th:href="@{/history/plan/2001}" target="_blank">历年招生计划</a></li>
+						<li>
+							<span></span>
+							<a href="http://www.sneac.com/gkcxx/lqcx/gklqjgcx.htm" target="_blank">
+								<tem th:text="${#dates.format(new java.util.Date().getTime(), 'yyyy')}-1"></tem>年录取查询
+							</a>
+						</li>
+					</ul>
+				</div>
+			</div>
+	    </div>
+
+
+	    <div class="indRow">
+			<div class="stustyle">
+				<div class="bt"><span><img src="/static/images/icon_main_zixun.png"><a th:href="@{'/content/title_list_notice/1'}">新闻资讯</a></span>
+					<ul>
+						<li th:each="newsInfo:${getNews}"><a th:href="@{'/content/content_detail_notice/'+${newsInfo.id}}" th:text="${newsInfo.title}" target="_blank"></a></li>
+					</ul>
+				</div>
+				<p class="showMore"><a th:href="@{'/content/title_list_notice/1'}">Show More >></a></p>
+			</div>
+
+            <div class="stustyle commonlink">
+                <div class="bt linkList"><span><img src="/static/images/icon_main_lianjie.png">常用链接</span>
+                    <ul></ul>
+                </div>
+            </div>
+
+            <div class="stustyle">
+                <div class="bt"><span><img src="/static/images/icon_main_redian.png"><a>热点信息</a></span>
+                    <contain style="display:block;float:right;">
+                    	<ul class="pagination" id="page"></ul>
+                    </contain>
+                    <ul class="hotsStyleList">
+                        <li th:each="hotsInfo:${hots}"><a th:href="@{'/content/content_detail_hots/'+${hotsInfo.id}+'/'+${hotsInfo.type}}" th:text="${hotsInfo.title}" target="_blank"></a></li>
+                    </ul>
+                </div>
+            </div>
+		</div>
+	</div>
+    <div id="footer" th:utext="${footer}"></div>
+</body>
+</html>

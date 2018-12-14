@@ -1,0 +1,82 @@
+<!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-4.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+	<meta charset="utf-8">
+	<title>标题列表</title>
+	<link href="../../static/css/lib/bootstrap.min.css" rel="stylesheet">
+	<link href="../../static/css/common.css" rel="stylesheet">
+	<link href="../../static/css/main_style_new.css" rel="stylesheet">
+	<link href="../../static/css/list_style_new.css" rel="stylesheet">
+	<link href="../../static/pagination/pagination.css" rel="stylesheet">
+	<style>
+		.pagination>li>a{color:#205a82;}
+		.pagination>.active>a, .pagination>.active>a:focus, .pagination>.active>a:hover{background:#205a82;border-color:#205a82;}
+	</style>
+	<script src="../../static/js/lib/jquery.min.js"></script>
+	<script src="../../static/js/lib/bootstrap.min.js"></script>
+	<script src="../../static/pagination/pagination.js"></script>
+	<script src="../../static/js/main.js"></script>
+	<script th:inline="javascript">
+		//var menuCode = [[${menu.code}]];
+        var menuCode = 2001;
+        $(function(){
+            pageTotal = 9;
+            url = "/content/title_list?subModuleId="+menuCode+"&currentPage=";
+            pagination();
+            function loadData(data){
+
+            }
+        })
+	</script>
+</head>
+<body>
+<div class="listContent" style="padding-top:0;">
+	<div class="welcomePic">
+		<img src="../../static/images/welcome_new.png">
+	</div>
+	<div class="wrapper">
+		<div class="gyleft" style="margin:40px 0 0;">
+			<div class="ko">
+				<ul>
+					<h1 th:text="${firstMenu}">报考指南</h1>
+					<li><a class="">招生政策</a></li>
+					<li><a class="">历年招生计划</a></li>
+					<li><a class="">历年分数</a></li>
+					<li th:each="menu:${menus}"><a th:href="@{/content/title_list_two(menuId=${menu.id})}" th:each="${menu.name}">录取查询</a></li>
+				</ul>
+			</div>
+		</div>
+		<div class="listRight" style="width:75%;">
+			<a th:href="@{/menu/getMenu}">网站首页</a>  &gt;  <tem th:text="${menu.name}">点击的菜单名称</tem></span>
+			<div class="listBanner" th:text="${menu.name}">
+				点击的菜单名称
+			</div>
+			<div class="list">
+				<div class="listItem">
+					<ul>
+						<li></li>
+						<li th:each="titleList:${titleLists}">
+							<div class="listItemLeft">
+								<a th:href="@{/content/content_details(contentId=${titleList.id},menuId=${menu.code})}" th:text="${titleList.title}"></a>
+							</div>
+							<div class="listItemRight">
+								<span>[<tem th:text="${#strings.substring(titleList.createTime,0,10)}">2018-05-21</tem>]</span>
+								<!--<span th:text="'['+${titleList.createTime}+']'"></span>-->
+							</div>
+							<div class="clear"></div>
+						</li>
+					</ul>
+				</div>
+				<!-- 分页开始 -->
+				<div class="text-center">
+					<ul class="pagination" id="page">
+					</ul>
+				</div>
+				<!-- 分页结束 -->
+			</div>
+		</div>
+		<div class="clear"></div>
+	</div>
+</div>
+</body>
+</html>

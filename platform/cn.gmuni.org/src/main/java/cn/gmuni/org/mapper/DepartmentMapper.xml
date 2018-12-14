@@ -1,0 +1,181 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.gmuni.org.mapper.DepartmentMapper">
+    <resultMap id="BaseResultMap" type="cn.gmuni.org.model.Department">
+        <id column="ID" jdbcType="VARCHAR" property="id"/>
+        <result column="name" jdbcType="VARCHAR" property="name"/>
+        <result column="simple_name" jdbcType="VARCHAR" property="simpleName"/>
+        <result column="code" jdbcType="VARCHAR" property="code"/>
+        <result column="parent_id" jdbcType="VARCHAR" property="parentId"/>
+        <result column="type" jdbcType="VARCHAR" property="type"/>
+        <result column="remark" jdbcType="VARCHAR" property="remark"/>
+        <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
+        <result column="status" jdbcType="CHAR" property="status"/>
+        <result column="dLevel" jdbcType="DECIMAL" property="dlevel"/>
+        <result column="dLevel_code" jdbcType="VARCHAR" property="dlevelCode"/>
+        <result column="faculty" jdbcType="VARCHAR" property="faculty"/>
+        <result column="sort" jdbcType="VARCHAR" property="sort"/>
+    </resultMap>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from pf_gmuni_department
+    where ID = #{id,jdbcType=VARCHAR}
+</delete>
+    <delete id="deleteByIdsIn" parameterType="java.lang.String">
+    delete from pf_gmuni_department
+    where ID in
+        <foreach item="item" collection="list" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+  </delete>
+
+    <insert id="insert" parameterType="cn.gmuni.org.model.Department">
+    insert into pf_gmuni_department (ID, name, simple_name,
+      code, parent_id, type, 
+      remark, create_time, status, 
+      dLevel, dLevel_code,faculty, sort)
+    values (#{id,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR}, #{simpleName,jdbcType=VARCHAR}, 
+      #{code,jdbcType=VARCHAR}, #{parentId,jdbcType=VARCHAR}, #{type,jdbcType=VARCHAR}, 
+      #{remark,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{status,jdbcType=CHAR}, 
+      #{dlevel,jdbcType=DECIMAL}, #{dlevelCode,jdbcType=VARCHAR},
+       #{faculty,jdbcType=DECIMAL}, #{sort,jdbcType=VARCHAR})
+  </insert>
+    <update id="updateByPrimaryKey" parameterType="cn.gmuni.org.model.Department">
+    update pf_gmuni_department
+    set name = #{name,jdbcType=VARCHAR},
+      simple_name = #{simpleName,jdbcType=VARCHAR},
+      code = #{code,jdbcType=VARCHAR},
+      parent_id = #{parentId,jdbcType=VARCHAR},
+      type = #{type,jdbcType=VARCHAR},
+      remark = #{remark,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      status = #{status,jdbcType=CHAR},
+      dLevel = #{dlevel,jdbcType=DECIMAL},
+      dLevel_code = #{dlevelCode,jdbcType=VARCHAR},
+      faculty = #{faculty,jdbcType=DECIMAL},
+      sort = #{sort,jdbcType=VARCHAR}
+    where ID = #{id,jdbcType=VARCHAR}
+  </update>
+    <update id="updateNameSimpleName" parameterType="cn.gmuni.org.model.Department">
+    update pf_gmuni_department
+    set name = #{name,jdbcType=VARCHAR},
+      simple_name = #{simpleName,jdbcType=VARCHAR},
+      sort = #{sort,jdbcType=VARCHAR},
+      status=#{status}
+    where ID = #{id,jdbcType=VARCHAR}
+  </update>
+    <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select ID, name, simple_name, code, parent_id, type, remark, create_time, status,
+    dLevel, dLevel_code,faculty, sort
+    from pf_gmuni_department
+    where ID = #{id,jdbcType=VARCHAR}
+    order by sort
+  </select>
+    <select id="selectAll" resultMap="BaseResultMap">
+    select ID, name, simple_name, code, parent_id, type, remark, create_time, status,
+    dLevel, dLevel_code,faculty, sort
+    from pf_gmuni_department order by dLevel, dLevel_code, sort
+  </select>
+    <select id="selectByPid" resultMap="BaseResultMap" parameterType="java.util.Map">
+    select ID, name, simple_name, code, parent_id, type, remark, create_time, status,
+    dLevel, dLevel_code,faculty, sort
+    from pf_gmuni_department where id != #{pid,jdbcType=VARCHAR} and dLevel_code like
+     CONCAT((select dLevel_code from pf_gmuni_department where id =  #{pid,jdbcType=VARCHAR}),'%')
+        <if test="name!=null and name!=''">
+            and name like CONCAT('%',#{name,jdbcType=VARCHAR},'%')
+        </if>
+        <if test="code!=null and code!=''">
+            and code like CONCAT('%',#{code,jdbcType=VARCHAR},'%')
+        </if>
+        order by dLevel, dLevel_code,sort
+        
+  </select>
+
+    <update id="updateStatus">-
+    set
+    status = #{status,jdbcType=CHAR}
+    where ID = #{id,jdbcType=VARCHAR}
+  </update>
+
+    <select id="getByName" resultMap="BaseResultMap" parameterType="java.lang.String">
+    select ID, name, simple_name, code, parent_id, type, remark, create_time, status,
+    dLevel, dLevel_code,faculty, sort
+    from pf_gmuni_department where name = #{name,jdbcType=VARCHAR}
+  </select>
+    <select id="getByCode" resultMap="BaseResultMap" parameterType="java.lang.String">
+    select ID, name, simple_name, code, parent_id, type, remark, create_time, status,
+    dLevel, dLevel_code,faculty, sort
+    from pf_gmuni_department where code = #{code,jdbcType=VARCHAR}
+  </select>
+    <select id="selectByNameAndDlevelCodeLike" resultMap="BaseResultMap" parameterType="java.lang.String">
+    select ID, name, simple_name, code, parent_id, type, remark, create_time, status,
+    dLevel, dLevel_code,faculty, sort
+    from pf_gmuni_department where name = #{name,jdbcType=VARCHAR} and dLevel_code like
+    CONCAT(#{dlevelCode,jdbcType=VARCHAR},'%')
+  </select>
+    <update id="updateParent">
+    update pf_gmuni_department
+    set
+    parent_id = #{parentId,jdbcType=VARCHAR},dLevel_code = #{dlevelCode,jdbcType=VARCHAR},dLevel = #{dlevel}
+    where ID = #{id,jdbcType=VARCHAR}
+  </update>
+
+    <select id="getMaxDlevelCodeByPid" resultType="java.lang.String" parameterType="java.lang.String">
+      SELECT MAX(dLevel_code) FROM pf_gmuni_department WHERE parent_id = #{pid,jdbcType=VARCHAR}
+  </select>
+    <select id="countByPid" resultType="java.lang.Long" parameterType="java.util.Map">
+      select count(1)
+    from pf_gmuni_department where id != #{pid,jdbcType=VARCHAR} and dLevel_code like
+     CONCAT((select dLevel_code from pf_gmuni_department where id =  #{pid,jdbcType=VARCHAR}),'%')
+        <if test="name!=null and name!=''">
+            and name like CONCAT('%',#{name,jdbcType=VARCHAR},'%')
+        </if>
+        <if test="code!=null and code!=''">
+            and code like CONCAT('%',#{code,jdbcType=VARCHAR},'%')
+        </if>
+  </select>
+    <select id="countByPids" resultType="java.lang.Long" parameterType="java.lang.String">
+      select count(1)
+    from pf_gmuni_department where parent_id in
+        <foreach item="item" collection="list" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+  </select>
+    <select id="countUserByPids" resultType="java.lang.Long" parameterType="java.lang.String">
+        select count(1)
+        from pf_gmuni_user where dept_id in
+        <foreach item="item" collection="list" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </select>
+
+    <select id="getDlevelCodeByUserCode" resultType="java.lang.String" parameterType="java.lang.String">
+        SELECT dLevel_code FROM pf_gmuni_department
+        WHERE id = (SELECT dept_id FROM pf_gmuni_user WHERE CODE =#{code,jdbcType=VARCHAR})
+        or id in (SELECT dp.deptid FROM pf_gmuni_department_part dp LEFT JOIN pf_gmuni_user u ON dp.userId = u.id where u.code=#{code,jdbcType=VARCHAR})
+    </select>
+    <insert id="addDeptParts" parameterType="cn.gmuni.org.model.DeptPart">
+        insert into pf_gmuni_department_part (ID, userId, deptId)
+        values
+        <foreach collection="list" item="item" separator=",">
+            (#{item.id,jdbcType=VARCHAR}, #{item.userId,jdbcType=VARCHAR}, #{item.deptId,jdbcType=VARCHAR})
+        </foreach>
+    </insert>
+    <delete id="delDeptPartsByDeptIds" parameterType="java.lang.String">
+        delete from pf_gmuni_department_part
+        where deptId in
+        <foreach item="item" collection="list" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </delete>
+    <delete id="delDeptPartsByUserIds" parameterType="java.lang.String">
+        delete from pf_gmuni_department_part
+        where userId in
+        <foreach item="item" collection="list" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </delete>
+    <select id="listPartDeptByUserId" parameterType="java.lang.String" resultMap="BaseResultMap">
+        SELECT d.* FROM pf_gmuni_department_part dp LEFT JOIN pf_gmuni_user u ON dp.userId = u.ID LEFT JOIN pf_gmuni_department d ON dp.deptId=d.ID
+        where u.id =  #{userId}
+    </select>
+</mapper>

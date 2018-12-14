@@ -1,0 +1,43 @@
+<!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-4.dtd">
+<html xmlns:gm="" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout" layout:decorator="layout/layout">
+<head>
+    <link gm:href="index">
+    <link gm:href="solution">
+    <script>
+        $(function(){
+            //接收跳转参数
+            var param=location.href;
+            var type=param.split('?')[1].split("=")[1];
+            $('#myTab a[href="#'+type+'"]').tab('show');
+            $('#myTab a[href="#'+type+'"]').parent().addClass("on");
+        });
+    </script>
+</head>
+<body id="index-body">
+    <div layout:fragment="content">
+        <div th:replace="layout/commonTop :: carouse('解决方案',
+                                                    'bg_solution_top_01.png',
+                                                    '多年来，我们致力于扎根行业，深入场景进行产品设计和创新，为行业用户构建端到端的解决方案，为客户网络创造新价值。')">
+        </div>
+        <ul class="solution-nav" id="myTab">
+            <li><a href="#tab-smartCampus" data-toggle="tab">智慧校园</a><guideIcon></guideIcon></li>
+            <li><a href="#tab-schoolNet" data-toggle="tab">校园网络</a><guideIcon></guideIcon></li>
+            <li><a href="#tab-wifi" data-toggle="tab">无线WIFI覆盖</a><guideIcon></guideIcon></li>
+            <li><a href="#tab-water" data-toggle="tab">直饮水服务</a><guideIcon></guideIcon></li>
+            <li><a href="#tab-later" data-toggle="tab">敬请期待</a><guideIcon></guideIcon></li>
+        </ul>
+        <div th:replace="layout/breadNav :: nav('主页,解决方案','/pageindex,/pagesolution')"></div>
+
+        <div class="tab-content">
+            <div class="tab-pane active" id="tab-smartCampus" th:include="/solution/solution_smartCampus :: smartCampus"></div>
+            <div class="tab-pane" id="tab-schoolNet" th:include="/solution/solution_schoolNet :: schoolNet"></div>
+            <div class="tab-pane" id="tab-wifi" th:include="/solution/solution_wifi :: wifi"></div>
+            <div class="tab-pane" id="tab-water" th:include="/solution/solution_water :: water"></div>
+            <div class="tab-pane" id="tab-later">
+                更多新产品正在研发中，敬请期待！
+            </div>
+        </div>
+
+    </div>
+</body>
+</html>

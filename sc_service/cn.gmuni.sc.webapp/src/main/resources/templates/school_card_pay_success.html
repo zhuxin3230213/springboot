@@ -1,0 +1,20 @@
+<!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-4.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+    <title>充值成功</title>
+    <link type="text/css" rel="stylesheet" th:href="@{/app/css/school_card_pay_success.css}">
+    <script th:src="@{/app/js/simJQ-1.4.min.js}"></script>
+</head>
+<body>
+    <div class="wrap">
+        <span class="card_pay_success_title">充值成功</span>
+        <span class="card_pay_success_money" th:text="${total_amount}"></span>
+        <div class="card_pay_success_method">
+            <span>付款方式</span>
+            <span>支付宝</span>
+        </div>
+    </div>
+</body>
+</html>

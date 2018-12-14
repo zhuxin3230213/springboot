@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.gmuni.sc.devicmanagement.mapper.DeviceManagementMapper">
+
+    <insert id="addDevice" parameterType="cn.gmuni.sc.devicmanagement.model.Device">
+        INSERT INTO sc_gmuni_device (id,code,status,school_code,type,device_ip,usb_port,serial_number,address) VALUES
+        (#{id,jdbcType=VARCHAR},#{code,jdbcType=VARCHAR},#{status,jdbcType=VARCHAR},#{schoolCode,jdbcType=VARCHAR},#{type,jdbcType=VARCHAR},
+        #{deviceIp,jdbcType=VARCHAR},#{usbPort,jdbcType=VARCHAR},#{serialNumber,jdbcType=VARCHAR},#{address,jdbcType=VARCHAR})
+    </insert>
+    <update id="updateDevice" parameterType="cn.gmuni.sc.devicmanagement.model.Device">
+          update sc_gmuni_device set
+          status=#{status,jdbcType=VARCHAR},
+          school_code=#{schoolCode,jdbcType=VARCHAR},
+          type=#{type,jdbcType=VARCHAR},
+          device_ip=#{deviceIp,jdbcType=VARCHAR},
+          usb_port=#{usbPort,jdbcType=VARCHAR},
+          serial_number=#{serialNumber,jdbcType=VARCHAR},
+          address=#{address,jdbcType=VARCHAR}
+          where id =#{id,jdbcType=VARCHAR} and code=#{code,jdbcType=VARCHAR}
+    </update>
+     <delete id="delDevice" parameterType="java.lang.String">
+        delete from sc_gmuni_device where id in
+        <foreach collection="list" item="item" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </delete>
+
+    <select id="listDevice" parameterType="java.util.Map" resultType="java.util.Map">
+      SELECT d.id,d.code,d.status,ci.name AS schoolName,d.type,d.device_ip AS deviceIp,d.usb_port AS usbPort,d.serial_number AS serialNumber,d.address
+      FROM sc_gmuni_device d INNER JOIN sc_gmuni_college_info ci ON d.school_code=ci.code
+      <where>
+          <if test="code != null and code != ''">
+            and  d.code=#{code,jdbcType=VARCHAR}
+          </if>
+          <if test="schoolCode != null and schoolCode != ''">
+             and d.schoolCode=#{schoolCode,jdbcType=VARCHAR}
+          </if>
+          <if test="type != null and type != ''" >
+              and d.type like CONCAT('%',#{type,jdbcType=VARCHAR},'%')
+          </if>
+      </where>
+        order by d.school_code,d.type asc, d.code desc
+    </select>
+
+    <select id="checkCode" parameterType="cn.gmuni.sc.devicmanagement.model.Device" resultType="java.lang.Integer">
+        select count(1) from sc_gmuni_device where (code=#{code,jdbcType=VARCHAR} or (device_ip=#{deviceIp,jdbcType=VARCHAR}
+        and usb_port=#{usbPort,jdbcType=VARCHAR} and serial_number=#{serialNumber,jdbcType=VARCHAR}))
+        <if test="id !=null and id!=''">
+          and  id!=#{id,jdbcType=VARCHAR}
+        </if>
+    </select>
+
+</mapper>

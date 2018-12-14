@@ -1,0 +1,18 @@
+<div class="bread-nav" th:fragment="nav(names,paths)">
+    <style>
+        .nav-arrow::after{
+            content: '>';
+            position: absolute;
+            margin-left: 5px;
+        }
+    </style>
+    <div class="container">
+        <div class="col-sm-12" th:with="ns=${#strings.arraySplit(names,',')},ps=${#strings.arraySplit(paths,',')}">
+            <span>当前位置：</span>
+            <a th:each="name,userStat : ${ns}" th:href="@{${ps[userStat.index]}}" th:text="${name}"
+               th:class="${userStat.index} lt ${#arrays.length(ns)}-1?'nav-arrow':''">
+            </a>
+        </div>
+    </div>
+</div>
+

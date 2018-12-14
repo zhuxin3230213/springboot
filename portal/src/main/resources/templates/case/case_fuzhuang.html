@@ -1,0 +1,31 @@
+<!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-4.dtd">
+<html xmlns:gm="" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout" layout:decorator="layout/layout">
+<head>
+    <link gm:href="index">
+    <link gm:href="content">
+</head>
+<body id="index-body">
+<div layout:fragment="content">
+    <div th:replace="layout/commonTop :: carouse('客户案例',
+                                                    'case/bg_top.png',
+                                                    '多年来，我们致力于扎根行业、深入场景进行产品设计和创新，为行业用户构建端到端的解决方案，为客户网络创造新价值')">
+    </div>
+
+    <div th:replace="layout/breadNav :: nav('首页,客户案例,陕西科技大学镐京学院案例','/pageindex,/pagecase-case,/pagecase-case_haojing')"></div>
+
+    <div class="container content-detail">
+        <div class="content-top">
+            <div class="content-title">陕西服装工程学院案例</div>
+            <div class="content-info">作者：admin &nbsp; 发布日期：2018/6/10 &nbsp; 关注次数：299</div>
+        </div>
+        <div class="content-bottom">
+            <p>西安冠铭科技有限公司与陕西服装工业学院合作智慧校园网。</p>
+
+            <div class="content-img"><img src="/static/images/case/case_fuzhuang01.jpg" width="881" alt="01"></div>
+
+            <div class="content-img"><img src="/static/images/case/case_fuzhuang02.jpg" width="881" alt="02"></div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

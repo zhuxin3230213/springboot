@@ -1,0 +1,66 @@
+<!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-4.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+    <title>预约套餐</title>
+    <link type="text/css" rel="stylesheet" th:href="@{/app/css/net_sub_combo.css}">
+    <script th:src="@{/app/js/simJQ-1.4.min.js}"></script>
+</head>
+<body>
+    <div class="net_sub_compo_title">
+        <span class="net_sub_compo_title_label" th:text="${account.packageName}">当前套餐</span>
+        <span class="net_sub_compo_title_value">学生组</span>
+        <input type="text" id="net_sub_compo_current_package" th:value="${account.packageCode}" style="display: none;">
+    </div>
+    <div class="net_sub_compo_list" >
+        <div class="net_sub_compo_item" th:each="item:${data}">
+            <input type="radio" name="compo" th:id="${item.id}" th:value="${item.code}" th:attr="data-text=${item.name}" />
+            <label class="net_sub_compo_item_label" th:for="${item.id}" th:text="${item.name}"></label>
+        </div>
+    </div>
+    <div class="net_sub_compo_btn_wrap">
+        <button onclick="beforeSubmit()">提交</button>
+    </div>
+</body>
+<script>
+    function beforeSubmit(){
+        var currentPackage = $("#net_sub_compo_current_package").val();
+        if($("input[type='radio']:checked").length == 0){
+            alert("请先选择套餐");
+            return;
+        }
+        var selectPackage = $("input[type='radio']:checked").val();
+        if(currentPackage == selectPackage){
+            alert("预约的套餐跟当前套餐一致");
+            return;
+        }
+        datepicker.showDatePicker(false, "net_sub_compo", "");
+    }
+    function selectedDatePicker(time, flag) {
+        var selectPackage = $("input[type='radio']:checked").val();
+        var packageName = $("input[type='radio']:checked")[0].dataset.text;
+        time = time.substring(0, 10);
+        var r = confirm("是否于" + time + "将套餐变更为【" + packageName + "】？变更套餐之后当前套餐未使用余额无法退还。");
+        if (r == true) {
+            $.ajax({
+                url: "/networkPay/netSubCompo",
+                method: "post",
+                data: {'dateStr': time,"packageId":selectPackage},
+                success: function (data) {
+                    if (data && data.msg) {
+                        alert(data.msg);
+                    } else {
+                        alert("系统异常，请前往营业厅办理");
+                    }
+                },
+                error: function () {
+
+                }
+            });
+        } else {
+
+        }
+    }
+</script>
+</html>

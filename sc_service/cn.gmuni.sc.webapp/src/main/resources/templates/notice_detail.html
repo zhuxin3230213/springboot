@@ -1,0 +1,76 @@
+<!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-4.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+    <meta name="format-detection" content="telephone=no">
+    <meta name="keywords" th:content="${notice.keywords}">
+    <meta name="description" th:content="${notice.description}">
+    <meta http-equiv="cache-control" content="max-age=86400">
+    <title>详情</title>
+    <link type="text/css" rel="stylesheet" th:href="@{/app/css/notice_detail.css}">
+    <link type="text/css" rel="stylesheet" th:href="@{/app/css/wangEditor.css}">
+    <link rel=icon th:href="@{/favicon.ico}" type=image/x-icon>
+</head>
+<body>
+  <div class="notice_detail_container">
+      <div class="notice_detail_title">
+          <span th:text="${notice.title}"></span>
+      </div>
+      <div class="notice_detail_info">
+          <span class="notice_detail_dept" th:text="${notice.deptName}"></span>
+          <span class="notice_detail_time" th:text="${notice.updateTime}"></span>
+      </div>
+      <div class="notice_detail_content" th:utext="${notice.content}">
+      </div>
+  </div>
+
+   <div class="notice_detail_attachment"  th:if="${#objects.nullSafe(notice.attachment,notice.attachment)}">
+            <a class="notice_detail_att_item" th:each="att : ${notice.attachment}"
+               th:href="@{'/api-download/upload/download-image/'+${att.id}}"
+               th:switch="${att.format}"
+               th:attr="data-id='${att.id}',data-lastmodified='${att.lastModified}'">
+                <img src="/app/image/excel.png" th:case="'xls'">
+                <img src="/app/image/excel.png" th:case="'xlsx'">
+                <img src="/app/image/word.png" th:case="'doc'">
+                <img src="/app/image/word.png" th:case="'docx'">
+                <img src="/app/image/ppt.png" th:case="'ppt'">
+                <img src="/app/image/ppt.png" th:case="'pptx'">
+                <img src="/app/image/pdf.png" th:case="'pdf'">
+                <img src="/app/image/picture.png" th:case="'jpg'">
+                <img src="/app/image/picture.png" th:case="'jpeg'">
+                <img src="/app/image/picture.png" th:case="'png'">
+                <img src="/app/image/picture.png" th:case="'bmp'">
+                <img src="/app/image/picture.png" th:case="'gif'">
+                <img src="/app/image/picture.png" th:case="'jpg'">
+                <img src="/app/image/moren.png" th:case="'*'">
+                <div class="notice_detail_att_wrap">
+                    <span class="notice_detail_att_name" th:text="${att.name}+'.'+${att.format}"></span>
+                    <span class="notice_detail_att_size" th:text="${att.size/1024}+'KB'"></span>
+                </div>
+            </a>
+   </div>
+  <script>
+      document.addEventListener("DOMContentLoaded",function(){
+          //处理预加载的图片
+          var imgs = document.getElementsByTagName("img");
+          var img,id,lastmodify;
+          for(var i=0;i<imgs.length;i++){
+              img = imgs[i];
+              id = img.dataset.imageid;
+              lastmodify = img.dataset.lastmodify;
+              if(id!=null){
+                  (function(img,id,lastmodify){
+                      var newimg = new Image();
+                      newimg.src = "/api-download/upload/download-image/"+id+"?"+lastmodify;
+                      newimg.onload = function(){
+                          img.src = newimg.src;
+                          newimg = undefined;
+                      }
+                  }(img,id,lastmodify))
+              }
+          }
+      })
+  </script>
+</body>
+</html>

@@ -1,0 +1,169 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.gmuni.sc.pay.mapper.PayCountMapper">
+
+    <select id="getNetCount"  parameterType="java.util.Map" resultType="java.util.Map">
+      SELECT
+  ci.name AS schoolName,
+  pay_way AS payWay,
+  temp.mon AS mon,
+  num
+FROM
+  (SELECT
+    school_code,
+    SUM(total_amount) AS mon,
+    pay_way,
+    COUNT(1) AS num
+    FROM
+    `sc_gmuni_pay_log`
+    WHERE pay_status = '6' and module = 'wangfei'
+        <if test="startTime != null and startTime != ''">
+            <![CDATA[
+               and  DATE_FORMAT(pay_time,'%Y-%m-%d')>=#{startTime}
+              ]]>
+        </if>
+        <if test="endTime != null and endTime != ''">
+            <![CDATA[
+               and  DATE_FORMAT(pay_time,'%Y-%m-%d')<=#{endTime}
+              ]]>
+        </if>
+  GROUP BY pay_way,school_code) temp
+  INNER JOIN sc_gmuni_college_info ci
+    ON temp.school_code = ci.code
+    </select>
+
+
+
+    <select id="getNetCostTrend"  parameterType="java.util.Map" resultType="java.util.Map">
+       SELECT
+       DATE_FORMAT(pay_time,'%Y-%m-%d') AS time,
+       SUM(total_amount) AS mon,
+       COUNT(1) AS num
+       FROM
+      `sc_gmuni_pay_log`
+       WHERE pay_status = '6' and module = 'wangfei'
+        <if test="schoolCode != null and schoolCode != ''">
+            and  school_code =#{schoolCode,jdbcType=VARCHAR}
+        </if>
+        <if test="startTime != null and startTime != ''">
+            <![CDATA[
+               and  DATE_FORMAT(pay_time,'%Y-%m')>= #{startTime}
+              ]]>
+        </if>
+        <if test="endTime != null and endTime != ''">
+            <![CDATA[
+               and  DATE_FORMAT(pay_time,'%Y-%m')<= #{endTime}
+              ]]>
+        </if>
+        <if test="date != null  and date !=''">
+            <if test="date == 1">
+                <![CDATA[
+                    and  DATE_SUB(CURDATE(), INTERVAL 7 DAY) <= DATE(pay_time)
+                    ]]>
+            </if>
+            <if test="date == 2">
+                <![CDATA[
+                    and DATE_SUB(CURDATE(), INTERVAL 30 DAY) <= DATE(pay_time)
+                    ]]>
+            </if>
+            <if test="date == 3">
+                <![CDATA[
+                    and DATE_SUB(CURDATE(), INTERVAL 90 DAY) <= DATE(pay_time)
+                    ]]>
+            </if>
+        </if>
+       GROUP BY DATE_FORMAT(pay_time,'%Y-%m-%d')
+    </select>
+
+    <select id="getSetMeal"   parameterType="java.util.Map" resultType="java.util.Map">
+        SELECT m.setMealType as setMealType,m.mon as mon,m.payWay as payWay,m.num as num,np.name as name FROM
+        (SELECT
+        set_meal_type AS setMealType,
+        SUM(total_amount) AS mon,
+        pay_way AS payWay,
+        COUNT(1) AS num
+        FROM
+        sc_gmuni_pay_log
+        WHERE pay_status = '6'  AND module = 'wangfei'
+        <if test="schoolCode != null and schoolCode != ''">
+            and  school_code =#{schoolCode,jdbcType=VARCHAR}
+        </if>
+        <if test="startTime != null and startTime != ''">
+            <![CDATA[
+               and  DATE_FORMAT(pay_time,'%Y-%m-%d')>=#{startTime}
+              ]]>
+        </if>
+        <if test="endTime != null and endTime != ''">
+            <![CDATA[
+               and  DATE_FORMAT(pay_time,'%Y-%m-%d')<=#{endTime}
+              ]]>
+        </if>
+        GROUP BY set_meal_type,pay_way) m
+        LEFT JOIN sc_gmuni_net_package np ON m.setMealType = np.code
+
+    </select>
+
+    <select id="selectPay" parameterType="java.util.Map" resultType="java.util.Map">
+        SELECT
+        pl.trade_no AS tradeNo,
+        pl.total_amount AS totalAmount,
+        pl.net_id AS netId,
+        pl.pay_way AS payWay,
+        pl.pay_status AS payStatus,
+        pl.login_code AS loginCode,
+        pl.stu_code AS stuCode,
+        pl.school_code AS schoolCode,
+        pl.pay_time AS payTime,
+        pl.module AS module,
+        pl.reason AS reason,
+        pl.set_meal_type AS setMealType,
+        np.name AS name,
+        ci.name as schoolName
+        FROM
+        sc_gmuni_pay_log  pl
+        LEFT JOIN sc_gmuni_net_package np ON pl.set_meal_type= np.code  LEFT JOIN sc_gmuni_college_info ci ON pl.school_code = ci.code
+        <where>
+            <if test="schoolCode != null and schoolCode!=''">
+                and pl.school_code =#{schoolCode,jdbcType=VARCHAR}
+            </if>
+            <if test="stuCode != null and stuCode != ''">
+               and  pl.stu_code like CONCAT('%',#{stuCode,jdbcType=VARCHAR},'%')
+            </if>
+            <if test="startTime != null and startTime != ''">
+                <![CDATA[
+               and  DATE_FORMAT(pl.pay_time,'%Y-%m-%d')>=#{startTime}
+              ]]>
+            </if>
+            <if test="endTime != null and endTime != ''">
+                <![CDATA[
+               and  DATE_FORMAT(pl.pay_time,'%Y-%m-%d')<=#{endTime}
+              ]]>
+            </if>
+            </where>
+    </select>
+
+    <select id="selectCount" parameterType="java.util.Map" resultType="java.util.Map">
+       SELECT school_code as schoolCode,DATE_FORMAT(pay_time,'%Y-%m-%d') as day,SUM(total_amount) as mon
+        FROM sc_gmuni_pay_log
+        WHERE pay_status ='6'
+            <if test="schoolCode != null and schoolCode!=''">
+              and  school_code =#{schoolCode,jdbcType=VARCHAR}
+            </if>
+            <if test="startTime != null and startTime != ''">
+                <![CDATA[
+               and  DATE_FORMAT(pay_time,'%Y-%m-%d')>=#{startTime}
+              ]]>
+            </if>
+            <if test="endTime != null and endTime != ''">
+                <![CDATA[
+               and  DATE_FORMAT(pay_time,'%Y-%m-%d')<=#{endTime}
+              ]]>
+            </if>
+        GROUP BY school_code,DATE_FORMAT(pay_time,'%Y-%m-%d')
+        ORDER BY DATE_FORMAT(pay_time,'%Y-%m-%d')
+    </select>
+
+
+
+
+</mapper>

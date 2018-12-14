@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.gmuni.org.mapper.UserMapper">
+  <resultMap id="BaseResultMap" type="cn.gmuni.org.model.User">
+    <id column="ID" jdbcType="VARCHAR" property="id" />
+    <result column="name" jdbcType="VARCHAR" property="name" />
+    <result column="code" jdbcType="VARCHAR" property="code" />
+    <result column="sex" jdbcType="CHAR" property="sex" />
+    <result column="birthday" jdbcType="DATE" property="birthday" />
+    <result column="mobile" jdbcType="VARCHAR" property="mobile" />
+    <result column="weixin" jdbcType="VARCHAR" property="weixin" />
+    <result column="mail" jdbcType="VARCHAR" property="mail" />
+    <result column="dept_id" jdbcType="VARCHAR" property="deptId" />
+    <result column="remark" jdbcType="VARCHAR" property="remark" />
+    <result column="deptName" jdbcType="VARCHAR" property="deptName" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="qq" jdbcType="VARCHAR" property="qq" />
+  </resultMap>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from pf_gmuni_user
+    where ID = #{id,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="cn.gmuni.org.model.User">
+    insert into pf_gmuni_user (ID, name, code,
+      sex, birthday, mobile, weixin, 
+      mail, dept_id, remark, 
+      create_time, qq)
+    values (#{id,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR}, #{code,jdbcType=VARCHAR}, 
+      #{sex,jdbcType=CHAR}, #{birthday,jdbcType=DATE}, #{mobile,jdbcType=VARCHAR}, #{weixin,jdbcType=VARCHAR}, 
+      #{mail,jdbcType=VARCHAR}, #{deptId,jdbcType=VARCHAR}, #{remark,jdbcType=VARCHAR}, 
+      #{createTime,jdbcType=TIMESTAMP}, #{qq,jdbcType=VARCHAR})
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="cn.gmuni.org.model.User">
+    update pf_gmuni_user
+    set name = #{name,jdbcType=VARCHAR},
+      code = #{code,jdbcType=VARCHAR},
+      sex = #{sex,jdbcType=CHAR},
+      birthday = #{birthday,jdbcType=DATE},
+      mobile = #{mobile,jdbcType=VARCHAR},
+      weixin = #{weixin,jdbcType=VARCHAR},
+      mail = #{mail,jdbcType=VARCHAR},
+      dept_id = #{deptId,jdbcType=VARCHAR},
+      remark = #{remark,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      qq = #{qq,jdbcType=VARCHAR}
+    where ID = #{id,jdbcType=VARCHAR}
+  </update>
+  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select u.ID, u.name, u.code, u.sex, u.birthday, u.mobile, u.weixin, u.mail, u.dept_id, u.remark, u.create_time,
+    u.qq, d.name as deptName
+    from pf_gmuni_user u left join pf_gmuni_department d on u.dept_id = d.ID
+    where u.ID = #{id,jdbcType=VARCHAR}
+  </select>
+  <select id="selectAllByIdsIn" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select u.ID, u.name, u.code, u.sex, u.birthday, u.mobile, u.weixin, u.mail, u.dept_id, u.remark, u.create_time,
+    u.qq, d.name as deptName
+    from pf_gmuni_user u left join pf_gmuni_department d on u.dept_id = d.ID
+    where ID IN
+    <foreach item="item" collection="list" open="(" separator="," close=")">
+      #{item}
+    </foreach>
+  </select>
+  <select id="selectAll" resultMap="BaseResultMap">
+    select u.ID, u.name, u.code, u.sex, u.birthday, u.mobile, u.weixin, u.mail, u.dept_id, u.remark, u.create_time,
+    u.qq, d.name as deptName
+    from pf_gmuni_user u left join pf_gmuni_department d on u.dept_id = d.ID
+  </select>
+  <select id="listUserByDeptId" resultMap="BaseResultMap" parameterType="java.util.Map">
+   select u.ID, u.name, u.code, u.sex, u.birthday, u.mobile, u.weixin, u.mail, u.dept_id, u.remark, u.create_time,
+    u.qq, d.name as deptName
+    from pf_gmuni_user u left join pf_gmuni_department d on u.dept_id = d.ID WHERE u.dept_id IN
+(SELECT ID FROM pf_gmuni_department WHERE  dLevel_code LIKE
+     CONCAT((SELECT dLevel_code FROM pf_gmuni_department WHERE id = #{deptid,jdbcType=VARCHAR}),'%'))
+    and u.code != 'admin'
+    <if test="name!=null and name!=''">
+      and u.name like CONCAT('%',#{name,jdbcType=VARCHAR},'%')
+    </if>
+    <if test="code!=null and code!=''">
+      and u.code like CONCAT('%',#{code,jdbcType=VARCHAR},'%')
+    </if>
+  </select>
+  <select id="listUserByDeptIdForPart" resultMap="BaseResultMap" parameterType="java.util.Map">
+   select u.ID, u.name, u.code, u.sex, u.birthday, u.mobile, u.weixin, u.mail, u.dept_id, u.remark, u.create_time,
+    u.qq, d.name as deptName
+    from pf_gmuni_user u left join pf_gmuni_department d on u.dept_id = d.ID WHERE u.dept_id IN
+(SELECT ID FROM pf_gmuni_department WHERE
+    u.code != 'admin'
+    and  dLevel_code LIKE
+     CONCAT((SELECT dLevel_code FROM pf_gmuni_department WHERE id = #{deptid,jdbcType=VARCHAR}),'%'))
+    and u.ID not in (SELECT userId FROM pf_gmuni_department_part WHERE  deptId = #{deptid,jdbcType=VARCHAR} )
+    <if test="name!=null and name!=''">
+      and u.name like CONCAT('%',#{name,jdbcType=VARCHAR},'%')
+    </if>
+    <if test="code!=null and code!=''">
+      and u.code like CONCAT('%',#{code,jdbcType=VARCHAR},'%')
+    </if>
+  </select>
+  <select id="listPartUserByDeptId" resultMap="BaseResultMap" parameterType="java.lang.String">
+    select u.ID, u.name, u.code, u.sex, u.birthday, u.mobile, u.weixin, u.mail, u.dept_id, u.remark, u.create_time,
+    u.qq, d.name as deptName
+    from pf_gmuni_user u left join pf_gmuni_department d on u.dept_id = d.ID WHERE
+    u.code != 'admin'
+    and u.id IN
+    (SELECT userId FROM pf_gmuni_department_part WHERE  deptId = #{deptid,jdbcType=VARCHAR})
+  </select>
+  <select id="countByDeptId" resultType="java.lang.Long"  parameterType="java.util.Map">
+      SELECT count(1) FROM pf_gmuni_user WHERE dept_id IN
+(SELECT ID FROM pf_gmuni_department WHERE  dLevel_code LIKE
+     CONCAT((SELECT dLevel_code FROM pf_gmuni_department WHERE id = #{deptid,jdbcType=VARCHAR}),'%'))
+    <if test="name!=null and name!=''">
+      and name like CONCAT('%',#{name,jdbcType=VARCHAR},'%')
+    </if>
+    <if test="code!=null and code!=''">
+      and code like CONCAT('%',#{code,jdbcType=VARCHAR},'%')
+    </if>
+  </select>
+
+  <delete id="deleteByIdsIn" parameterType="java.lang.String">
+    DELETE u, ui ,r
+    FROM pf_gmuni_user u
+    LEFT JOIN pf_gmuni_userinfo ui ON u.ID=ui.user_id
+    LEFT JOIN pf_gmuni_role_user r ON ui.ID = r.user_id
+    WHERE u.ID IN
+    <foreach item="item" collection="list" open="(" separator="," close=")">
+      #{item}
+    </foreach>
+  </delete>
+  <update id="transferDept" parameterType="java.lang.String">
+    update pf_gmuni_user
+    set dept_id = #{deptId,jdbcType=VARCHAR}
+    where ID IN
+    <foreach item="item" collection="list" open="(" separator="," close=")">
+      #{item}
+    </foreach>
+  </update>
+  <select id="listUndefinedUser" resultMap="BaseResultMap" parameterType="java.util.Map">
+     select u.ID, u.name, u.code, u.sex, u.birthday, u.mobile, u.weixin, u.mail, u.dept_id, u.remark, u.create_time,
+    u.qq, d.name as deptName
+    from pf_gmuni_user u left join pf_gmuni_department d on u.dept_id = d.ID WHERE u.id NOT IN (SELECT user_id FROM pf_gmuni_userinfo)
+    and u.dept_id  IN (SELECT id FROM pf_gmuni_department WHERE dLevel_code LIKE
+    CONCAT((SELECT dLevel_code FROM pf_gmuni_department WHERE id = #{deptId}),'%'))
+    and u.code !='admin'
+    <if test="name!=null and name!=''">
+      and u.name like CONCAT('%',#{name,jdbcType=VARCHAR},'%')
+    </if>
+    <if test="code!=null and code!=''">
+      and u.code like CONCAT('%',#{code,jdbcType=VARCHAR},'%')
+    </if>
+    order by u.name, u.code
+  </select>
+  <select id="countUndefinedUser" resultType="java.lang.Integer" parameterType="java.util.Map">
+    select count(1)
+    from pf_gmuni_user WHERE id NOT IN (SELECT user_id FROM pf_gmuni_userinfo)
+    and dept_id IN (SELECT id FROM pf_gmuni_department WHERE dLevel_code LIKE
+    CONCAT((SELECT dLevel_code FROM pf_gmuni_department WHERE id = #{deptId}),'%'))
+    <if test="name!=null and name!=''">
+      and name like CONCAT('%',#{name,jdbcType=VARCHAR},'%')
+    </if>
+    <if test="code!=null and code!=''">
+      and code like CONCAT('%',#{code,jdbcType=VARCHAR},'%')
+    </if>
+  </select>
+  <select id="checkUserCode" resultType="java.lang.Integer">
+    select count(1)
+    from pf_gmuni_user WHERE code = #{code}
+  </select>
+</mapper>

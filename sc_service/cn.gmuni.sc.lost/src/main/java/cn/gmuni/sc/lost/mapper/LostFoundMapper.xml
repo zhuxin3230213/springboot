@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.gmuni.sc.lost.mapper.LostFoundMapper">
+    <resultMap id="BaseResultMap" type="cn.gmuni.sc.lost.model.LostFound">
+        <id column="id" jdbcType="VARCHAR" property="id"/>
+        <result column="title" jdbcType="VARCHAR" property="title"/>
+        <result column="obj_name" jdbcType="VARCHAR" property="objName"/>
+        <result column="obj_address" jdbcType="VARCHAR" property="objAddress"/>
+        <result column="obj_time" jdbcType="TIMESTAMP" property="objTime"/>
+        <result column="description" jdbcType="VARCHAR" property="description"/>
+        <result column="user_info" jdbcType="VARCHAR" property="userInfo"/>
+        <result column="campus" jdbcType="VARCHAR" property="campus"/>
+        <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
+        <result column="lf_type" jdbcType="VARCHAR" property="lfType"/>
+        <result column="info_status" jdbcType="VARCHAR" property="infoStatus"/>
+        <result column="snapshot" jdbcType="VARCHAR" property="snapshot"/>
+        <result column="image" jdbcType="VARCHAR" property="image"/>
+        <result column="userImg" jdbcType="VARCHAR" property="userImg"/>
+    </resultMap>
+    <delete id="delete" parameterType="java.lang.String">
+        delete from sc_gmuni_lost_found
+        where ID = #{id,jdbcType=VARCHAR}
+    </delete>
+    <insert id="add" parameterType="cn.gmuni.sc.lost.model.LostFound">
+        insert into sc_gmuni_lost_found(id,title,obj_name,obj_address,obj_time,description,user_info,campus,create_time,lf_type,info_status,snapshot,image) values
+        (
+          #{id,jdbcType=VARCHAR}, #{title,jdbcType=VARCHAR}, #{objName,jdbcType=VARCHAR},
+      #{objAddress,jdbcType=VARCHAR}, #{objTime,jdbcType=TIMESTAMP}, #{description,jdbcType=VARCHAR},
+      #{userInfo,jdbcType=VARCHAR}, #{campus,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP},
+      #{lfType,jdbcType=VARCHAR}, #{infoStatus,jdbcType=VARCHAR}, #{snapshot,jdbcType=VARCHAR},
+      #{image,jdbcType=VARCHAR}
+        )
+    </insert>
+    <update id="edit" parameterType="cn.gmuni.sc.lost.model.LostFound">
+        update sc_gmuni_lost_found set
+        title = #{title,jdbcType=VARCHAR},
+        obj_name = #{objName,jdbcType=VARCHAR},
+        obj_address = #{objAddress,jdbcType=VARCHAR},
+        description =  #{description,jdbcType=VARCHAR}
+        where id = #{id,jdbcType=VARCHAR}
+    </update>
+    <update id="finish" parameterType="java.lang.String">
+        update sc_gmuni_lost_found set
+        info_status = '1'
+        where id = #{id,jdbcType=VARCHAR}
+    </update>
+    <select id="list" resultMap="BaseResultMap" parameterType="java.util.Map">
+        SELECT
+        lf.id as id,
+        lf.title as title,
+        lf.obj_name as obj_name,
+        lf.obj_address as obj_address,
+        lf.obj_time as obj_time,
+        lf.description as description,
+        tu.name as user_info,
+        lf.campus as campus,
+        lf.create_time as create_time,
+        lf.lf_type as lf_type,
+        lf.info_status as info_status,
+        lf.snapshot as snapshot,
+        tu.avatar as userImg
+        FROM
+        sc_gmuni_lost_found lf LEFT JOIN sc_gmuni_thirdpart_userinfo ui
+        ON lf.user_info = ui.indentifier
+        LEFT JOIN sc_gmuni_thirdpart_user tu
+        ON ui.user_id = tu.id
+        WHERE 1 = 1
+        <if test="userInfo!=null and userInfo!=''">
+            and lf.user_info = #{userInfo,jdbcType=VARCHAR}
+        </if>
+        <if test="campus!=null and campus!=''">
+            and lf.campus = #{campus,jdbcType=VARCHAR}
+        </if>
+        <if test="lfType!=null and lfType!=''">
+            and lf.lf_type = #{lfType,jdbcType=VARCHAR}
+        </if>
+        <if test="queryType=='up' and createTime!=null and createTime!=''">
+            AND lf.create_time <![CDATA[<]]> #{createTime,jdbcType=TIMESTAMP}
+        </if>
+        <if test="queryType=='down' and createTime!=null and createTime!=''">
+            AND lf.create_time <![CDATA[>]]> #{createTime,jdbcType=TIMESTAMP}
+        </if>
+        <if test="infoStatus!=null and infoStatus!=''">
+            and lf.info_status = #{infoStatus,jdbcType=VARCHAR}
+        </if>
+        order by lf.create_time desc LIMIT 0,11
+    </select>
+    <select id="findOneById" resultMap="BaseResultMap" parameterType="java.lang.String">
+        SELECT
+          lf.id,
+          lf.title,
+          lf.obj_name,
+          lf.obj_address,
+          lf.obj_time,
+          lf.description,
+          tu.name AS user_info,
+          lf.campus,
+          lf.create_time,
+          lf.lf_type,
+          lf.info_status,
+          lf.image
+        FROM
+          sc_gmuni_lost_found lf
+          LEFT JOIN sc_gmuni_thirdpart_userinfo ui
+            ON lf.user_info = ui.indentifier
+          LEFT JOIN sc_gmuni_thirdpart_user tu
+            ON ui.user_id = tu.id
+        WHERE lf.id = #{id,jdbcType=VARCHAR}
+    </select>
+</mapper>

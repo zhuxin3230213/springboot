@@ -1,0 +1,10 @@
+<div th:fragment="carouse(title,img,info)" class="carouselImg" >
+    <img class="commonTopImg" th:attr="src=@{'/static/images/'+${img}}, alt=${title}">
+    <div class="solution-introduction">
+        <div class="container">
+            <h1 th:text="${title}"></h1>
+            <p th:text="${info}"></p>
+        </div>
+    </div>
+    <div class="index-maskLayer"></div>
+</div>

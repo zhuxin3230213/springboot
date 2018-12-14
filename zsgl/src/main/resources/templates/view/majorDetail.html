@@ -1,0 +1,115 @@
+<!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-4.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="description" th:if="${#objects.nullSafe(content,content)}" th:attr="content=${content.description}">
+    <meta name="keywords" th:if="${#objects.nullSafe(content,content)}" th:attr="content=${#strings.replace(content.keyWords,'|',',')}">
+    <title>院系专业</title>
+    <link href="/static/css/content_style_new.css" rel="stylesheet">
+    <link href="/static/css/main_style_new.css" rel="stylesheet">
+    <link href="/static/css/common.css" rel="stylesheet">
+    <link href="/static/favicon.ico" rel="icon" type="image/x-icon">
+    <script src="https://cdn.bootcss.com/jquery/2.2.4/jquery.min.js"></script>
+    <script src="/static/js/common.js"></script>
+    <link href="/static/css/index.css" rel="stylesheet">
+    <script th:inline="javascript">
+        $(function() {
+            $('#yx').mouseover(function() {
+                $('.yxjs').show();
+                $('.zyjs').hide();
+                $('#yxp').show();
+                $('#zyp').hide();
+            })
+
+            $('#zy').mouseover(function() {
+                $('.yxjs').hide();
+                $('.zyjs').show();
+                $('#zyp').show();
+                $('#yxp').hide();
+            })
+
+            $('.gyleft').hover(function() {
+            }, function() {
+                $('.yxjs').hide();
+                $('.zyjs').hide();
+                $('#yxp').hide();
+                $('#zyp').hide();
+            })
+
+            //加载招生专业
+            var listDeptAndMajor = [[${listDepts}]];
+            var liHtml = "";
+            listDeptAndMajor.forEach(function(item){
+                var major = item.children;
+                if(major.length>0){
+                    major.forEach(function(item){
+                        if(item.status == 1){//status为1代表本专业招生
+                            liHtml += '<li><h3><a href="/content/content_detail/'+item.id+'">'+item.name+'</a></h3></li>';
+                        }
+                    })
+                }
+            });
+            $(".zyjsin ul").append(liHtml);
+
+            footerPosition();
+        })
+    </script>
+</head>
+<body style="overflow-x:hidden;">
+    <div id="header" th:utext="${header}"></div>
+
+    <div class="listContent majorDetailHeight">
+        <div class="welcomePic">
+            <img src="/static/images/pageHeaderBg.jpg">
+        </div>
+        <div class="aio">
+            <div class="gyleft">
+                <div class="ko">
+                    <ul>
+                        <h1>学科专业</h1>
+                        <li id="yx"><a class="">院系设置<span id="yxp" style="display: none;"></span></a></li>
+                        <li id="zy"><a class="">招生专业<span id="zyp" style="display: none;"></span></a></li>
+                    </ul>
+                </div>
+
+                <div class="yxjs">
+                    <div class="yxjsin">
+                        <ul class="ul1">
+                            <li th:each="listDept:${listDepts}">
+                                <a th:href="@{'/content/content_detail/'+${listDept.id}}" th:text="${listDept.name}">专业01</a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="zyjs">
+                    <div class="zyjsin">
+                        <ul class="ul1"></ul>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="gyright">
+                <div class="gyright_head1" style="border-bottom:none;"><a th:href="@{/content/welcome}">首页</a>&gt;<a th:href="@{/fap/facps}">学科专业</a>
+                </div>
+
+                <div class="contentInfo" th:if="${#objects.nullSafe(content,content)}">
+                    <h2 class="gyright_head1" th:text="${content.title}">学院或专业名称</h2>
+                    <h5 style="border-bottom:1px solid #dedede;padding-bottom:10px;">[ 更新时间：<tem th:text="${#strings.substring(content.updateTime,0,19)}">时间格式 yyyy-mm-dd hh:mm:ss</tem>&nbsp;&nbsp;&nbsp; 来源：<tem th:text="${content.source}"></tem>] <a href="javascript:window.print()">[打印此页]</a></h5>
+                    <div class="clear"></div>
+                </div>
+
+                <!-- 文章正文部分-start -->
+                <div class="contentDetail" th:if="${#objects.nullSafe(content,content)}" th:utext="${content.content}">
+                    学院或专业正文介绍
+                </div>
+                <!-- 文章正文部分结束-end -->
+
+            </div>
+        </div>
+    </div>
+
+    <div id="footer" th:utext="${footer}"></div>
+</body>
+</html>

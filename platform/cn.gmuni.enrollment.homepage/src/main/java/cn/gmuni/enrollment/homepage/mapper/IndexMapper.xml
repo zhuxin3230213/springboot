@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.gmuni.enrollment.homepage.mapper.IndexMapper">
+    <select id="loadPvByDateRange" resultType="java.util.Map">
+      SELECT DATE_FORMAT(TIME,'%Y-%m-%d') as time,COUNT(1) as num FROM `zs_gmuni_visit_statistics`
+       WHERE  TIME BETWEEN #{start} AND #{end}
+       GROUP BY DATE_FORMAT(TIME,'%Y-%m-%d')
+       ORDER BY DATE_FORMAT(TIME,'%Y-%m-%d')
+   </select>
+    <select id="loadPvDataByMonth" resultType="java.util.Map">
+      SELECT DATE_FORMAT(TIME,'%Y-%m') as time,COUNT(1) as num FROM `zs_gmuni_visit_statistics`
+       WHERE  TIME BETWEEN #{start} AND #{end}
+       GROUP BY DATE_FORMAT(TIME,'%Y-%m')
+       ORDER BY DATE_FORMAT(TIME,'%Y-%m')
+   </select>
+    <select id="loadModulePvByDate" resultType="java.util.Map">
+        SELECT COUNT(1) as num,module FROM zs_gmuni_visit_statistics WHERE DATE_FORMAT(TIME,'%Y-%m-%d') = #{date} GROUP BY module
+    </select>
+    <select id="loadPlanData" parameterType="java.util.Map" resultType="java.util.Map">
+        SELECT p.`enrolment`,p.`actual_enrollment` as actualEnrollment,p.`year` FROM zs_gmuni_enrollment_plan p
+        WHERE p.`fap_id` = #{subject}
+        AND provinces = #{province}
+        ORDER BY p.`year`
+    </select>
+
+    <select id="loadScoreData" parameterType="java.util.Map" resultType="java.util.Map">
+        SELECT year,max_score AS maxScore,min_score AS minScore,scoreline ,avg_score as avgScore FROM zs_gmuni_yearly_score
+        WHERE provinces = #{province} AND batch = #{batch} AND family = #{asclassify}
+    </select>
+</mapper>

@@ -1,0 +1,74 @@
+<!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-4.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+	<meta charset="utf-8">
+    <meta name="description" th:if="${#objects.nullSafe(content,content)}" th:attr="content=${content.description}">
+    <meta name="keywords" th:if="${#objects.nullSafe(content,content)}" th:attr="content=${#strings.replace(content.keyWords,'|',',')}">
+	<title>详情页</title>
+	<link href="/static/css/main_style_new.css" rel="stylesheet">
+	<link href="/static/css/content_style_new.css" rel="stylesheet">
+    <link href="/static/css/lib/wangEditor.css" rel="stylesheet">
+    <link href="/static/favicon.ico" rel="icon" type="image/x-icon">
+	<script src="https://cdn.bootcss.com/jquery/2.2.4/jquery.min.js"></script>
+	<script src="/static/js/main.js"></script>
+	<script src="/static/js/common.js"></script>
+	<link href="/static/css/index.css" rel="stylesheet">
+	<script th:inline="javascript">
+        var listAttachments = [[${listAttachments}]];
+        $(function(){
+            //加载附件
+            loadAttachment();
+
+            footerPosition();
+        });
+	</script>
+</head>
+<body>
+	<div id="header" th:utext="${header}"></div>
+
+	<div class="listContent">
+		<div class="welcomePic">
+			<img src="/static/images/pageHeaderBg.jpg">
+		</div>
+		<div class="wrapper">
+			<div class="contentLeft" style="margin-top:20px;">
+				<div class="cHotListBanner">
+					<span>热点信息</span>
+				</div>
+				<div class="cHotList">
+					<ul>
+						<li></li>
+						<li th:each="hotInfo:${hots}">
+							<a th:href="@{'/content/content_detail_hots/'+${hotInfo.id}+'/'+${hotInfo.type}}" th:text="${hotInfo.title}"></a>
+						</li>
+					</ul>
+				</div>
+				<div class="clear"></div>
+			</div>
+			<div class="contentRight">
+				<span><a th:href="@{/content/welcome}">网站首页</a>  &gt;  <tem th:text="${menu.name}">菜单名称</tem></span>
+				<div class="contentInfo" th:if="${#objects.nullSafe(content,content)}">
+					<h2 th:text="${content.title}">标题名称</h2>
+					<h5>[ 点击次数：<tem th:text="${clickThrough}">点击次数</tem>&nbsp;&nbsp;&nbsp; 更新时间：<tem th:text="${#strings.substring(content.updateTime,0,19)}">时间格式 yyyy-mm-dd hh:mm:ss</tem>&nbsp;&nbsp;&nbsp; 来源：<tem th:text="${content.source}"></tem>]
+						<a href="javascript:window.print()">[打印此页]</a>
+					</h5>
+					<div class="clear"></div>
+				</div>
+
+				<!-- 文章正文部分-start -->
+				<div class="contentDetail" th:if="${#objects.nullSafe(content,content)}" th:utext="${content.content}">
+					标题对应正文内容
+				</div>
+				<!-- 文章正文部分结束-end -->
+
+				<!-- 附件部分-->
+				<div class="attachDownLoad" th:if="${not #lists.isEmpty(listAttachments)}">附件下载</div>
+				<div class="attachmentAppend"></div>
+			</div>
+			<div class="clear"></div>
+		</div>
+	</div>
+
+	<div id="footer" th:utext="${footer}"></div>
+</body>
+</html>

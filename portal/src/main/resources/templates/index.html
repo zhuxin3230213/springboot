@@ -1,0 +1,232 @@
+<!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-4.dtd">
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:gm=""
+      xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout"
+      layout:decorator="layout/layout"><!-- layout文件路径-->
+<head>
+    <link gm:href="index">
+    <style>
+        ul{
+            margin-bottom:0 !important;
+        }
+
+        @media (max-width: 768px) {
+            .companyInfo > div p{
+                max-width: 270px;
+            }
+        }
+    </style>
+    <script src="/static/js/lib/jquery.particleground.min.js"></script>
+    <script>
+        $(function(){
+            //粒子动态插件
+            setTimeout(function(){
+                $('#animatePointer').particleground({
+                    dotColor: '#5cbdaa',
+                    lineColor: '#5cbdaa'
+                });
+            },0);
+
+            //轮播图
+            $('#ad-carousel').carousel();
+
+            navChange();
+
+            //滑动效果
+            $(".divContainer").scroll(function() {
+                $(".slideanim").each(function(){
+                    var pos = $(this).offset().top;
+                    var winTop = $(window).scrollTop();
+                    if (pos < winTop + 600) {
+                        $(this).addClass("upSlide");
+                    }
+                });
+            });
+        });
+    </script>
+</head>
+<body id="index-body">
+    <div layout:fragment="content">
+
+        <div class="carouselImg">
+            <div id="ad-carousel" class="carousel slide" data-ride="carousel">
+                <ol class="carousel-indicators">
+                    <li data-target="#ad-carousel" class="active"></li>
+                    <li data-target="#ad-carousel"></li>
+                    <li data-target="#ad-carousel"></li>
+                </ol>
+                <div class="carousel-inner">
+                    <div class="item active">
+                        <a href=""><img src="/static/images/bg_top.png" alt="test01"></a>
+                    </div>
+                    <div class="item">
+                        <a href=""><img src="/static/images/bg_top_01.png" alt="test02"></a>
+                    </div>
+                    <div class="item">
+                        <a href=""><img src="/static/images/bg_top_02.png" alt="test03"></a>
+                    </div>
+                </div>
+            </div>
+            <div class="index-maskLayer"></div>
+        </div>
+
+        <div class="companyInfo">
+            <div>
+                <div class="container">
+                    <div class="col-sm-12">
+                        <h3>冠铭科技</h3>
+                        <h3><span>" 智慧校园 "</span> 建设创新型企业</h3>
+                        <p>作为中国智慧校园建设中 " 创新型企业 " 行列的优秀代表，冠铭每年将10%的销售收入投入研发，公司所有设备、系统均自主研发
+                            ，多年来，冠铭科技在智慧校园建设领域的创新之路稳健前行。</p>
+                        <div class="companyInfo-contact">
+                            <a href="" title="立即咨询"><img src="/static/images/icon_zixun.png" width="18" title="立即咨询" style="display: inline;"> 立即咨询</a>　
+                            <a href="" title="联系我们"><img src="/static/images/icon_lianxi.png" width="18" title="联系我们" style="display: inline;"> 联系我们</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 粒子动态插件 -->
+        <div style="width: 100%;height: 300px;">
+            <div id="animatePointer"></div>
+        </div>
+
+        <div class="container slideanim">
+            <div class="index-solution">
+                <h3>我们的<span>解决方案</span><div class="global-bottomLine"></div></h3>
+                <div class="row slideanim">
+                    <div class="col-md-6 schoolNet-img">
+                        <div class="index-schoolNet">
+                            <div class="index-maskLayer">
+                                <a th:href="@{/pagesolution-solution?type=tab-schoolNet}" target="_blank">
+                                    <div class="content slideanim">
+                                        <h3 style="margin-top:250px">校园网络</h3>
+                                    </div>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="solution-right">
+                            <div class="col-md-12 solution-top">
+                                <div class="col-md-6 index-smartSchool">
+                                    <div class="index-maskLayer">
+                                        <a th:href="@{/pagesolution-solution?type=tab-smartCampus}" target="_blank">
+                                            <div class="content slideanim">
+                                                <h3 style="margin-top:125px">智慧校园</h3>
+                                            </div>
+                                        </a>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 index-wifi">
+                                    <div class="index-maskLayer">
+                                        <a th:href="@{/pagesolution-solution?type=tab-wifi}" target="_blank">
+                                            <div class="content slideanim">
+                                                <h3 style="margin-top:125px">无线 WIFI 覆盖</h3>
+                                            </div>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-12 index-schoolInfo">
+                                <div class="index-maskLayer">
+                                    <a th:href="@{/pagesolution-solution?type=tab-water}" target="_blank">
+                                        <div class="content slideanim">
+                                            <h3 style="margin-top:125px">直饮水服务</h3>
+                                        </div>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="index-advantage slideanim">
+            <div class="container">
+                <h3>我们的<span> 3 大 </span>非凡优势<div class="global-bottomLine"></div></h3>
+                <div class="row advantage-detail slideanim">
+                    <div class="col-md-4">
+                        <div style="height:210px;position: relative;">
+                            <img class="advantage-outerImg" src="/static/images/img_yuan.png" alt="外环">
+                            <img class="advantage-innerImg" src="/static/images/icon_01.png" alt="内容">
+                        </div>
+                        <h3 class="slideanim">多年锐意进取，经验丰富</h3>
+                        <p class="slideanim">冠铭科技多年专注校园网络、智慧校园、校园信息化建设与服务，经验丰富，已为全国多家大专院校提供整体解决方案，口碑良好。</p>
+                    </div>
+                    <div class="col-md-4">
+                        <div style="height:210px;position: relative;">
+                            <img class="advantage-outerImg" src="/static/images/img_yuan.png" alt="外环">
+                            <img class="advantage-innerImg" src="/static/images/icon_02.png" alt="严苛的设计方案,专业的施工技术">
+                        </div>
+                        <h3 class="slideanim">严苛的设计方案,专业的施工技术</h3>
+                        <p class="slideanim">设计方案专业化、个性化，所构建的智慧校园、基础网络系统完善、智能受控、功能齐全、高效安全，抗干扰能力强。</p>
+                    </div>
+                    <div class="col-md-4">
+                        <div style="height:210px;position: relative;">
+                            <img class="advantage-outerImg" src="/static/images/img_yuan.png" alt="外环">
+                            <img class="advantage-innerImg" src="/static/images/icon_03.png" alt="严苛的设计方案,专业的施工技术">
+                        </div>
+                        <h3 class="slideanim">严苛的设计方案,专业的施工技术</h3>
+                        <p class="slideanim">系统配套产品均采用国内外知名品牌质量有保障，冠铭与供应商签订战略合作，用出厂价格为您带来高性价比，整体报价优惠10%。</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="index-service slideanim">
+            <div class="container">
+                <h3>我们的<span> 5 大 </span>服务承诺<div class="global-bottomLine"></div></h3>
+                <div class="row service-detail slideanim">
+                    <div class="col-md-2">
+                        <img src="/static/images/img_fuwu_01.png" alt="安装及实施服务">
+                        <p class="slideanim">现场安装及实施服务</p>
+                    </div>
+                    <div class="col-md-2">
+                        <img src="/static/images/img_fuwu_02.png" alt="定期回访服务">
+                        <p class="slideanim">定期回访服务</p>
+                    </div>
+                    <div class="col-md-2">
+                        <img src="/static/images/img_fuwu_03.png" alt="突发事件应急维护服务">
+                        <p class="slideanim">突发事件应急维护服务</p>
+                    </div>
+                    <div class="col-md-2">
+                        <img src="/static/images/img_fuwu_04.png" alt="长期的技术支持与合作">
+                        <p class="slideanim">长期的技术支持与合作</p>
+                    </div>
+                    <div class="col-md-2">
+                        <img src="/static/images/img_fuwu_05.png" alt="驻场人员现场服务">
+                        <p class="slideanim">驻场人员现场服务</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="index-advantage index-successCase slideanim">
+            <div class="container">
+                <h3>我们的冠铭智慧校园<span> 经典案例<div class="global-bottomLine"></div></span></h3>
+                <div class="row slideanim">
+                    <div class="col-md-4">
+                        <a th:href="@{/pagecase-case_haojing}" target="_blank"><img src="/static/images/img_school_01.png" alt="镐京学院"></a>
+                    </div>
+                    <div class="col-md-4">
+                        <a th:href="@{/pagecase-case_fuzhuang}" target="_blank"><img src="/static/images/img_school_02.png" alt="陕西服装工程学院"></a>
+                    </div>
+                    <div class="col-md-4">
+                        <a th:href="@{/pagecase-case_hangkong}" target="_blank"><img src="/static/images/img_school_03.png" alt="西安航空职业技术学院"></a>
+                    </div>
+                    <div class="col-md-4">
+                        <a th:href="@{/pagecase-case_zhongbei}" target="_blank"><img src="/static/images/img_school_04.png" alt="陕西中北专修学院"></a>
+                    </div>
+                    <div class="col-md-4">
+                        <a th:href="@{/pagecase-case_panzhihua}" target="_blank"><img src="/static/images/img_school_05.png" alt="四川机电职业技术学院"></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</body>
+</html>

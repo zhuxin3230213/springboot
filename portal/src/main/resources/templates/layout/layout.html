@@ -1,0 +1,60 @@
+<!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-4.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>西安冠铭科技股份有限公司 - 智慧校园、基础网络一体化解决方案专家</title>
+    <link rel="stylesheet" href="https://cdn.bootcss.com/bootstrap/3.1.1/css/bootstrap.min.css">
+    <link rel="stylesheet/less" href="/static/less/global.less">
+    <link rel="icon" type="image/x-icon" href="/static/favicon.ico">
+    <style>
+        @media (max-width: 768px) {
+            .footer-nav,.footer-companyInfo,.footer-version p{
+                max-width: 300px;
+            }
+        }
+    </style>
+    <script src="https://cdn.bootcss.com/jquery/2.2.4/jquery.min.js"></script>
+    <script src="https://cdn.bootcss.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
+    <script src="/static/js/common.js"></script>
+    <script>
+        $(function(){
+            navChange();
+
+            $(".solution-nav li").click(function(){
+                $(this).parent().find("li").removeClass("on");
+                $(this).addClass("on");
+            });
+
+            //一级菜单支持直接点击跳转
+            $(document).off('click.bs.dropdown.data-api');
+
+            //鼠标移动到一级菜单自动弹出二级菜单
+            dropdownOpen();
+        });
+
+        function dropdownOpen() {
+            var $dropdownLi = $('li.dropdown');
+            $dropdownLi.mouseover(function () {
+                $(this).addClass('open');
+            }).mouseout(function () {
+                $(this).removeClass('open');
+            });
+        }
+    </script>
+</head>
+<body id="index-body">
+<div class="main">
+    <div id="header" th:include="commonPage/header :: header"></div>
+
+    <div class="mainContainer">
+        <div class="bgDiv"></div>
+        <div class="divContainer">
+            <div layout:fragment="content" class="mainPart"></div>
+            <div id="footer" th:include="commonPage/footer :: footer"></div>
+        </div>
+    </div>
+</div>
+<script th:if="${profilesActive} eq 'dev'" src="https://cdn.bootcss.com/less.js/3.0.4/less.min.js"></script>
+</body>
+</html>

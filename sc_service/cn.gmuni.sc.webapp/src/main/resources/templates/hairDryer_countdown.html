@@ -1,0 +1,42 @@
+<!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-4.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+    <title>倒计时</title>
+    <link type="text/css" rel="stylesheet" href="../static/app/css/net_pay_success.css">
+    <script src="../static/app/js/simJQ-1.4.min.js"></script>
+</head>
+<body>
+    <div class="net_pay_success_wrap" style="padding-bottom:50px">
+        <img th:src="@{/app/image/icon_yue.png}" class="net_pay_success_icon">
+        <span class="net_pay_success_label">付款成功</span>
+        <span id="hairDryer_countdown" style="color:#ff4800;"></span>
+        <!--倒计时：<span class="net_pay_success_money" th:text="${total_amount}"></span>-->
+    </div>
+    <script>
+        $(function(){
+            var m = 3;
+            var s = 0;
+            getCountdown();
+            var timeout = setInterval(function(){
+                getCountdown()
+            },1000);
+            function getCountdown (){
+                $("#hairDryer_countdown").html("倒计时 <span>"+(m>9?m:'0'+m)+"</span>:<span>"+(s>9?s:'0'+s)+"</span>")
+                if( m == 0 && s == 0 ){
+                    alert("使用结束")
+                    clearInterval(timeout);
+                }else if( m >= 0 ){
+                    if( s > 0 ){
+                        s--;
+                    }else if( s == 0 ){
+                        m--;
+                        s = 59;
+                    }
+                }
+            }
+        })
+    </script>
+</body>
+</html>

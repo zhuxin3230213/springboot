@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.gmuni.org.mapper.RoleMapper">
+  <resultMap id="BaseResultMap" type="cn.gmuni.org.model.Role">
+    <id column="id" jdbcType="VARCHAR" property="id" />
+    <result column="code" jdbcType="VARCHAR" property="code" />
+    <result column="name" jdbcType="VARCHAR" property="name" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="state" jdbcType="CHAR" property="state" />
+    <result column="remark" jdbcType="VARCHAR" property="remark" />
+  </resultMap>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from pf_gmuni_role
+    where id = #{id,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="cn.gmuni.org.model.Role">
+    insert into pf_gmuni_role (id, code, name,
+       create_time, state,
+      remark)
+    values (#{id,jdbcType=VARCHAR}, #{code,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR}, 
+       #{createTime,jdbcType=TIMESTAMP}, #{state,jdbcType=CHAR},
+      #{remark,jdbcType=VARCHAR})
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="cn.gmuni.org.model.Role">
+    update pf_gmuni_role
+    set
+      name = #{name,jdbcType=VARCHAR},
+      remark = #{remark,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select id, code, name,  create_time, state, remark
+    from pf_gmuni_role
+    where id = #{id,jdbcType=VARCHAR}
+  </select>
+  <select id="selectAll" resultMap="BaseResultMap">
+    select id, code, name,  create_time, state, remark
+    from pf_gmuni_role order by name, code
+  </select>
+  <select id="selectAllByPage" resultMap="BaseResultMap" parameterType="java.util.Map">
+    select id, code, name, create_time, state, remark
+    from pf_gmuni_role where 1=1
+    <if test="name!=null and name!=''">
+      and name like CONCAT('%',#{name,jdbcType=VARCHAR},'%')
+    </if>
+    <if test="code!=null and code!=''">
+      and code like CONCAT('%',#{code,jdbcType=VARCHAR},'%')
+    </if>
+  </select>
+  <select id="countAll" resultType="java.lang.Integer" parameterType="java.util.Map">
+    select count(1)
+    from pf_gmuni_role where 1=1
+    <if test="name!=null and name!=''">
+      and name like CONCAT('%',#{name,jdbcType=VARCHAR},'%')
+    </if>
+    <if test="code!=null and code!=''">
+      and code like CONCAT('%',#{code,jdbcType=VARCHAR},'%')
+    </if>
+  </select>
+  <select id="checkNameAndCode" resultType="java.lang.Integer">
+    select count(1)
+    from pf_gmuni_role WHERE name=#{name} OR code = #{code}
+  </select>
+  <select id="listRoleForAuthorize" resultMap="BaseResultMap">
+   select r.id, r.code, r.name, r.create_time, r.state, r.remark
+    FROM pf_gmuni_role r LEFT JOIN pf_gmuni_role_user ru ON r.id=ru.role_id
+  WHERE ru.user_id=#{userId}
+  </select>
+  <select id="getRoleByUserCode" resultMap="BaseResultMap">
+     SELECT r.id, r.code, r.name, r.create_time, r.state, r.remark
+    FROM pf_gmuni_role r LEFT JOIN pf_gmuni_role_user ru ON r.id=ru.role_id
+LEFT JOIN pf_gmuni_userinfo u ON ru.user_id = u.id WHERE u.code = #{code}
+  </select>
+</mapper>

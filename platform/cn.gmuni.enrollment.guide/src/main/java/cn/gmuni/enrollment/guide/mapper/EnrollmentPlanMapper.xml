@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.gmuni.enrollment.guide.mapper.EnrollmentPlanMapper">
+    <insert id="insert" parameterType="cn.gmuni.enrollment.guide.model.EnrollmentPlan">
+    insert into zs_gmuni_enrollment_plan (id, fap_id,
+      enrolment, actual_enrollment, provinces,
+      create_time, year, edu_systme,
+      cost)
+    values (#{id,jdbcType=VARCHAR}, #{fapId,jdbcType=VARCHAR},
+      #{enrolment,jdbcType=INTEGER}, #{actualEnrollment,jdbcType=INTEGER}, #{provinces,jdbcType=VARCHAR},
+      #{createTime,jdbcType=TIMESTAMP}, #{year,jdbcType=VARCHAR}, #{eduSystme,jdbcType=DECIMAL},
+      #{cost,jdbcType=DECIMAL})
+  </insert>
+    <insert id="savePlans" parameterType="cn.gmuni.enrollment.guide.model.EnrollmentPlan">
+    insert into zs_gmuni_enrollment_plan (id, fap_id,
+      enrolment, actual_enrollment, provinces,
+      create_time, year, edu_systme,
+      cost)
+    values
+        <foreach collection="list" item="item" separator=",">
+            (#{item.id,jdbcType=VARCHAR}, #{item.fapId,jdbcType=VARCHAR},
+            #{item.enrolment,jdbcType=INTEGER}, #{item.actualEnrollment,jdbcType=INTEGER}, #{item.provinces,jdbcType=VARCHAR},
+            #{item.createTime,jdbcType=TIMESTAMP}, #{item.year,jdbcType=VARCHAR}, #{item.eduSystme,jdbcType=DECIMAL},
+            #{item.cost,jdbcType=DECIMAL})
+        </foreach>
+
+  </insert>
+    <update id="updateByPrimaryKey" parameterType="cn.gmuni.enrollment.guide.model.EnrollmentPlan">
+    update zs_gmuni_enrollment_plan
+    set fap_id = #{fapId,jdbcType=VARCHAR},
+      enrolment = #{enrolment,jdbcType=INTEGER},
+      actual_enrollment = #{actualEnrollment,jdbcType=INTEGER},
+      provinces = #{provinces,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      year = #{year,jdbcType=VARCHAR},
+      edu_systme = #{eduSystme,jdbcType=DECIMAL},
+      cost = #{cost,jdbcType=DECIMAL}
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+    <update id="updatePlans" parameterType="cn.gmuni.enrollment.guide.model.EnrollmentPlan">
+    update zs_gmuni_enrollment_plan
+        <trim prefix="set" suffixOverrides=",">
+            <trim prefix="actual_enrollment =case" suffix="end,">
+                <foreach collection="list" item="item">
+                    <if test="item.actualEnrollment!=nul
+
+                    l">
+                        when id=#{item.id} then #{item.actualEnrollment}
+                    </if>
+                </foreach>
+            </trim>
+            <trim prefix="enrolment =case" suffix="end,">
+                <foreach collection="list" item="item">
+                    <if test="item.enrolment!=null">
+                        when id=#{item.id} then #{item.enrolment}
+                    </if>
+                </foreach>
+            </trim>
+        </trim>
+        <where>
+            <foreach collection="list" separator="or" item="item">
+                id = #{item.id}
+            </foreach>
+        </where>
+  </update>
+    <select id="listAreas" resultType="java.util.Map">
+    SELECT F_AreaId AS id, F_AreaName AS name FROM pf_gmuni_base_area WHERE F_LAYER='1'
+  </select>
+    <select id="listAcademies" resultType="java.util.Map">
+    SELECT fp.id AS id, fp.deptid AS deptId,fp.type AS type,fp.status AS status, fp.sort AS sort, d.name AS name,
+        d.faculty AS faculty,d.dLevel_code AS dlevel_code,d.sort AS sort
+        FROM zs_gmuni_faculty_professional fp LEFT JOIN pf_gmuni_department d ON fp.deptId = d.id WHERE d.faculty = 'xy' ORDER BY d.sort
+  </select>
+    <select id="listSubjectByAcademy" resultType="java.util.Map">
+    SELECT fp.id AS id, fp.deptid AS deptId,fp.type AS TYPE,fp.status AS STATUS, fp.sort AS sort, d.name AS name,
+        d.faculty AS faculty,d.dLevel_code AS dlevel_code,d.sort AS sort
+        FROM zs_gmuni_faculty_professional fp LEFT JOIN pf_gmuni_department d ON fp.deptId = d.id WHERE d.faculty = 'xk'
+        AND d.dLevel_code LIKE CONCAT((SELECT dLevel_code FROM pf_gmuni_department WHERE id = #{deptId,jdbcType=VARCHAR}), '%') ORDER BY d.sort
+  </select>
+    <delete id="deletePlans" parameterType="java.lang.String">
+        delete from zs_gmuni_enrollment_plan
+        where id in
+        <foreach item="item" collection="list" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </delete>
+    <select id="getAllEnrollmentPlan" resultType="java.util.Map">
+        SELECT ep.id AS id, ep.enrolment AS enrollment,ep.actual_enrollment AS actualEnrollment,
+ep.provinces AS provinces, ep.year AS year, d.name AS name,d.ID AS deptId,d2.name AS academy,
+        d2.id as academyId,
+        area.F_AreaName as `provinceName`,
+        ep.cost as cost,
+        ep.edu_systme as eduSystme
+FROM zs_gmuni_enrollment_plan ep
+LEFT JOIN zs_gmuni_faculty_professional fp ON ep.fap_id=fp.id
+LEFT JOIN pf_gmuni_department d ON fp.deptId=d.ID
+left join pf_gmuni_base_area area on area.F_AreaId = ep.provinces
+LEFT JOIN pf_gmuni_department d2 ON (LOCATE(d2.dLevel_code,d.dLevel_code) = 1 AND d2.faculty = 'xy')
+WHERE 1=1
+        <if test="year!=null and year!=''">
+            and ep.year = #{year}
+        </if>
+        <if test="province!=null and province!=''">
+            and ep.provinces = #{province}
+        </if>
+        <if test="academy!=null and academy!=''">
+            and d2.id = #{academy}
+        </if>
+ORDER BY ep.year,ep.provinces
+    </select>
+    <select id="checkPlanInfo" resultType="java.lang.Integer">
+        SELECT count(1)
+        FROM zs_gmuni_enrollment_plan ep
+        LEFT JOIN zs_gmuni_faculty_professional fp ON ep.fap_id=fp.id
+        LEFT JOIN pf_gmuni_department d ON fp.deptId=d.ID
+        LEFT JOIN pf_gmuni_department d2 ON (LOCATE(d2.dLevel_code,d.dLevel_code) = 1 AND d2.faculty = 'xy')
+        WHERE 1=1
+        <if test="year!=null and year!=''">
+            and ep.year = #{year}
+        </if>
+        <if test="province!=null and province!=''">
+            and ep.provinces = #{province}
+        </if>
+        <if test="academy!=null and academy!=''">
+            and d2.id= #{academy}
+        </if>
+    </select>
+    <update id="edit" parameterType="cn.gmuni.enrollment.guide.model.EnrollmentPlan">
+          update zs_gmuni_enrollment_plan
+             set enrolment = #{enrolment,jdbcType=INTEGER},
+              actual_enrollment = #{actualEnrollment,jdbcType=INTEGER},
+              edu_systme = #{eduSystme,jdbcType=DECIMAL},
+              cost = #{cost,jdbcType=DECIMAL}
+            where id = #{id,jdbcType=VARCHAR}
+    </update>
+</mapper>

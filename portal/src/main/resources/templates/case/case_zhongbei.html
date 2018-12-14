@@ -1,0 +1,29 @@
+<!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-4.dtd">
+<html xmlns:gm="" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout" layout:decorator="layout/layout">
+<head>
+    <link gm:href="index">
+    <link gm:href="content">
+</head>
+<body id="index-body">
+<div layout:fragment="content">
+    <div th:replace="layout/commonTop :: carouse('客户案例',
+                                                    'case/bg_top.png',
+                                                    '多年来，我们致力于扎根行业、深入场景进行产品设计和创新，为行业用户构建端到端的解决方案，为客户网络创造新价值')">
+    </div>
+
+    <div th:replace="layout/breadNav :: nav('首页,客户案例,陕西中北专修学院案例','/pageindex,/pagecase-case,/pagecase-case_zhongbei')"></div>
+
+    <div class="container content-detail">
+        <div class="content-top">
+            <div class="content-title">陕西中北专修学院案例</div>
+            <div class="content-info">作者：admin &nbsp; 发布日期：2017/11/28 &nbsp; 关注次数：299</div>
+        </div>
+        <div class="content-bottom">
+            <p>陕西中北专修学院位于陕西省宝鸡市蟠龙新区龙翔大道1号，院长苏军科非常重视校园网络建设问题，我们以专业的态度和百倍的耐心完成了陕西中北专修学院项目。</p>
+
+            <div class="content-img"><img src="/static/images/case/case_zhongbei01.jpg" width="881" alt="01"></div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

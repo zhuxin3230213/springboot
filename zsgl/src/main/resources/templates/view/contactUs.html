@@ -1,0 +1,111 @@
+<!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-4.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>联系我们</title>
+    <link href="/static/css/common.css" rel="stylesheet">
+    <link href="/static/css/content_style_new.css" rel="stylesheet">
+    <link href="/static/css/main_style_new.css" rel="stylesheet">
+    <link href="/static/favicon.ico" rel="icon" type="image/x-icon">
+    <script src="https://cdn.bootcss.com/jquery/2.2.4/jquery.min.js"></script>
+    <script src="http://api.map.baidu.com/api?v=2.0&ak=A1LU7iHS0avqQwPLAxbhKn0UYSQCuRVH"></script>
+    <script src="/static/js/lib/jquery.baiduMap.min.js"></script>
+    <script src="/static/js/common.js"></script>
+    <link href="/static/css/index.css" rel="stylesheet">
+    <script th:inline="javascript">
+        var lngNum="",latNum="";
+        var address = [[${listConfigs}]][1].value;
+        var schoolName = [[${listConfigs}]][0].value;
+        var schoolTel = [[${listConfigs}]][2].value;
+
+        $(function() {
+            var myGeo = new BMap.Geocoder();
+            myGeo.getPoint(address, function(point){
+                if (point) {
+                    lngNum = point.lng;
+                    latNum = point.lat;
+
+                    new BaiduMap({
+                        id: "mapContainer",
+                        title: {
+                            text: schoolName,
+                            className: "title"
+                        },
+                        content: {
+                            className: "mapContent",
+                            text: ["地址："+address, "电话："+schoolTel]
+                        },
+                        point: {
+                            lng: lngNum,
+                            lat: latNum
+                        }
+                    });
+                }else{
+                    alert("请联系系统管理员输入详细地址。");
+                }
+            });
+
+            $(".schoolAddress").click(function(){
+                $(".mapDisplay").show();
+                $(".contactList").hide();
+
+            });
+
+            $(".contactMode").click(function(){
+                $(".contactList").show();
+                $(".mapDisplay").hide();
+            });
+
+            //加载常用链接
+            var listConfig = [[${listConfigs}]];//菜单code
+            var linkArr = listConfig[listConfig.length-1].value;
+            var liHtml = "";
+            if(linkArr!=""){
+                linkArr = JSON.parse(linkArr);
+                linkArr.forEach(function(item,index){
+                    if(item.name!=""||item.url!=""){
+                        liHtml += '<li><span>'+item.name+'</span>：<span><a href="https://'+item.url+'">'+item.url+'</a></span></li>';
+                    }
+                });
+            }
+            $(".contactList ul").append(liHtml);
+        })
+    </script>
+</head>
+<body>
+    <div id="header" th:utext="${header}"></div>
+
+    <div class="deptAndMajor">
+        <div class="welcomePic">
+            <img src="/static/images/pageHeaderBg.jpg">
+        </div>
+        <div class="contactUs">
+            <div class="gyleft">
+                <div class="ko">
+                    <ul>
+                        <h1>联系我们</h1>
+                        <li><a class="schoolAddress">学校地址</a></li>
+                        <li><a class="contactMode">联系方式</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="mapDisplay">
+                <div id="mapContainer" class="mapContainer"></div>
+            </div>
+            <div class="contactList">
+                <ul>
+                    <li style="color:#E53333;">联系方式</li>
+                    <li th:if="${iterStat.index<iterStat.size - 1}" th:each="listConfig,iterStat:${listConfigs}">
+                        <span th:text="${listConfig.name}"></span><span>：</span>
+                        <span th:text="${listConfig.value}"></span>
+                    </li>
+                    <li style="color:#E53333;margin-top:50px;">常用链接</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <div id="footer" th:utext="${footer}"></div>
+
+</body>
+</html>

@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gmunidata.pay.mapper.PayMapper">
+    <insert id="save" parameterType="java.util.Map">
+      insert into pay_gmuni_log(id, name,create_time,amount)
+      values (#{id,jdbcType=VARCHAR},#{name,jdbcType=VARCHAR},#{create_time,jdbcType=TIMESTAMP},
+            #{amount,jdbcType=VARCHAR})
+    </insert>
+    <select id="list" parameterType="java.lang.String" resultType="java.util.Map">
+        select id, name,create_time,amount from pay_gmuni_log where name = #{name,jdbcType=VARCHAR}
+    </select>
+    <insert id="saveChange" parameterType="com.gmunidata.pay.model.ChangeModel">
+        insert into pay_gmuni_change(id,name,expenses,money,create_time) values(
+        #{id,jdbcType=VARCHAR},#{name,jdbcType=VARCHAR},#{expenses,jdbcType=VARCHAR},#{money,jdbcType=VARCHAR},#{createTime,jdbcType=TIMESTAMP}
+        )
+    </insert>
+    <select id="getMaxTime" parameterType="java.lang.String" resultType="java.util.Date">
+        select max(create_time) from pay_gmuni_change where name = #{name,jdbcType=VARCHAR}
+    </select>
+
+    <delete id="deleteLog" parameterType="java.lang.String">
+        delete from pay_gmuni_log where id = #{id,jdbcType=VARCHAR}
+    </delete>
+
+    <delete id="deleteChange" parameterType="java.lang.String">
+        delete from pay_gmuni_change where id = #{id,jdbcType=VARCHAR}
+    </delete>
+
+</mapper>

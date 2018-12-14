@@ -1,0 +1,126 @@
+<!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-4.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+    <meta name="format-detection" content="telephone=no">
+    <title>网费缴纳</title>
+    <script>
+        var schoolCode = '[[${schoolCode}]]';
+    </script>
+    <link href="/static/css/index.css?1" rel="stylesheet">
+    <script src="/static/js/jquery-3.3.1.min.js?1"></script>
+    <script src="/static/js/index.js?1"></script>
+</head>
+<body>
+
+    <div class="username">
+        用户名:<span id="username-text">张三</span>
+    </div>
+    <div class="pay-content">
+        <!--余额-->
+        <i class="remain-icon"></i>
+        <span class="remain-text">账户余额</span>
+        <span class="" id="remain">50</span>
+        <button class="pay-btn">充值</button>
+        <button class="change-btn">套餐变更</button>
+        <span class="pay-record">充值记录</span>
+    </div>
+
+    <div class="dialog-mask" id="pay-dialog" style="display: none">
+       <div class="dialog-wrap">
+           <div class="dialog">
+               <div class="dialog-title">充值</div>
+               <div class="dialog-pane">
+                   <div class="form-content">
+                       <div class="item">
+                           <span class="item-label">金额:</span>
+                           <input class="item-input" name="money" type="number" placeholder="请输入充值金额">
+                       </div>
+                       <div class="item">
+                           <span class="item-label">账号:</span>
+                           <input class="item-input" name="cardAccount" th:placeholder="请输入一卡通账号">
+                       </div>
+                       <div class="item">
+                           <span class="item-label">密码:</span>
+                           <input class="item-input" type="password" name="pwd" placeholder="请输入一卡通密码">
+                       </div>
+                   </div>
+               </div>
+               <div class="dialog-buttons">
+                   <button class="dialog-btn" id="cancel">取消</button>
+                   <button class="dialog-btn" id="ok">确定</button>
+               </div>
+           </div>
+       </div>
+    </div>
+
+    <div class="dialog-mask" id="record-dialog" style="display: none;">
+        <div class="dialog-wrap">
+            <div class="dialog">
+                <div class="dialog-title">充值记录</div>
+                <div class="dialog-pane">
+                    <div class="record-empty">
+                        还没有充值记录
+                    </div>
+                </div>
+                <div class="dialog-buttons">
+                    <button class="dialog-btn" id="close">关闭</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="dialog-mask" id="change-dialog" style="display: none">
+        <div class="dialog-wrap">
+            <div class="dialog">
+                <div class="dialog-title">套餐变更</div>
+                <div class="dialog-pane">
+                    <div class="form-content">
+                        <div class="item">
+                            <span class="item-label">分类:</span>
+                            <select class="item-input" name="type">
+                                <option value="0">包月</option>
+                                <option value="1">流量包</option>
+                            </select>
+                        </div>
+                        <div class="item">
+                            <span class="item-label">资费:</span>
+                            <select class="item-input" name="expenses">
+                            </select>
+                        </div>
+                        <!--<div class="item">-->
+                            <!--<span class="item-label">金额:</span>-->
+                            <!--<input class="item-input" name="changemoney" th:placeholder="请输入缴费金额">-->
+                        <!--</div>-->
+                        <!--<div class="item">-->
+                            <!--<span class="item-label">账号:</span>-->
+                            <!--<input class="item-input" name="changeCardAccount" th:placeholder="请输入一卡通账号">-->
+                        <!--</div>-->
+                        <!--<div class="item">-->
+                            <!--<span class="item-label">密码:</span>-->
+                            <!--<input class="item-input" name="changepwd" type="password" th:placeholder="请输入一卡通密码">-->
+                        <!--</div>-->
+                        <div class="item">
+                            <span class="change-warning">若用户在套餐结束前变更套餐，原套餐扣减费用不予返还</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="dialog-buttons">
+                    <button class="dialog-btn" id="change-cancel">取消</button>
+                    <button class="dialog-btn" id="change-ok">确定</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="spinner-wrap">
+        <div class="spinner">
+            <div class="rect1"></div>
+            <div class="rect2"></div>
+            <div class="rect3"></div>
+            <div class="rect4"></div>
+            <div class="rect5"></div>
+        </div>
+    </div>
+
+</body>
+</html>

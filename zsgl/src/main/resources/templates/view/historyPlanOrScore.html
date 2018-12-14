@@ -1,0 +1,199 @@
+<!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-4.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title th:text="${menu.name}">历年招生计划/分数</title>
+    <link href="/static/css/main_style_new.css" rel="stylesheet">
+    <link href="/static/css/list_style_new.css" rel="stylesheet">
+    <link href="/static/favicon.ico" rel="icon" type="image/x-icon">
+    <script src="https://cdn.bootcss.com/jquery/2.2.4/jquery.min.js"></script>
+    <script src="/static/js/common.js"></script>
+    <link href="/static/css/index.css" rel="stylesheet">
+    <script th:inline="javascript">
+        $(function(){
+            var liHtml="",areaHtml="";
+            var currTime = new Date();
+            var currYear = currTime.getFullYear();
+            //支持选择包含当前年份向前的六个年份
+            for(var i=currYear;i>currYear-6;i--){
+                liHtml += "<li class='yearBtn'><a>"+i+"</a></li>";
+            }
+            $(".planScore .yearNum").append(liHtml);
+
+            //地区列表
+            var areaList=[[${provinces}]];
+            areaList.forEach(function(item,index){
+                areaHtml += "<li class='yearBtnArea'><a value="+item.f_areaid+">"+item.f_areaname+"</a></li>";
+            });
+            $(".planScore .area").append(areaHtml);
+
+            //历年分数数据初始化加载
+            var menuCode=[[${menu.code}]];//菜单code
+            if(menuCode == 2002){
+                var historyScore = [[${historyPlanOrScore}]];
+                loadTableData(historyScore);
+            }
+
+            //点击选择年份和地区时，动态加载对应的历年招生计划和分数
+            $(".planScore a").click(function(){
+                var hasCls = $(this).hasClass("changeColor");
+                $(this).parent().siblings().find("a").removeClass("changeColor");//点击此button，移除其他button样式，且再次点击自身样式不失效
+                if(!hasCls){
+                    $(this).addClass("changeColor");
+                }
+                var yearId = $(".yearBtn a[class='changeColor']").text();
+                var areaId = $(".yearBtnArea a[class='changeColor']").attr("value");
+                //根据菜单code的不同，获取到与菜单对应的数据集合
+                $.ajax({
+                    url:"/history/getByYAP?yearID="+yearId+"&areaId="+areaId+"&menuCode="+menuCode,
+                    dataType:'json',
+                    async:true ,
+                    type:"GET" ,
+                    success:function(result){
+                        var trs="",data="";
+                        data = result.data;
+                        if(menuCode == 2001){//若为历年招生计划（2001），则执行如下代码
+                            $(data).each(function(index,item){
+                                trs +='<tr>'+
+                                            '<td>'+item.name+'</td>'+
+                                            '<td>'+item.typeText+'</td>'+
+                                            '<td>'+item.enrolment+'</td>'+
+                                            '<td>'+item.actual_enrollment+'</td>'+
+                                            '<td>'+item.edu_systme+'</td>'+
+                                            '<td>'+item.cost+'</td>'+
+                                        '</tr>';
+                            });
+                            $("#historyPlan tbody").html(trs);
+                        }else if(menuCode == 2002){//历年分数部分代码
+                            loadTableData(data);
+                        }
+                    }
+                });
+            });
+
+            //初始状态下，默认勾选当前年份的“前一年”和“陕西省”
+            $(".planScore a").each(function(index,item){
+                if($(item).text()== currYear-1 || $(item).attr("value")== '610000'){
+                    $(item).addClass("changeColor");
+                }
+            });
+        });
+
+        //加载历年分数表格数据
+        function loadTableData(arrObj){
+            var trs="";
+            $(arrObj).each(function(index,item){
+                var familyTextArr = item.familyText.split("-");
+                var batchText = item.batchText;
+                if(index>0){
+                    var familyTextPrevArr = $(arrObj)[index-1].familyText.split("-");
+                    var batchTextPrev = $(arrObj)[index-1].batchText;
+                }
+                if(familyTextArr.length == 1){//长度等于1代表不包含子集，本条数据正常显示
+                    trs +='<tr>'+
+                        '<td>'+item.batchText+'</td>'+
+                        '<td>'+item.familyText+'</td>'+
+                        '<td>'+item.scoreline+'</td>'+
+                        '<td>'+item.max_score+'</td>'+
+                        '<td>'+item.min_score+'</td>'+
+                        '<td>'+item.avg_score+'</td>'+
+                        '</tr>';
+                }else if(familyTextArr.length > 1){
+                    $(familyTextArr).each(function(indexII,itemII){
+                        if(index==0 || (index>0 && familyTextArr[indexII] != familyTextPrevArr[indexII]) || batchText!=batchTextPrev){//当前数据与前一条数据前面几个元素相等时，则这几个相等的元素合并
+                            if(indexII<familyTextArr.length-1){
+                                trs += '<tr><td>'+item.batchText+'</td><td style="padding-left:'+35*indexII+'px"><img src="../../static/images/fileIcon.png" height="15" style="margin-left:10px;">&nbsp;'+itemII+'</td>' +
+                                    '<td>-</td><td>-</td><td>-</td><td>-</td></tr>';
+                            }else if(indexII==familyTextArr.length-1){
+                                trs += '<tr><td>'+item.batchText+'</td><td style="padding-left:'+45*indexII+'px">'+itemII+'</td><td>'+item.scoreline+'</td>'+
+                                    '<td>'+item.max_score+'</td><td>'+item.min_score+'</td><td>'+item.avg_score+'</td></tr>';
+                            }
+                        }else{
+                            trs += '';
+                        }
+                    });
+                }
+            });
+            $("#historyScore tbody").html(trs);
+            $("#historyScore tr td:nth-child(2)").css("text-align","left");
+        }
+    </script>
+</head>
+<body>
+    <div id="header" th:utext="${header}"></div>
+    <div class="deptAndMajor">
+        <div class="welcomePic">
+            <img src="/static/images/pageHeaderBg.jpg">
+        </div>
+        <div class="wrapper" style="max-width:1250px;">
+            <div class="listLeft" style="width:26%;">
+                <div class="hotListBanner">
+                    <span>热点信息</span>
+                </div>
+                <div class="hotList">
+                    <ul>
+                        <li></li>
+                        <li th:each="hotInfo:${hots}">
+                            <a th:href="@{'/content/content_detail_hots/'+${hotInfo.id}+'/'+${hotInfo.type}}" th:text="${hotInfo.title}"></a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div class="listRight">
+                <a th:href="@{/content/welcome}">网站首页</a>  &gt;  <tem th:text="${menu.name}">点击的菜单名称</tem></span>
+                <div class="listBanner" th:text="${menu.name}">
+                    点击的菜单名称
+                </div>
+                <div class="planScore">
+                    <span>请选择年份：&nbsp;</span><ul class="yearNum"></ul>
+                    <span>请选择地区：&nbsp;</span><ul class="area"></ul>
+                    <!--<ul class="area">请选择地区：&nbsp;<li class="yearBtnArea" th:each="history:${historyPlanOrScore}"><a th:text="${history.provinces}"></a></li></ul>-->
+                </div>
+                <div class="planScoreContent" th:if="${menu.code=='2001'}"><!--历年招生计划正文-->
+                    <table id="historyPlan">
+                        <thead>
+                            <tr>
+                                <th style="width:28%">专业及专业方向</th>
+                                <th style="width:15%">科别</th>
+                                <th style="width:15%">计划招生</th>
+                                <th style="width:15%">实际招生</th>
+                                <th style="width:12%">学制</th>
+                                <th style="width:15%">学费</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr th:each="planOrScoreData:${historyPlanOrScore}">
+                                <td th:text="${planOrScoreData.name}"></td>
+                                <td th:text="${planOrScoreData.typeText}"></td>
+                                <td th:text="${planOrScoreData.enrolment}"></td>
+                                <td th:text="${planOrScoreData.actual_enrollment}"></td>
+                                <td th:text="${planOrScoreData.edu_systme}"></td>
+                                <td th:text="${planOrScoreData.cost}"></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="planScoreContent" th:if="${menu.code=='2002'}"><!--历年分数正文-->
+                    <table id="historyScore">
+                        <thead>
+                            <tr>
+                                <th style="width:23%">批次</th>
+                                <th style="width:20%">科类</th>
+                                <th style="width:15%">分数线</th>
+                                <th style="width:15%">最高分</th>
+                                <th style="width:12%">最低分</th>
+                                <th style="width:15%">平均分</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="clear"></div>
+        </div>
+    </div>
+
+    <div id="footer" th:utext="${footer}"></div>
+</body>
+</html>

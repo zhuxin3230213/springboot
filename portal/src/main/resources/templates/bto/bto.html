@@ -1,0 +1,86 @@
+<!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-4.dtd">
+<html xmlns:gm="" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout" layout:decorator="layout/layout">
+<head>
+    <link gm:href="index">
+    <link gm:href="bto">
+    <script>
+
+    </script>
+</head>
+<body id="index-body">
+<div layout:fragment="content">
+    <div th:replace="layout/commonTop :: carouse('BTO模式',
+                                                    'bto/bg_top.png',
+                                                    '让院校&quot;0投资&quot;、零风险、零运维')">
+    </div>
+
+    <div th:replace="layout/breadNav :: nav('首页,BTO模式','/pageindex,/pagebto-bto')"></div>
+
+    <div class="bto-content">
+        <div class="container">
+            <div class="row  bto-title">
+                <div class="col-md-12">
+                    <span class="item-header-text">借助"BTO"模式,建设高校智慧校园
+                    <div class="global-bottomLine"></div>
+                    </span>
+
+                </div>
+            </div>
+            <div class="row  bto-row-item">
+                <div class="col-md-3 bto-content-img">
+                    <img src="/static/images/bto/image_01.png" >
+                </div>
+                <div class="col-md-9">
+                    <div class="bto-row-content">
+                        <div class="bto-item-title">
+                            <span class="bto-item-icon bto-item-icon-money"></span>
+                            <span class="bto-item-title-text">省钱—零投入</span>
+                        </div>
+                        <div class="bto-item-content">
+                            校方无需投入资金即可建成一张高质量的有线、无线统一认证管理的校园网。冠铭科技依据用户对服务质量的需求持续提供10年更新投建，并在10年合作期内提供免费网络运维服务
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <div class="row  bto-row-item">
+                <div class="col-md-3 bto-content-img">
+                    <img src="/static/images/bto/image_02.png" >
+                </div>
+                <div class="col-md-9">
+                    <div class="bto-row-content">
+                        <div class="bto-item-title">
+                            <span class="bto-item-icon bto-item-icon-xin"></span>
+                            <span class="bto-item-title-text">省心—零风险</span>
+                        </div>
+                        <div class="bto-item-content">
+                            提供校方未来智慧校园建设的相关咨询、设计服务，并引入多家运营商共同运营，避免独家垄断政策风险。师生用户可依据喜好、习惯、价格、服务质量自由选择各大运营商的ICT套餐服务，避免师生投诉
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <div class="row  bto-row-item">
+                <div class="col-md-3 bto-content-img">
+                    <img src="/static/images/bto/image_03.png" >
+                </div>
+                <div class="col-md-9">
+                    <div class="bto-row-content">
+                        <div class="bto-item-title">
+                            <span class="bto-item-icon bto-item-icon-li"></span>
+                            <span class="bto-item-title-text">省力—零运维</span>
+                        </div>
+                        <div class="bto-item-content">
+                            提供规划、设计、工建、运维、运营、优化等多重贴心服务，校方无需在琐碎的一线运维投入精力，由冠铭科技负责办公基础网络及学生网络端所有运维工作
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+
+</div>
+</body>
+</html>

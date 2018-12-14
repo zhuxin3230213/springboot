@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.gmuni.sc.pay.mapper.NetWorkPayMapper">
+    <insert id="saveAliPayInfo" parameterType="java.util.Map">
+        insert into sc_gmuni_pay_log_ali (notify_time,notify_type,notify_id,app_id,charset,version,sign_type,
+        sign,trade_no,out_trade_no,out_biz_no,buyer_id,buyer_logon_id,seller_id,seller_email,trade_status,total_amount,
+        receipt_amount,invoice_amount,buyer_pay_amount,point_amount,refund_fee,subject,body,gmt_create,gmt_payment,
+        gmt_refund,gmt_close,fund_bill_list,passback_params,voucher_detail_list)
+        values (#{notify_time,jdbcType=TIMESTAMP},#{notify_type,jdbcType=VARCHAR},#{notify_id,jdbcType=VARCHAR},#{app_id,jdbcType=VARCHAR},#{charset,jdbcType=VARCHAR},
+        #{version,jdbcType=VARCHAR},#{sign_type,jdbcType=VARCHAR},#{sign,jdbcType=VARCHAR},#{trade_no,jdbcType=VARCHAR},#{out_trade_no,jdbcType=VARCHAR},
+        #{out_biz_no,jdbcType=VARCHAR},#{buyer_id,jdbcType=VARCHAR},#{buyer_logon_id,jdbcType=VARCHAR},#{seller_id,jdbcType=VARCHAR},#{seller_email,jdbcType=VARCHAR},
+        #{trade_status,jdbcType=VARCHAR},#{total_amount,jdbcType=DECIMAL},#{receipt_amount,jdbcType=DECIMAL},#{invoice_amount,jdbcType=DECIMAL},#{buyer_pay_amount,jdbcType=DECIMAL},
+        #{point_amount,jdbcType=DECIMAL},#{refund_fee,jdbcType=DECIMAL},#{subject,jdbcType=VARCHAR},#{body,jdbcType=VARCHAR},#{gmt_create,jdbcType=TIMESTAMP},
+        #{gmt_payment,jdbcType=TIMESTAMP},#{gmt_refund,jdbcType=TIMESTAMP},#{gmt_close,jdbcType=TIMESTAMP},#{fund_bill_list,jdbcType=VARCHAR},#{passback_params,jdbcType=VARCHAR},
+        #{voucher_detail_list,jdbcType=VARCHAR})
+    </insert>
+    <insert id="saveNetWorkPayInfo" parameterType="java.util.Map">
+        insert into sc_gmuni_pay_log (trade_no,total_amount,net_id,pay_way,pay_status,login_code,stu_code,school_code,pay_time,module,reason,set_meal_type)
+        values (#{trade_no,jdbcType=VARCHAR},#{total_amount,jdbcType=DECIMAL},#{net_id,jdbcType=VARCHAR},#{pay_way,jdbcType=VARCHAR},#{pay_status,jdbcType=VARCHAR},
+        #{login_code,jdbcType=VARCHAR},#{stu_code,jdbcType=VARCHAR},#{school_code,jdbcType=VARCHAR},#{pay_time,jdbcType=TIMESTAMP},#{module,jdbcType=VARCHAR},#{reason,jdbcType=VARCHAR}
+        ,#{package_code,jdbcType=VARCHAR})
+    </insert>
+    <update id="updateNetWorkPayStatusAndReason" parameterType="java.util.Map">
+        update sc_gmuni_pay_log set
+        pay_status = #{status,jdbcType=TIMESTAMP},
+        reason = #{reason,jdbcType=TIMESTAMP}
+        where trade_no = #{tradeNo,jdbcType=TIMESTAMP}
+    </update>
+    <select id="getByNotifyId" resultType="java.lang.Integer" parameterType="java.lang.String">
+        select count(1) from sc_gmuni_pay_log_ali where notify_id = #{notifyId,jdbcType=TIMESTAMP}
+    </select>
+    <select id="getPayDetails" resultType="java.util.Map" parameterType="java.lang.String">
+        SELECT
+          trade_no AS trade_no,
+          pay_time AS pay_time,
+          pay_way AS pay_way,
+          total_amount AS total_amount
+        FROM
+          sc_gmuni_pay_log
+        WHERE school_code = #{schoolCode,jdbcType=TIMESTAMP}
+          AND stu_code = #{stuCode,jdbcType=TIMESTAMP}
+        ORDER BY pay_time DESC
+        LIMIT 0, 50
+    </select>
+
+
+    <select id="getUrlMap" resultType="java.util.Map">
+        SELECT NAME AS name, CODE AS code, col1 AS url FROM sc_gmuni_college_info
+    </select>
+</mapper>

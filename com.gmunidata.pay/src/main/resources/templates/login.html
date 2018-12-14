@@ -1,0 +1,33 @@
+<!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-4.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+    <meta name="format-detection" content="telephone=no">
+    <title>网费缴纳</title>
+    <link href="/static/css/login.css?1" rel="stylesheet">
+    <script src="/static/js/jquery-3.3.1.min.js?1"></script>
+    <script src="/static/js/login.js?1"></script>
+</head>
+<body>
+    <!--<div style="display: table;position: fixed;z-index: 100000;background: rgba(0,0,0,0.5);top: 0;left: 0;width: 100%;height: 100%;text-align: center">-->
+        <!--<span style="color: white;font-size: 16px;    vertical-align: middle;display: table-cell">系统正在升级中，无法使用</span>-->
+    <!--</div>-->
+    <div class="title">
+         <span class="title-text" th:text="${schoolName}"></span>
+    </div>
+    <div class="content">
+        <div class="content-item">
+            <span class="item-label">校园网账号:</span>
+            <div class="item-input">
+                <input name="account" placeholder="请输入校园网账号">
+            </div>
+        </div>
+
+        <div class="content-item btn-wrap">
+            <button id="login" class="login-btn">进入</button>
+        </div>
+    </div>
+
+</body>
+</html>

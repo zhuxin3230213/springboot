@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.gmuni.enrollment.feature.mapper.TeacharStyleMapper">
+    <resultMap id="teacharStyle" type="cn.gmuni.enrollment.feature.model.TeacherStyle">
+        <id column="id" jdbcType="VARCHAR" property="id"/>
+        <result column="code" jdbcType="VARCHAR" property="code"/>
+        <result column="name" jdbcType="VARCHAR" property="name"/>
+        <result column="sex" jdbcType="VARCHAR" property="sex"/>
+        <result column="faculty_code" jdbcType="TIMESTAMP" property="facultyCode"/>
+        <result column="subject_code" jdbcType="DECIMAL" property="subjectCode"/>
+        <result column="degree" jdbcType="VARCHAR" property="degree"/>
+        <result column="academic_title" jdbcType="VARCHAR" property="academicTitle"/>
+        <result column="honor" jdbcType="VARCHAR" property="honor"/>
+        <result column="eduction" jdbcType="VARCHAR" property="eduction"/>
+        <result column="e_mail" jdbcType="VARCHAR" property="email"/>
+        <result column="telephone" jdbcType="VARCHAR" property="telephone"/>
+        <result column="avatars" jdbcType="VARCHAR" property="avatars"/>
+        <result column="teacher_introduction" jdbcType="VARCHAR" property="teacherIntroduction"/>
+        <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
+        <result column="sort" jdbcType="DECIMAL" property="sort"/>
+        <result column="facultyName" jdbcType="VARCHAR" property="facultyName"/>
+        <result column="subjectName" jdbcType="VARCHAR" property="subjectName"/>
+    </resultMap>
+    <sql id="BASE_COLUMN_LIST">
+        id,code,name,sex,faculty_code,subject_code,degree,academic_title,honor,eduction,e_mail,telephone,avatars,teacher_introduction,create_time,sort,homepage
+    </sql>
+    <insert id="save" parameterType="cn.gmuni.enrollment.feature.model.TeacherStyle">
+        insert into zs_gmuni_famous_teachers_style(<include refid="BASE_COLUMN_LIST"></include> )
+        values (#{id,jdbcType=VARCHAR},#{code,jdbcType=VARCHAR},#{name,jdbcType=VARCHAR},
+        #{sex,jdbcType=VARCHAR},#{facultyCode,jdbcType=DECIMAL},
+        #{subjectCode,jdbcType=VARCHAR},#{degree,jdbcType=VARCHAR},#{academicTitle,jdbcType=VARCHAR},
+        #{honor,jdbcType=VARCHAR},#{eduction,jdbcType=VARCHAR},
+        #{email,jdbcType=VARCHAR},#{telephone,jdbcType=VARCHAR},#{avatars,jdbcType=VARCHAR},#{teacherIntroduction,jdbcType=VARCHAR},
+        #{createTime,jdbcType=TIMESTAMP},#{sort,jdbcType=DECIMAL},#{homePage,jdbcType=DECIMAL})
+    </insert>
+    <update id="update" parameterType="cn.gmuni.enrollment.feature.model.TeacherStyle">
+        update zs_gmuni_famous_teachers_style set
+        name = #{name,jdbcType=VARCHAR},
+        sex = #{sex,jdbcType=VARCHAR},
+        faculty_code =  #{facultyCode,jdbcType=VARCHAR},
+        subject_code = #{subjectCode,jdbcType=VARCHAR},
+        degree = #{degree,jdbcType=VARCHAR},
+        academic_title = #{academicTitle,jdbcType=VARCHAR},
+        honor = #{honor,jdbcType=VARCHAR},
+        eduction = #{eduction,jdbcType=VARCHAR},
+        e_mail = #{email,jdbcType=VARCHAR},
+        telephone = #{telephone,jdbcType=VARCHAR},
+        avatars = #{avatars,jdbcType=VARCHAR},
+        teacher_introduction = #{teacherIntroduction,jdbcType=VARCHAR},
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+        sort = #{sort,jdbcType=DECIMAL},
+        homepage=#{homePage,jdbcType=DECIMAL}
+        where id = #{id,jdbcType=VARCHAR}
+    </update>
+    <select id="list" parameterType="java.util.Map" resultMap="teacharStyle">
+        SELECT
+        ts.id,ts.code,ts.name,ts.sex,ts.faculty_code,ts.subject_code,ts.degree,ts.academic_title,ts.honor,
+        ts.eduction,ts.e_mail,ts.telephone,ts.avatars,ts.teacher_introduction,ts.create_time,ts.sort,ts.homepage,
+        dp1.name AS facultyName,dp2.name AS subjectName
+        FROM
+        zs_gmuni_famous_teachers_style ts
+        LEFT JOIN zs_gmuni_faculty_professional fp1 ON ts.faculty_code=fp1.id
+        LEFT JOIN pf_gmuni_department dp1 ON fp1.deptId=dp1.id
+        LEFT JOIN zs_gmuni_faculty_professional fp2 ON ts.subject_code=fp2.id
+        LEFT JOIN pf_gmuni_department dp2 ON fp2.deptId=dp2.id
+        WHERE 1 = 1
+        <if test="facultyCode!=null and facultyCode!=''">
+           and ts.faculty_code = #{facultyCode}
+        </if>
+        <if test="subjectCode!=null and subjectCode!=''">
+           and ts.subject_code = #{subjectCode}
+        </if>
+        <if test="name!=null and name != ''">
+            and ts.name like concat('%',#{name},'%')
+        </if>
+        order by ts.sort
+    </select>
+    <delete id="delete" parameterType="java.lang.String">
+        delete from zs_gmuni_famous_teachers_style
+        where id in
+        <foreach item="item" collection="list" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </delete>
+    <select id="checkByCodeEqual" parameterType="java.lang.String" resultType="java.lang.Integer">
+        select count(1) from zs_gmuni_faculty_professional where code = #{code,jdbcType=VARCHAR}
+    </select>
+</mapper>

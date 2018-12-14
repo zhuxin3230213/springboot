@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.gmuni.enrollment.guide.mapper.InfoContentMapper">
+    <resultMap id="info" type="cn.gmuni.maintenance.model.InfoContent">
+        <id column="id" jdbcType="VARCHAR" property="id"/>
+        <result column="title" jdbcType="VARCHAR" property="title"/>
+        <result column="content" jdbcType="VARCHAR" property="content"/>
+        <result column="author" jdbcType="VARCHAR" property="author"/>
+        <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
+        <result column="source" jdbcType="VARCHAR" property="source"/>
+        <result column="parent_code" jdbcType="VARCHAR" property="parentCode"/>
+        <result column="keywords" jdbcType="VARCHAR" property="keywords"/>
+        <result column="cover" jdbcType="VARCHAR" property="cover"/>
+        <result column="attachment" jdbcType="VARCHAR" property="attachment"/>
+        <result column="update_time" jdbcType="TIMESTAMP" property="updateTime"/>
+        <result column="sort" jdbcType="DECIMAL" property="sort"/>
+        <result column="top" jdbcType="VARCHAR" property="top"/>
+        <result column="description" jdbcType="VARCHAR" property="description"/>
+        <result column="image_ids" jdbcType="VARCHAR" property="imageIds"/>
+        <result column="author_name" jdbcType="VARCHAR" property="authorName"/>
+    </resultMap>
+    <insert id="saveInfo" parameterType="cn.gmuni.maintenance.model.InfoContent">
+        insert into zs_gmuni_content(id,title,content,author,create_time,
+        source,parent_code,keywords,cover,attachment,
+        update_time,sort,top,description,image_ids)
+        values (#{id,jdbcType=VARCHAR},#{title,jdbcType=VARCHAR},#{content,jdbcType=VARCHAR},
+        #{author,jdbcType=VARCHAR},#{createTime,jdbcType=TIMESTAMP},
+        #{source,jdbcType=VARCHAR},#{parentCode,jdbcType=VARCHAR},#{keywords,jdbcType=VARCHAR},
+        #{cover,jdbcType=VARCHAR},#{attachment,jdbcType=VARCHAR},
+        #{updateTime,jdbcType=TIMESTAMP},#{sort,jdbcType=DECIMAL},#{top,jdbcType=VARCHAR},#{description,jdbcType=VARCHAR},
+        #{imageIds,jdbcType=VARCHAR})
+    </insert>
+    <insert id="saveClickThrough" parameterType="cn.gmuni.enrollment.guide.model.ClickThrough">
+        insert into zs_gmuni_update_click_through(id,article_id,click_through,type) values
+        (#{id,jdbcType=VARCHAR},#{articleId,jdbcType=VARCHAR},#{clickThrough,jdbcType=DECIMAL},#{type,jdbcType=VARCHAR})
+    </insert>
+    <update id="updateInfo" parameterType="cn.gmuni.maintenance.model.InfoContent">
+        update zs_gmuni_content set
+        content = #{content,jdbcType=VARCHAR},
+        title =  #{title,jdbcType=VARCHAR},
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+        top = #{top,jdbcType=VARCHAR},
+        sort = #{sort,jdbcType=VARCHAR},
+        description = #{description,jdbcType=VARCHAR},
+        keywords = #{keywords,jdbcType=VARCHAR},
+        cover = #{cover,jdbcType=VARCHAR},
+        attachment = #{attachment,jdbcType=VARCHAR},
+        image_ids = #{imageIds,jdbcType=VARCHAR}
+        where id = #{id,jdbcType=VARCHAR}
+    </update>
+    <select id="listContents" parameterType="java.util.Map" resultMap="info">
+        SELECT
+        c.id,c.title,c.content,c.author,c.create_time,
+        c.source,c.parent_code,c.keywords,c.cover,c.attachment,
+        c.update_time,c.sort,c.top,c.description,c.image_ids,u.name as author_name
+        FROM
+        zs_gmuni_content c
+        left join pf_gmuni_user u
+        on u.id = c.author
+        where c.parent_code = #{moduleName}
+        <if test="title!=null and title!=''">
+            and c.title like CONCAT('%',#{title,jdbcType=VARCHAR},'%')
+        </if>
+        <if test="keywords!=null and keywords!=''">
+            and c.keywords like CONCAT('%',#{keywords,jdbcType=VARCHAR},'%')
+        </if>
+    </select>
+    <delete id="deleteByIds" parameterType="java.lang.String">
+        delete gc,ct
+        from zs_gmuni_content gc left join zs_gmuni_update_click_through ct on gc.id = ct.article_id
+        where gc.id in
+        <foreach item="item" collection="list" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </delete>
+
+     <delete id="deleteEnrollmentPlan" parameterType="java.lang.String">
+        delete from zs_gmuni_enrollment_plan where fap_id in
+        <foreach item="item" collection="list" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </delete>
+
+</mapper>

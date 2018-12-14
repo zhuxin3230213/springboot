@@ -1,0 +1,32 @@
+<div th:fragment="album">
+    <div class="album-content">
+        <div class="album-info">西安冠铭科技股份有限公司成立于2015年，是一家专业从事陕西校园网络,陕西高校信息化,陕西智慧校园,陕西无线wifi覆盖的应用和服务的公司。冠铭科技致力发展校园wifi基础建设，在此基础上研发校园管理app，打造智慧校园管理体系，服务于学校，教师，家长，学生。冠铭科技高校智慧校园建设，高校智慧校园网运营服务商和解决方案供应商。为广大高校用户提供零投资建设智慧校园基础网络和运维服务，同时研发团队结合多年学校教学和教务管理经验，为用户提供卓越的教育信息化解决方案。</div>
+
+        <section class="our-gallery" id="gallery">
+            <div class="row album-list"></div>
+        </section>
+
+        <script>
+            var imgHtml = "";
+            var albumInfoArr = ['企业全体合影','企业优秀员工','员工风采','领导风采','交流现场','新址门头'];
+            albumInfoArr.forEach(function(item,index){
+                imgHtml += '<div class="col-md-4 slideanim"><div class="album-list-img">' +
+                                '<img class="img-responsive" src="/static/images/aboutus/album/album_image_0'+(index+1)+'.png" ' +
+                                        'data-darkbox="/static/images/aboutus/album/album_image_0'+(index+1)+'_large.png" ' +
+                                        'data-darkbox-description="<div class=album-maskLayer-bottom>' +
+                                        '<div class=maskLayer-bottom-num><span>'+(index+1)+'</span>/ 6</div>' +
+                                        '<div class=maskLayer-bottom-detail>'+item+'</div><div class=maskLayer-bottom-info>作者：admin &nbsp; 发布日期：2018/6/10 &nbsp; 关注次数：222 &nbsp;' +
+                                        '<img src=/static/images/aboutus/album/icon_erweima.png alt=二维码> &nbsp;二维码分享</div></div>">' +
+                            '<div class="album-list-img-info">'+item+'</div></div></div>';
+            });
+            $("#gallery .row").html(imgHtml);
+        </script>
+
+        <div class="global-pagination">
+            <div>共6条记录</div>
+            <div><a> < 上一页</a></div>
+            <div><a href="" class="global-currPage">1</a></div>
+            <div><a>下一页 > </a></div>
+        </div>
+    </div>
+</div>

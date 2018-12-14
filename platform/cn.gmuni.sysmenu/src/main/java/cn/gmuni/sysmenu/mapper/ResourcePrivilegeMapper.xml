@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.gmuni.sysmenu.mapper.ResourcePrivilegeMapper">
+    <resultMap id="BaseResultMap" type="cn.gmuni.sysmenu.model.ResourcePrivilege">
+        <id column="ID" property="id" jdbcType="VARCHAR"/>
+        <result column="resource_code" property="resourceCode" jdbcType="VARCHAR"/>
+        <result column="priv_code" property="privCode" jdbcType="VARCHAR"/>
+        <result column="priv_type" property="privType" jdbcType="CHAR"/>
+        <result column="resource_type" property="resourceType" jdbcType="CHAR"/>
+    </resultMap>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from pf_gmuni_resource_privilege
+    where ID = #{id,jdbcType=VARCHAR}
+  </delete>
+    <delete id="deleteByPrivCode" parameterType="java.lang.String">
+    delete from pf_gmuni_resource_privilege
+    where priv_code = #{privCode,jdbcType=VARCHAR}
+  </delete>
+    <insert id="insert" parameterType="cn.gmuni.sysmenu.model.ResourcePrivilege">
+    insert into pf_gmuni_resource_privilege (ID, resource_code, priv_code,
+      priv_type, resource_type)
+    values (#{id,jdbcType=VARCHAR}, #{resourceCode,jdbcType=VARCHAR}, #{privCode,jdbcType=VARCHAR}, 
+      #{privType,jdbcType=CHAR}, #{resourceType,jdbcType=CHAR})
+  </insert>
+    <update id="updateByPrimaryKey" parameterType="cn.gmuni.sysmenu.model.ResourcePrivilege">
+    update pf_gmuni_resource_privilege
+    set resource_code = #{resourceCode,jdbcType=VARCHAR},
+      priv_code = #{privCode,jdbcType=VARCHAR},
+      priv_type = #{privType,jdbcType=CHAR},
+      resource_type = #{resourceType,jdbcType=CHAR}
+    where ID = #{id,jdbcType=VARCHAR}
+  </update>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String">
+    select ID, resource_code, priv_code, priv_type, resource_type
+    from pf_gmuni_resource_privilege
+    where ID = #{id,jdbcType=VARCHAR}
+  </select>
+    <select id="selectByPrivCode" resultMap="BaseResultMap" parameterType="java.lang.String">
+    select ID, resource_code, priv_code, priv_type, resource_type
+    from pf_gmuni_resource_privilege
+    where priv_code = #{privCode,jdbcType=VARCHAR}
+  </select>
+    <select id="selectAll" resultMap="BaseResultMap">
+    select ID, resource_code, priv_code, priv_type, resource_type
+    from pf_gmuni_resource_privilege
+  </select>
+    <select id="getPrivByDeptDlevelCode" resultMap="BaseResultMap" parameterType="java.lang.String">
+        SELECT rp.ID, rp.resource_code, rp.priv_code, rp.priv_type, rp.resource_type
+        FROM pf_gmuni_resource_privilege rp
+        LEFT JOIN pf_gmuni_department d ON rp.priv_code = d.ID
+        WHERE rp.priv_type='1' AND d.dLevel_code IN
+        <foreach item="item" collection="list" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </select>
+    <select id="getPrivByUserCode" resultMap="BaseResultMap" parameterType="java.lang.String">
+    SELECT
+  rp.ID,
+  rp.resource_code,
+  rp.priv_code,
+  rp.priv_type,
+  rp.resource_type
+FROM
+  pf_gmuni_resource_privilege rp
+  LEFT JOIN pf_gmuni_role r
+    ON rp.priv_code = r.id
+  INNER JOIN pf_gmuni_role_user ru
+    ON r.id = ru.role_id
+  INNER JOIN pf_gmuni_userinfo u
+    ON ru.user_id = u.id
+WHERE rp.priv_type = '2'
+  AND u.code = #{code,jdbcType=VARCHAR}
+  </select>
+
+</mapper>

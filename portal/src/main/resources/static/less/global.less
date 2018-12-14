@@ -1,0 +1,408 @@
+@charset "utf-8";
+/* CSS Document
+- Created by cyj
+- 2018/7/23
+*/
+
+
+//变量
+@backgroundColor: rgba(255,255,255,.95);
+@height: 65px;
+@color: rgba(255,255,255,.5);
+
+//全局样式
+*{
+    margin: 0;
+    padding: 0;
+}
+html{
+  /*min-width: 1280px;*/
+}
+body{
+    background:#ffffff;
+    min-width: 1280px;
+}
+a{
+    text-decoration: none;
+    cursor: pointer;
+}
+li{
+    list-style: none;
+}
+img{
+    vertical-align: middle;
+}
+h3{
+    text-align: center;
+    color: rgb(247,241,230);
+    span{
+        color: rgb(246,172,39);
+    }
+}
+
+.global-bottomLine{
+    width: 34px;
+    margin: 1rem auto;
+    border-bottom: 2px solid rgb(246,172,39);
+}
+
+#index-body{
+    overflow:hidden;
+    background:#001020;
+}
+
+/* 公共菜单 */
+#header{
+    width: 100%;
+    position: absolute;
+    top: 0;
+    z-index: 99;
+}
+.menu{
+    max-width: 1200px;
+    height: @height;
+    margin: 0 auto;
+}
+.nav-logo{
+    float:left;
+    margin:10px 148px 10px 50px;
+}
+.nav-phone{
+    float:left;
+    /*margin-top:17px;*/
+    margin-top:10px;
+    margin-left:116px;
+    span{
+        margin-left: 8px;
+        font-family: "MicrosoftYaHei";
+        font-size: 16px;
+        color: rgb(247,241,230);
+        vertical-align: middle;
+    }
+}
+.firstMenu{
+    float:left;
+    >li{
+        display: inline-block;
+        line-height: @height;
+        width: 100px;
+        text-align: center;
+        cursor: pointer;
+        position: relative;
+    }
+    >li>a{
+        display: block;
+        color: #fff;
+        text-decoration: none;
+        font-size: 16px;
+    }
+    >li>a:hover{
+        color: #40b5ff;
+        background: @backgroundColor;
+    }
+}
+.menuBg{
+    background: @backgroundColor;
+    box-shadow: 1px 2px 1px #fff;
+    li a{
+        color: #444d50;
+    }
+    li a:hover{
+        color: #fff !important;
+        background: #40b5ff;
+    }
+}
+.secondMenu{
+    /*overflow: hidden;*/
+    display: none;
+    position: absolute;
+    top: @height;
+    left: 0;
+    width: 135px;
+    background: @backgroundColor;
+    li{
+        height: 45px;
+        line-height: 45px;
+        list-style: none;
+        text-align: left;
+        /*transition: 0.5s height cubic-bezier(0.73, 0.32, 0.34, 1.5);*/
+        a{
+            display: block;
+            color: #444d50;
+            text-decoration: none;
+            font-size: 14px;
+            padding-left: 15px;
+        }
+        a:hover{
+            color: #fff !important;
+            background: #40b5ff;
+        }
+    }
+}
+/*.firstMenu li:not(:hover) .secondMenu li{
+    visibility: hidden;
+    height: 0;
+    transition: 0.5s 0.1s height, 0.6s visibility;
+    z-index: 100;
+}*/
+
+/* 首页主体框架 */
+.aBgColor{
+    background:@backgroundColor;
+    color:#444d50 !important;
+}
+.bgDiv{
+    width: 100%;
+    background: url(../images/bgImg.png);
+}
+.divContainer{
+    width: 100%;
+    position: absolute;
+    top: 0;
+    z-index: 1;
+    overflow-y: scroll;
+}
+.mainPart{
+    /*max-width: 1200px;
+    margin: 0 auto;*/
+}
+.carouselImg{
+    position: relative;
+}
+
+/* 公共遮罩层 */
+.index-maskLayer{
+    position: absolute;
+    top:0;
+    width:100%;
+    height:100%;
+    background:rgba(0,0,0,.5);
+    z-index:99;
+}
+
+/* 页脚 */
+#footer{
+    margin-top: 30px;
+    background: rgba(4,12,19,.95);
+    .foot-main{
+        width: 1020px;
+        margin: 0 auto;
+        .footer-nav{
+            ul{
+                padding-top:30px;
+            }
+            li{
+                display: inline-block;
+                margin-left: 40px;
+            }
+            a{
+                text-decoration: none;
+                color: @color;
+            }
+        }
+        .footer-companyInfo{
+            margin-top: 45px;
+            padding-bottom: 25px;
+            .footer-version {
+                width: 800px;
+                text-align: left;
+                line-height: 32px;
+                margin-left: 40px;
+                color: #000;
+                float: left;
+                p{
+                    font-size: 12px;
+                    color: @color;
+                }
+                a{
+                    text-decoration: none;
+                    color: @color;
+                }
+            }
+            .footer-erweima {
+                width: 109px;
+                float: right;
+                margin-top: 50px;
+                img{
+                    border-radius: 5px;
+                }
+                span {
+                    display: block;
+                    color: @color;
+                    font-size: 12px;
+                    text-align: center;
+                    margin-top: 8px;
+                }
+            }
+        }
+    }
+}
+.clear {
+    clear: both;
+}
+
+/* bootstrap导航重构 */
+.navbar-inverse{
+    background:transparent;
+    border: none;
+}
+.navbar-inverse .navbar-nav>.active>a, .navbar-inverse .navbar-nav>.active>a:hover, .navbar-inverse .navbar-nav>.active>a:focus{
+    background:transparent;
+}
+.navbar-inverse .navbar-nav>li>a{
+    color: #fff;
+    font-size: 16px;
+}
+.navbar-brand{
+    padding-top: 5px;
+    padding-left: 30px;
+}
+
+
+/* 响应式 */
+@media (max-width: 768px) {
+    .carouselImg {
+        height: 300px;
+        margin-bottom: 30px;
+    }
+    .carouselImg img {
+        min-height: 300px;
+    }
+}
+
+/* 页面公共顶部 */
+.solution-introduction{
+    position: absolute;
+    top: 240px;
+    width: 100%;
+    height: 230px;
+    z-index: 100;
+    h1{
+        font-size: 50px;
+        color: rgb(247,241,230);
+        text-align: center;
+    }
+    p,ul{
+        text-align: center;
+        font-size: 16px;
+        color: rgb(247,241,230);
+    }
+    p{
+        width: 500px;
+        color: rgba(255,255,255,.6);
+        margin: 0 auto;
+        margin-top: 18px;
+        margin-bottom: 102px;
+    }
+}
+.commonTopImg{
+    width: 100%;
+}
+.solution-nav{
+    position: absolute;
+    top: 474px;
+    left: 578px;
+    z-index: 99;
+    li{
+        position: relative;
+        display: inline-block;
+        margin: 0 36px;
+        a{
+            font-size: 16px;
+            color: rgba(255,255,255,.6);
+            text-decoration: none;
+        }
+        a:hover{
+            color: #fff;
+        }
+    }
+}
+.solution-nav li.on guideIcon{
+    position: absolute;
+    top: 29px;
+    left: 32%;
+    border-left: 12px solid transparent;
+    border-right: 12px solid transparent;
+    border-bottom: 12px solid rgba(4,12,19,.8);
+}
+
+/* 面包屑导航 */
+.bread-nav{
+    background: rgba(4,12,19,.8);
+    color: rgb(247,241,230);
+    /*margin-bottom: 3rem;*/
+    a{
+        display: inline-block;
+        height: 50px;
+        line-height: 30px;
+        padding: 10px;
+        color: rgb(247,241,230);
+        font-family: "Microsoft Yahei";
+        font-size: 15px;
+        text-decoration: none;
+    }
+}
+
+.item-header-text{
+    margin-top: 52px;
+    margin-bottom: 48px;
+    display: inline-block;
+    font-size: 24px;
+    font-family: MicrosoftYaHei;
+    color: rgb(246,172,39);
+    width: 100%;
+    text-align:center;
+}
+
+/* 分页样式 */
+.global-pagination{
+    text-align: center;
+    margin-top: 22px;
+    padding-bottom: 60px;
+    >div{
+        display: inline-block;
+        height: 32px;
+        line-height: 15px;
+        padding: 10px;
+        font-size: 15px;
+        background: #132b3f;
+        margin-right: 10px;
+        a{
+            color: rgba(255,255,255,.6);
+            text-decoration: none;
+        }
+    }
+    .global-currPage{
+        color: #f7f1e6;
+    }
+}
+
+/* 页面滑动效果 */
+.slideanim {visibility:hidden;}
+.upSlide {
+    animation-name: upSlide;
+    -webkit-animation-name: upSlide;
+    animation-duration: 1s;
+    -webkit-animation-duration: 1s;
+    visibility: visible;
+}
+@keyframes upSlide {
+    0% {
+        opacity: 0;
+        -webkit-transform: translateY(70%);
+    }
+    100% {
+        opacity: 1;
+        -webkit-transform: translateY(0%);
+    }
+}
+@-webkit-keyframes upSlide {
+    0% {
+        opacity: 0;
+        -webkit-transform: translateY(70%);
+    }
+    100% {
+        opacity: 1;
+        -webkit-transform: translateY(0%);
+    }
+}

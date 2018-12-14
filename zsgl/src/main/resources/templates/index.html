@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-4.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+	<meta charset="utf-8">
+	<title>招生信息网</title>
+	<link rel="stylesheet" href="/static/css/index.css">
+	<link rel="icon" type="image/x-icon" href="/static/favicon.ico">
+	<script type="text/javascript" src="/static/js/lib/jquery.min.js"></script>
+	<script th:inline="javascript">
+		$(function(){
+			/*setIframeHight();
+
+            //调整iframe的高度
+			function setIframeHight(){
+                winHeight = $(this).height();
+                iframeHeight = winHeight - 100;
+                $("#showmain").css("height",iframeHeight+"px");
+			}
+
+            //浏览器窗口大小变化时调整iframe的高度
+			$(window).resize(function(){
+                setIframeHight();
+			});*/
+        })
+	</script>
+</head>
+<body>
+	<div id="showNav">
+		<div class="header">
+			<img src="/static/images/logo.png" width="238px" style="float:left;margin-left:2%;margin-top:20px;">
+
+			<ul id="firstMenu">
+				<li th:each="firstMenu:${listMenus}">
+					<a th:href="@{${firstMenu.url}}" th:text="${firstMenu.name}" target="_blank"></a>
+					<ul class="secondMenu">
+						<li th:each="secondMenu:${firstMenu.children}" th:if="${not #lists.isEmpty(firstMenu.children)}">
+							<a th:href="@{${secondMenu.url}}"  th:text="${secondMenu.name}" target="_blank"></a>
+						</li>
+					</ul>
+				</li>
+			</ul>
+
+			<div class="nav">
+				<input id="searchAll" class="searchAll" name="searchAll" placeholder="Search..." value="">
+				<img id="searchIcon" src="/static/images/search-icon.png"/>
+			</div>
+		</div>
+	</div>
+
+	<!--<div id="showmain">
+		<iframe th:src="@{/content/welcome}" src="welcome.html" frameborder="0" class="iframe" width="100%"></iframe>
+	</div>-->
+</body>
+</html>

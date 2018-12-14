@@ -1,0 +1,42 @@
+<!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-4.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+</head>
+<div>
+    <div class="footer">
+        <div class="footer_mask">
+            <div class="wrapper">
+                <div class="footer_title">
+                    <div style="display: none;">测试乱码</div>
+                    <h4>联系我们</h4>
+                    <div class="clear"></div>
+                    </div>
+                <div class="footer_content"  th:object="${configUtil}">
+                    <div class="contact">
+                        <h5>联系电话：<span th:text="*{tel}"></span></h5><br>
+                        <h5>电子邮箱：<span th:text="*{email}"></span></h5>
+                        </div>
+                    <div class="address">
+                        <h5>地址：<span th:text="*{address}"></span></h5><br>
+                        <h5>邮编：<span th:text="*{post}"></span></h5>
+                        </div>
+                    <div class="link">
+                        <h5>传真：<span th:text="*{fax}"></span></h5><br>
+                        <h5>网址：<span th:text="*{netAddress}"></span></h5>
+                    </div>
+                    <div class="weibo">
+                        <h5><a href="*{weibo}" target="view_window"><img src="/static/images/sina_wb.png" title="微博" height="30px" style="vertical-align: text-bottom;"></a></h5>
+                        <h5><a href="*{weibo}" target="view_window"><img src="/static/images/weixin.png" title="微信" height="30px" style="vertical-align: text-top;"> </a> </h5>
+                        </div>
+                    <div class="clear"></div>
+                </div>
+                <div class="clear"></div>
+                <div class="copyright">
+                    © 2018 西安冠铭科技股份有限公司 版权所有<br>Copyright © 2012-2018 www.gmuni.cn All Rights Reserved
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</html>

@@ -1,0 +1,52 @@
+*{
+    outline: none;
+}
+html,body{
+    padding:0;
+    margin:0;
+    width: 100%;
+    overflow-x: hidden;
+    height: 100%;
+    background-color: #f2f0f7;
+    position: relative;
+}
+
+.net_stop_detail_wrap{
+
+}
+
+.net_stop_detail_time{
+    width:100%;
+    font-size: 14px;
+    color: #333333;
+    padding:13px 9px 13px 10px;
+}
+
+.net_stop_detail_time span::before{
+    content: "";
+    display: inline-block;
+    margin-right: 4px;
+    width: 2px;
+    height: 16px;
+    background-color: #27d0ae;
+    vertical-align: sub;
+}
+
+.net_stop_detail_list{
+
+}
+
+.net_stop_detail_item{
+    background: #fff;
+    padding: 13px 10px 13px 9px;
+    display: table;
+    width: 100%;
+    box-sizing: border-box;
+    color: #333333;
+    margin-bottom:1px;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: stretch;
+    font-size: 14px;
+}

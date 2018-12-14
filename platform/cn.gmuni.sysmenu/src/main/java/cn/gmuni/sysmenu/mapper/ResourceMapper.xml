@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.gmuni.sysmenu.mapper.ResourceMapper" >
+  <resultMap id="BaseResultMap" type="cn.gmuni.sysmenu.model.Resource" >
+    <id column="id" property="id" jdbcType="VARCHAR" />
+    <result column="name" property="name" jdbcType="VARCHAR" />
+    <result column="type" property="type" jdbcType="CHAR" />
+    <result column="url" property="url" jdbcType="VARCHAR" />
+    <result column="button_code" property="buttonCode" jdbcType="VARCHAR" />
+    <result column="parent_id" property="parentId" jdbcType="VARCHAR" />
+    <result column="code" property="code" jdbcType="VARCHAR" />
+    <result column="parent_code" property="parentCode" jdbcType="VARCHAR" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="status" property="status" jdbcType="VARCHAR" />
+    <result column="sort" property="sort" jdbcType="DECIMAL" />
+  </resultMap>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from pf_gmuni_resource
+    where id = #{id,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="cn.gmuni.sysmenu.model.Resource" >
+    insert into pf_gmuni_resource (id, name, type,
+      url, button_code, parent_id, 
+      code, parent_code, create_time,status,
+      sort
+      )
+    values (#{id,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR}, #{type,jdbcType=CHAR}, 
+      #{url,jdbcType=VARCHAR}, #{buttonCode,jdbcType=VARCHAR}, #{parentId,jdbcType=VARCHAR}, 
+      #{code,jdbcType=VARCHAR}, #{parentCode,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}
+      , #{status,jdbcType=TIMESTAMP}, #{sort,jdbcType=DECIMAL}
+      )
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="cn.gmuni.sysmenu.model.Resource" >
+    update pf_gmuni_resource
+    set name = #{name,jdbcType=VARCHAR},
+      type = #{type,jdbcType=CHAR},
+      url = #{url,jdbcType=VARCHAR},
+      button_code = #{buttonCode,jdbcType=VARCHAR},
+      parent_id = #{parentId,jdbcType=VARCHAR},
+      code = #{code,jdbcType=VARCHAR},
+      parent_code = #{parentCode,jdbcType=VARCHAR},
+      status = #{status,jdbcType=TIMESTAMP},
+      sort = #{sort,jdbcType=DECIMAL}
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select id, name, type, url, button_code, parent_id, code, parent_code, create_time,status,sort
+    from pf_gmuni_resource
+    where id = #{id,jdbcType=VARCHAR}
+    order by sort
+  </select>
+  <select id="selectAll" resultMap="BaseResultMap" >
+    select id, name, type, url, button_code, parent_id, code, parent_code, create_time,status,sort
+    from pf_gmuni_resource
+    order by sort
+  </select>
+  <select id="selectAllWithoutButton" resultMap="BaseResultMap" >
+    select id, name, type, url, button_code, parent_id, code, parent_code, create_time,status,sort
+    from pf_gmuni_resource where type <![CDATA[<>]]> '2'
+    order by sort
+  </select>
+  <select id="selectByPid" resultMap="BaseResultMap"  parameterType="java.util.Map">
+    select id, name, type, url, button_code, parent_id, code, parent_code, create_time,status,sort
+    from pf_gmuni_resource where parent_id =  #{pid,jdbcType=VARCHAR}
+    <if test="name!=null and name!=''">
+      and name like CONCAT('%',#{name,jdbcType=VARCHAR},'%')
+    </if>
+    <if test="code!=null and code!=''">
+      and code like CONCAT('%',#{code,jdbcType=VARCHAR},'%')
+    </if>
+    order by sort,name, code
+  </select>
+  <select id="countByPid" resultType="java.lang.Long"  parameterType="java.util.Map">
+    select count(1)
+    from pf_gmuni_resource where parent_id =  #{pid,jdbcType=VARCHAR}
+    <if test="name!=null and name!=''">
+      and name like CONCAT('%',#{name,jdbcType=VARCHAR},'%')
+    </if>
+    <if test="code!=null and code!=''">
+      and code like CONCAT('%',#{code,jdbcType=VARCHAR},'%')
+    </if>
+  </select>
+
+  <select id="countByPids" resultType="java.lang.Long" parameterType="java.lang.String">
+    select count(1)
+    from pf_gmuni_resource where parent_id in
+    <foreach item="item" collection="list" open="(" separator="," close=")">
+      #{item}
+    </foreach>
+  </select>
+
+  <delete id="deleteByIdsIn" parameterType="java.lang.String">
+    DELETE r,p
+    FROM pf_gmuni_resource r LEFT JOIN pf_gmuni_resource_privilege p ON r.id = p.resource_code
+    WHERE r.id IN
+    <foreach item="item" collection="list" open="(" separator="," close=")">
+      #{item}
+    </foreach>
+  </delete>
+  <update id="updateStatus" parameterType="java.lang.String">
+    update pf_gmuni_resource
+    set status = #{status,jdbcType=VARCHAR}
+    where ID IN
+    <foreach item="item" collection="list" open="(" separator="," close=")">
+      #{item}
+    </foreach>
+  </update>
+  <select id="selectByUrl" resultMap="BaseResultMap" parameterType="cn.gmuni.sysmenu.model.Resource">
+    select id, name, type, url, button_code, parent_id, code, parent_code, create_time,status,sort
+    from pf_gmuni_resource where url = #{url,jdbcType=VARCHAR} or code = #{code,jdbcType=VARCHAR}
+  </select>
+  <select id="selectByName" resultMap="BaseResultMap" parameterType="cn.gmuni.sysmenu.model.Resource">
+    select id, name, type, url, button_code, parent_id, code, parent_code, create_time,status,sort
+    from pf_gmuni_resource where name = #{name,jdbcType=VARCHAR} or code = #{code,jdbcType=VARCHAR}
+  </select>
+  <select id="selectByButtonCode" resultMap="BaseResultMap" parameterType="cn.gmuni.sysmenu.model.Resource">
+    select id, name, type, url, button_code, parent_id, code, parent_code, create_time,status,sort
+    from pf_gmuni_resource where (button_code = #{buttonCode,jdbcType=VARCHAR} and  parent_id = #{parentId,jdbcType=VARCHAR}) or code = #{code,jdbcType=VARCHAR}
+  </select>
+</mapper>

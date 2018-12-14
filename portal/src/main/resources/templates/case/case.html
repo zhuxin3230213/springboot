@@ -1,0 +1,126 @@
+<!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-4.dtd">
+<html xmlns:gm="" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout" layout:decorator="layout/layout">
+<head>
+    <link gm:href="index">
+    <link gm:href="case">
+    <script>
+
+    </script>
+</head>
+<body id="index-body">
+<div layout:fragment="content">
+    <div th:replace="layout/commonTop :: carouse('客户案例',
+                                                    'case/bg_top.png',
+                                                    '多年来，我们致力于扎根行业、深入场景进行产品设计和创新，为行业用户构建端到端的解决方案，为客户网络创造新价值')">
+    </div>
+
+    <div th:replace="layout/breadNav :: nav('首页,客户案例','/pageindex,/pagecase-case')"></div>
+
+    <div class="case-content">
+        <div class="container">
+            <div class="row  bto-title">
+                <div class="col-md-12">
+                    <span class="item-header-text">成功案例
+                    <div class="global-bottomLine"></div>
+                    </span>
+
+                </div>
+            </div>
+            <div class="case-content-info">
+                <div class="row case-content-hot">
+                    <div class="col-md-5">
+                        <img src="/static/images/case/image_school.png">
+                    </div>
+                    <div class="col-md-7">
+                        <span class="case-hot-title">
+                            陕西科技大学镐京学院案例
+                        </span>
+                        <span class="case-hot-info">
+                            陕西科技大学镐京学院是全国重点大学——陕西科技大学按照新机制、新模式与陕西斯卡雷博德制衣有限公司合作举办的本科层次独立学院。
+                        </span>
+                        <div class="case-hot-btn-container">
+                            <div class="row">
+                                <div class="col-xs-10">
+                                    <span class="case-hot-btn">
+                                        <a th:href="@{/pagecase-case_haojing}">了解详情</a>
+                                    </span>
+                                </div>
+                                <div class="col-xs-2">
+                                    <span class="case-hot-rhot">Hot</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row case-content-item">
+                    <div class="col-sm-3">
+                        <img src="/static/images/case/img_school_01.png">
+                        <span class="case-item-date">2018/06/10</span>
+                        <span class="case-item-split-line"></span>
+                    </div>
+                    <a th:href="@{/pagecase-case_haojing}" class="col-sm-9 case-item-info">
+                        <span class="case-item-title">陕西科技大学镐京学院案例</span>
+                        <span class="case-item-desc">
+                                陕西科技大学镐京学院是全国重点大学——陕西科技大学按照新机制、新模式与陕西斯卡雷 博德制衣有限公司合作举办的本科层次独立学院。
+                        </span>
+                    </a>
+                </div>
+                <div class="row case-content-item">
+                    <div class="col-sm-3">
+                        <img src="/static/images/case/img_school_02.png">
+                        <span class="case-item-date">2018/06/10</span>
+                        <span class="case-item-split-line"></span>
+                    </div>
+                    <a th:href="@{/pagecase-case_fuzhuang}" class="col-sm-9 case-item-info">
+                        <span class="case-item-title">陕西服装工程学院案例</span>
+                        <span class="case-item-desc">
+                               西安冠铭科技有限公司与陕西服装工业学院合作智慧校园网。
+                        </span>
+                    </a>
+                </div>
+                <div class="row case-content-item">
+                    <div class="col-sm-3">
+                        <img src="/static/images/case/img_school_03.png">
+                        <span class="case-item-date">2017/12/07</span>
+                        <span class="case-item-split-line"></span>
+                    </div>
+                    <a th:href="@{/pagecase-case_panzhihua}" class="col-sm-9 case-item-info">
+                        <span class="case-item-title">四川机电职业技术学院案例</span>
+                        <span class="case-item-desc">
+                                四川机电职业技术学院位于名闻遐迩、得天独厚的钢铁钒钛之都，中国唯一以花命名的城市——四川省攀枝花市，善于培养学生的网络文化意识，期待与在校园网络建设方面能成为先行者。
+                        </span>
+                    </a>
+                </div>
+                <div class="row case-content-item">
+                    <div class="col-sm-3">
+                        <img src="/static/images/case/img_school_04.png">
+                        <span class="case-item-date">2017/11/28</span>
+                        <span class="case-item-split-line"></span>
+                    </div>
+                    <a th:href="@{/pagecase-case_hangkong}" class="col-sm-9 case-item-info">
+                        <span class="case-item-title">陕西航空技师学院案例</span>
+                        <span class="case-item-desc">
+                                陕西航空技师学院位于陕西省汉中大河坎，学校有专门的网络中心，我们与相关负责人及时对接，出色的完成了网络搭建等工作。
+                        </span>
+                    </a>
+                </div>
+                <div class="row case-content-item">
+                    <div class="col-sm-3">
+                        <img src="/static/images/case/img_school_05.png">
+                        <span class="case-item-date">2017/11/28</span>
+                        <span class="case-item-split-line case-item-split-line-last"></span>
+                    </div>
+                    <a th:href="@{/pagecase-case_zhongbei}" class="col-sm-9 case-item-info">
+                        <span class="case-item-title">陕西中北专修学院案例</span>
+                        <span class="case-item-desc">
+                                陕西中北专修学院位于陕西省宝鸡市蟠龙新区龙翔大道1号，院长苏军科非常重视校园网络建设问题，我们以专业的态度和百倍的耐心完成了陕西中北专修学院项目。
+                        </span>
+                    </a>
+                </div>
+            </div>
+
+    </div>
+
+</div>
+</body>
+</html>

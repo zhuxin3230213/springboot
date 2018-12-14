@@ -1,0 +1,84 @@
+<div th:fragment="recruit">
+    <script>
+        //控制折叠面板的箭头方向
+        $(function () {
+            $("#accordion").on("show.bs.collapse",function(e){
+                $(e.target).parent().find(".abus-recruit-arrow").addClass("abus-recruit-arrow-in");
+            })
+
+            $("#accordion").on("hide.bs.collapse",function(e){
+                $(e.target).parent().find(".abus-recruit-arrow").removeClass("abus-recruit-arrow-in");
+            })
+        })
+    </script>
+    <div class="abus-recruit-container">
+        <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="false">
+            <div class="panel panel-default">
+                <div class="panel-heading" role="tab" id="headingOne">
+                    <h4 class="panel-title">
+                        <a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseOne"
+                           aria-expanded="true" aria-controls="collapseOne">
+                            需求分析师
+                        </a>
+                        <i class="abus-recruit-arrow abus-recruit-arrow-in"></i>
+                    </h4>
+                </div>
+                <div id="collapseOne" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingOne">
+                    <div class="panel-body">
+                        <div class="abus-recruit-info">
+                            <h4 class="abus-recruit-info-title">岗位职责：</h4>
+                            <ul class="abus-recruit-info-content">
+                                <li>1、完成公司软件开发项目的需求分析，业务设计</li>
+                                <li>2、开发及后续过程的需求跟进、变更把控</li>
+                                <li>3、进行市场调研</li>
+                            </ul>
+                        </div>
+                        <div>
+                            <h4 class="abus-recruit-info-title">任职资格：</h4>
+                            <ul class="abus-recruit-info-content">
+                                <li>1、有用户需求、市场需求和业务需求调研经验</li>
+                                <li>2、良好的学习能力、逻辑思维、语言及文字表达能力；良好的团队沟通能力</li>
+                                <li>3、具备优秀策划能力，对产品的规则、流程、用户体验有深刻理解</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!--<div class="panel panel-default">-->
+                <!--<div class="panel-heading" role="tab" id="headingTwo">-->
+                    <!--<h4 class="panel-title">-->
+                        <!--<a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseTwo"-->
+                           <!--aria-expanded="true" aria-controls="collapseTwo">-->
+                            <!--需求分析师-->
+                        <!--</a>-->
+                        <!--<i class="abus-recruit-arrow"></i>-->
+                    <!--</h4>-->
+                <!--</div>-->
+                <!--<div id="collapseTwo" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingTwo">-->
+                    <!--<div class="panel-body">-->
+                        <!--<div class="abus-recruit-info">-->
+                            <!--<h4 class="abus-recruit-info-title">岗位职责：</h4>-->
+                            <!--<ul class="abus-recruit-info-content">-->
+                                <!--<li>1、完成公司软件开发项目的需求分析，业务设计</li>-->
+                                <!--<li>2、开发及后续过程的需求跟进、变更把控</li>-->
+                                <!--<li>3、进行市场调研</li>-->
+                            <!--</ul>-->
+                        <!--</div>-->
+                        <!--<div>-->
+                            <!--<h4 class="abus-recruit-info-title">任职资格：</h4>-->
+                            <!--<ul class="abus-recruit-info-content">-->
+                                <!--<li>1、有用户需求、市场需求和业务需求调研经验</li>-->
+                                <!--<li>2、良好的学习能力、逻辑思维、语言及文字表达能力；良好的团队沟通能力</li>-->
+                                <!--<li>3、具备优秀策划能力，对产品的规则、流程、用户体验有深刻理解</li>-->
+                            <!--</ul>-->
+                        <!--</div>-->
+                    <!--</div>-->
+                <!--</div>-->
+            <!--</div>-->
+        </div>
+        <div class="abus-recruit-conus">
+            <div class="abus-recruit-conus-email">简历请发送至:xxxx@gmuni.com,X女士 收</div>
+            <div class="abus-recruit-conus-source">请在邮件主题中标明所聘职位及信息来源 如："销售经理 + 智联招聘"</div>
+        </div>
+    </div>
+</div>

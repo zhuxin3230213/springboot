@@ -1,0 +1,85 @@
+<!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-4.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+	<meta charset="utf-8">
+	<title>搜索结果</title>
+	<link href="/static/css/main_style_new.css" rel="stylesheet">
+	<link href="/static/css/list_style_new.css" rel="stylesheet">
+	<link href="/static/pagination/pagination.css" rel="stylesheet">
+	<link href="/static/favicon.ico" rel="icon" type="image/x-icon">
+	<style>
+		.pagination>li>a{color:#205a82;}
+		.pagination>.active>a, .pagination>.active>a:focus, .pagination>.active>a:hover{background:#205a82;border-color:#205a82;}
+	</style>
+	<script src="https://cdn.bootcss.com/jquery/2.2.4/jquery.min.js"></script>
+	<script src="/static/pagination/pagination.js"></script>
+	<script src="/static/js/main.js"></script>
+	<script src="/static/js/common.js"></script>
+	<link href="/static/css/index.css" rel="stylesheet">
+	<script th:inline="javascript">
+        pageTotal = [[${pageTotal}]];
+        keyWord = [[${keyWord}]];
+        $(function(){
+            url = "/content/searchPage/"+keyWord+"/";
+            pagination();
+
+            $("#searchAll").attr("value",keyWord);
+
+            footerPosition();
+        })
+
+		//加载表格数据
+        function loadData(data){
+            var data = data.data;
+            var liHtml = '<li></li>';
+            $(data).each(function(index,item){
+                liHtml += '<li>' +
+							 '<div class="listItemLeft"><a href="/content/searchContent/'+item.id+'/'+item.type+'">'+item.name+'</a></div>'+
+							 '<div class="clear"></div>'+
+					      '</li>';
+            });
+            $(".listItem ul").html(liHtml);
+        }
+	</script>
+</head>
+<body>
+	<div id="header" th:utext="${header}"></div>
+
+	<div class="listContent" style="padding-top:0;">
+		<div class="welcomePic">
+			<img src="/static/images/pageHeaderBg.jpg">
+		</div>
+		<div class="wrapper">
+			<div class="listRight" style="width:85%;margin-top:20px;">
+				<a th:href="@{/content/welcome}">网站首页</a>  &gt;  关于 “<tem th:text="${keyWord}"></tem>” 的搜索结果</span>
+				<div class="listBanner"></div>
+				<div class="list">
+					<div class="listItem">
+						<ul>
+							<li></li>
+							<li th:if="${not #lists.isEmpty(listSearchs)}" th:each="listSearch:${listSearchs}">
+								<div class="listItemLeft">
+									<a th:href="@{'/content/searchContent/'+${listSearch.id}+'/'+${listSearch.type}}" th:text="${listSearch.name}" style="cursor:pointer;font-size:14px;"></a>
+								</div>
+								<div class="clear"></div>
+							</li>
+                            <div th:if="${#lists.isEmpty(listSearchs)}" style="color:red;font-size:14px;margin-top:50px;">
+                                抱歉，没有关于 “<tem th:text="${keyWord}"></tem>” 的搜索结果
+                            </div>
+						</ul>
+					</div>
+					<!-- 分页开始 -->
+					<div class="text-center">
+						<ul class="pagination" id="page">
+						</ul>
+					</div>
+					<!-- 分页结束 -->
+				</div>
+			</div>
+			<div class="clear"></div>
+		</div>
+	</div>
+
+	<div id="footer" th:utext="${footer}"></div>
+</body>
+</html>

@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.gmuni.enrollment.guide.mapper.YearlyScoreMapper">
+    <resultMap id="yearlyScore" type="cn.gmuni.enrollment.guide.model.YearlyScore">
+        <id column="id" jdbcType="VARCHAR" property="id"/>
+        <result column="year" jdbcType="VARCHAR" property="year"/>
+        <result column="provinces" jdbcType="VARCHAR" property="provinces"/>
+        <result column="batch" jdbcType="VARCHAR" property="batch"/>
+        <result column="family" jdbcType="VARCHAR" property="family"/>
+        <result column="scoreline" jdbcType="DECIMAL" property="scoreline"/>
+        <result column="max_score" jdbcType="DECIMAL" property="maxScore"/>
+        <result column="min_score" jdbcType="DECIMAL" property="minScore"/>
+        <result column="avg_score" jdbcType="DECIMAL" property="avgScore"/>
+        <result column="sort" jdbcType="VARCHAR" property="sort"/>
+        <result column="pro_course" jdbcType="VARCHAR" property="proCourse"/>
+        <result column="F_AreaName" jdbcType="VARCHAR" property="areaName"/>
+    </resultMap>
+    <select id="selectAllByPage" resultMap="yearlyScore" parameterType="java.lang.String">
+        SELECT s.id,s.year,s.provinces,s.batch,s.family,s.scoreline,s.max_score,s.min_score,s.avg_score,s.sort,s.pro_course ,a.F_AreaName
+        FROM zs_gmuni_yearly_score s LEFT JOIN pf_gmuni_base_area a ON s.provinces = a.F_AreaId where 1=1
+        <if test="year!=null and year!=''">
+            and s.year = #{year}
+        </if>
+        <if test="batch!=null and batch!=''">
+            and s.batch = #{batch}
+        </if>
+        <if test="family!=null and family!=''">
+            and s.family = #{family}
+        </if>
+        <if test="provinces!=null and provinces!=''">
+            and s.provinces = #{provinces}
+        </if>
+        order by s.year,s.sort+0,s.provinces
+    </select>
+    <insert id="saveScores" parameterType="cn.gmuni.enrollment.guide.model.YearlyScore">
+      insert into zs_gmuni_yearly_score(id,year,provinces,batch,family,scoreline,max_score,min_score,avg_score,sort,pro_course)
+      values
+        <foreach collection="list" item="item" separator=",">
+            (#{item.id,jdbcType=VARCHAR},#{item.year,jdbcType=VARCHAR},#{item.provinces,jdbcType=VARCHAR},
+            #{item.batch,jdbcType=VARCHAR},#{item.family,jdbcType=VARCHAR},#{item.scoreline,jdbcType=VARCHAR},
+            #{item.maxScore,jdbcType=VARCHAR},#{item.minScore,jdbcType=VARCHAR},#{item.avgScore,jdbcType=VARCHAR},
+            #{item.sort,jdbcType=VARCHAR},#{item.proCourse,jdbcType=VARCHAR})
+        </foreach>
+    </insert>
+    <select id="maxSort" parameterType="cn.gmuni.enrollment.guide.model.YearlyScore" resultType="java.lang.Integer">
+        select (case when t.m is null then 0 else t.m end) FROM (SELECT MAX(sort) as m FROM zs_gmuni_yearly_score WHERE YEAR = #{year,jdbcType=VARCHAR} AND provinces = #{provinces,jdbcType=VARCHAR}) t
+    </select>
+    <delete id="deleteByYearAndProvinces" parameterType="java.lang.String">
+        delete from zs_gmuni_yearly_score where
+        provinces = #{provinces,jdbcType=VARCHAR} and year = #{year,jdbcType=VARCHAR}
+    </delete>
+    <delete id="deleteById" parameterType="java.lang.String">
+        delete from zs_gmuni_yearly_score where
+         id in
+        <foreach item="item" collection="list" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </delete>
+    <update id="updateScore"  parameterType="cn.gmuni.enrollment.guide.model.YearlyScore">
+        update zs_gmuni_yearly_score set
+        scoreline = #{scoreline,jdbcType=DECIMAL},
+        max_score =  #{maxScore,jdbcType=DECIMAL},
+        min_score = #{minScore,jdbcType=DECIMAL},
+        avg_score = #{avgScore,jdbcType=DECIMAL},
+        sort = #{sort,jdbcType=VARCHAR},
+        pro_course = #{proCourse,jdbcType=VARCHAR}
+        where id = #{id,jdbcType=VARCHAR}
+    </update>
+
+    <select id="listBAndCByYearAndProv" resultType="java.util.Map" parameterType="java.lang.String">
+        SELECT DISTINCT batch,family
+        FROM zs_gmuni_yearly_score
+        WHERE year = #{year,jdbcType=VARCHAR} and provinces = #{provinces,jdbcType=VARCHAR}
+    </select>
+</mapper>

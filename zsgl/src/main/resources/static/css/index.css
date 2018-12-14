@@ -1,0 +1,339 @@
+/* CSS Document */
+
+@charset "utf-8";
+
+*{
+    margin: 0;
+    padding: 0;
+    border: 0;
+    outline: 0;
+}
+body {
+    font: 12px/1.5 Tahoma,'\5FAE\8F6F\96C5\9ED1','Microsoft Yahei',"hiragino sans gb",Helvetica, Arial,"\5b8b\4f53",'sans-serif';
+    color: #333;
+}
+h1,h2,h3,h4,h5,h6 {
+    font-weight: normal;
+    font-size: 100%;
+}
+:focus {outline: 0;}
+ul,ol {list-style: none;}
+fieldset,img {border: 0 none;}
+address,caption,cite,code,dfn,em,i,th,var,optgroup {
+    font-style: normal;
+    font-weight: normal;
+}
+abbr,acronym {
+    border: 0;
+    font-variant: normal;
+}
+input,button,textarea,select,optgroup,option {
+    font-family: inherit;
+    font-size: inherit;
+    font-style: inherit;
+    font-weight: inherit;
+}
+code, kbd, samp, tt { font-size: 100%;}
+blockquote, q {quotes: none;}
+blockquote:before, blockquote:after,
+q:before, q:after {content: '';content: none;}
+a{
+    color: #333;
+    text-decoration: none;
+    -webkit-transition: color .2s ease-in-out;
+    -moz-transition: color .2s ease-in-out;
+    -o-transition: color .2s ease-in-out;
+    -ms-transition: color .2s ease-in-out;
+    transition: color .2s ease-in-out;
+}
+a:hover {
+    text-decoration: none;
+}
+
+
+/** 导航栏样式-start **/
+#showNav{
+    width:100%;
+    height:100px;
+    line-height:100px;
+    /*background:#24292e;
+    background:#2267b1;*/
+    background:#002147;
+    color:#fff;
+}
+.header{
+    width: 1350px;
+    height: 100%;
+    margin: auto;
+    background:#002147;
+    position: relative;
+}
+#showmain{
+    width:100%;
+    margin-top:2px;
+}
+#firstMenu{
+    min-width: 815px;
+    position: absolute;
+    left: 20%;
+    height: 35px;
+    line-height: 35px;
+    margin-top: 35px;
+    list-style: none;
+    text-align: center;
+    z-index: 100;
+}
+#firstMenu>li{
+    display:inline-block;
+    position: relative;
+    width:103px;
+    font-size:16px;
+    margin-right:0.73%;
+    margin-top:10px;
+}
+#firstMenu>li:hover{
+    background: #3277ae;
+}
+#firstMenu>li a{
+    display: block;
+    color:#fff;
+    cursor:pointer;
+    text-decoration: none;
+}
+.secondMenu li{
+    overflow: hidden;
+    height: 36px;
+    float: left;
+    width: 103px;
+    text-align: center;
+    background: #f3f1ee;
+    transition: 0.5s height cubic-bezier(0.73, 0.32, 0.34, 1.5);
+}
+#firstMenu li:not(:hover) .secondMenu li{
+    visibility: hidden;
+    height: 0;
+    transition: 0.5s 0.1s height, 0.6s visibility;
+    z-index: 100;
+}
+.secondMenu li:hover{
+    background: #3277ae;
+}
+.secondMenu li:hover a{
+    color: #fff !important;
+    border-bottom: none;
+}
+.secondMenu li a {
+    display: block;
+    height: 35px;
+    line-height: 15px;
+    padding: 10px 0;
+    font-size:14px;
+    /*color: #fff;*/
+    color: #3277ae !important;
+    text-decoration: none;
+    margin: 0 0.625em;
+    border-bottom: 1px solid #e0ded9;
+}
+li a:hover{
+    color:rgba(255,255,255,.75);
+}
+.iframe {
+    overflow: hidden;
+    width: 100%;
+    height: 100%;
+}
+.item img{
+    cursor: pointer;
+}
+/** 导航栏样式-end **/
+
+
+/* 首页主体版块 */
+.ind{
+    width:1245px;
+    margin:auto;
+    margin-top:20px;
+}
+.indRow{
+    float:left;
+    width:100%;
+    height:240px;
+    margin-bottom:30px;
+}
+.stustyle{
+    float: left;
+    position: relative;
+    width: 400px;
+    height: 100%;
+    margin: 30px 7px;
+    overflow: hidden;
+    border: 1px solid #dcdcdc;
+    border-radius: 5px;
+}
+.stustyle ul{
+    float:left;
+    width:400px;
+    border-top: 1px solid #ccc;
+    padding-top:10px;
+}
+.stustyle ul li{
+    float:left;
+    padding-left:20px;
+    padding-top:6px;
+    margin-bottom:6px;
+    height: 30px;
+    line-height: 30px;
+}
+.stustyle ul li span{
+    float:left;
+    text-align:right;
+    font-size:12px;
+}
+.stustyle ul li a{
+    float:right;
+    font-size:14px;
+    width:350px;
+    display:block;
+    line-height:140%;
+}
+.stustyle div>ul li a{
+    overflow:hidden;
+    text-overflow:ellipsis;
+    white-space:nowrap;
+}
+.stustyle ul li a:hover{
+    text-decoration:underline;
+    color: #003595;
+}
+.showMore a{
+    color:#003595;
+    font-size:14px;
+    line-height:35px;
+    padding-left:20px;
+}
+.bt{
+    float:left;
+    width:400px;
+}
+.bt span{
+    float:left;
+    color:#004e72;
+    font-size:18px;
+    height: 45px;
+    line-height: 45px;
+}
+.bt span img{
+    vertical-align: middle;
+    margin-left: 15px;
+    margin-right: 7px;
+}
+.bt span a{
+    color:rgb(0,89,157);
+}
+.bt p{
+    float:right;
+}
+.bt p a{
+    color:#003595;
+    font-size:12px;
+    line-height:35px;
+}
+.bt p b{
+    float: left;
+    line-height: 35px;
+    color: #313131;
+    margin-right: 6px;
+    font-size: 12px;
+}
+.bt p strong{
+    float: left;
+    line-height: 35px;
+    color: #959595;
+    margin-right: 6px;
+    font-size: 12px;
+}
+.publicInfo{
+    background: rgb(31,197,197);
+    border: 1px solid rgb(31,197,197);
+}
+.publicInfo .bt>span{
+    color: #fff;
+}
+.publicInfo ul{
+    border-top: 1px solid rgba(255,255,255,.7);
+}
+.publicInfo ul li a{
+    color: #fff;
+    font-size: 16px;
+    line-height:38px;
+}
+.publicInfo ul li span{
+    background:url(../images/publicInfo_img.png) no-repeat left;
+    margin-left: 5px;
+    padding-right:20px;
+    margin-top: -3px;
+}
+.applyGuide{
+    background: url(../images/applyGuide_bg.png) no-repeat;
+    border:none;
+}
+.commonlink{
+    background: #78bffc;
+    border: 1px solid #78bffc;
+}
+.commonlink ul{
+    border-top: 1px solid rgba(255,255,255,.7);
+}
+.commonlink a{
+    color: #fff;
+}
+.linkList span{
+    color: #fff;
+}
+.linkList{
+    float:left;
+    width:260px;
+    line-height:30px;
+}
+#page li{
+    padding-left: 10px;
+}
+
+
+/** footer样式 **/
+#footer{
+    float:left;
+    width:100%;
+    margin-top:30px;
+}
+
+
+/** 搜索栏样式 **/
+.nav{
+    position: relative;
+    right: 2%;
+    top: 45px;
+    float: right;
+    width: 13.5%;
+    height:35px;
+    background: #fff;
+    border-radius: 5px;
+    font-size: 14px;
+    text-align: center;
+}
+.searchAll{
+    position: relative;
+    top: -32px;
+    left: -9%;
+    width: 80%;
+    text-indent: 10px;
+    height: 2rem;
+    line-height: 2rem;
+    color: #777;
+}
+.nav img{
+    position: absolute;
+    top: 0.5rem;
+    left: 85%;
+    cursor: pointer;
+}

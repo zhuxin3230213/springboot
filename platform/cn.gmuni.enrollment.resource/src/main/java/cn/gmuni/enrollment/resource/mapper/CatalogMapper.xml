@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.gmuni.enrollment.resource.mapper.CatalogMapper">
+  <resultMap id="BaseResultMap" type="cn.gmuni.enrollment.resource.model.Catalog">
+    <id column="ID" jdbcType="VARCHAR" property="id" />
+    <result column="name" jdbcType="VARCHAR" property="name" />
+    <result column="code" jdbcType="VARCHAR" property="code" />
+    <result column="sort" jdbcType="DECIMAL" property="sort" />
+    <result column="parent_id" jdbcType="DATE" property="parentId" />
+    <result column="remark" jdbcType="DATE" property="remark" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+  </resultMap>
+
+  <select id="listAllCatalog" resultMap="BaseResultMap">
+    select id,code,name,sort,parent_id,remark,create_time from zs_gmuni_res_catalog
+  </select>
+
+  <select id="listAllCatalogByPid" parameterType="java.util.Map" resultMap="BaseResultMap">
+      select id,code,name,sort,parent_id,remark,create_time from zs_gmuni_res_catalog
+      where parent_id = #{parentId,jdbcType=VARCHAR}
+    <if test="name!=null and name!=''">
+      and name like CONCAT('%',#{name,jdbcType=VARCHAR},'%')
+    </if>
+    <if test="code!=null and code!=''">
+      and code like CONCAT('%',#{code,jdbcType=VARCHAR},'%')
+    </if>
+    order by create_time
+  </select>
+
+  <select id="checkName" resultType="java.lang.Integer">
+    select count(1)
+    from zs_gmuni_res_catalog WHERE name = #{name}
+    and parent_id = #{parentId}
+    <if test="id!=null and id!=''">
+      <![CDATA[
+      and id <> #{id}
+      ]]>
+    </if>
+  </select>
+
+  <select id="checkCode" resultType="java.lang.Integer">
+    select count(1)
+    from zs_gmuni_res_catalog WHERE code = #{code}
+    <if test="id!=null and id!=''">
+      <![CDATA[
+      and id <> #{id}
+      ]]>
+    </if>
+  </select>
+  <insert id="insert" parameterType="cn.gmuni.enrollment.resource.model.Catalog">
+    insert into zs_gmuni_res_catalog (id,code,name,sort,parent_id,remark,
+      create_time)
+    values (#{id,jdbcType=VARCHAR}, #{code,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR},
+      #{sort,jdbcType=DECIMAL}, #{parentId,jdbcType=VARCHAR}, #{remark,jdbcType=VARCHAR},
+      #{createTime,jdbcType=TIMESTAMP})
+  </insert>
+  <select id="countCatalogByPid" parameterType="java.util.Map"  resultType="java.lang.Integer">
+    select count(1) from zs_gmuni_res_catalog
+    where parent_id = #{parentId,jdbcType=VARCHAR}
+    <if test="name!=null and name!=''">
+      and name like CONCAT('%',#{name,jdbcType=VARCHAR},'%')
+    </if>
+    <if test="code!=null and code!=''">
+      and code like CONCAT('%',#{code,jdbcType=VARCHAR},'%')
+    </if>
+  </select>
+  <update id="update" parameterType="cn.gmuni.enrollment.resource.model.Catalog">
+    update zs_gmuni_res_catalog
+    set name = #{name,jdbcType=VARCHAR},
+    sort = #{sort,jdbcType=DECIMAL},
+    remark= #{remark,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+  <select id="countChildrenByIds" parameterType="java.lang.String" resultType="java.lang.Integer">
+    select count(1) from zs_gmuni_res_catalog
+    where parent_id in
+    <foreach item="item" collection="list" open="(" separator="," close=")">
+      #{item}
+    </foreach>
+  </select>
+  <select id="countResourceByPids" parameterType="java.lang.String" resultType="java.lang.Integer">
+    select count(1) from zs_gmuni_resource
+    where catalog_id in
+    <foreach item="item" collection="list" open="(" separator="," close=")">
+      #{item}
+    </foreach>
+  </select>
+  <delete id="delete" parameterType="java.lang.String">
+    delete from zs_gmuni_res_catalog
+    where id in
+    <foreach item="item" collection="list" open="(" separator="," close=")">
+      #{item}
+    </foreach>
+  </delete>
+</mapper>

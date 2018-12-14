@@ -1,0 +1,36 @@
+<!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-4.dtd">
+<html xmlns:gm="" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout" layout:decorator="layout/layout">
+<head>
+    <link gm:href="index">
+    <link gm:href="content">
+</head>
+<body id="index-body">
+<div layout:fragment="content">
+    <div th:replace="layout/commonTop :: carouse('最新动态',
+                                                    'bg_news_top.png',
+                                                    '多年来，我们致力于扎根行业，深入场景进行产品设计和创新，为行业用户构建端到端的解决方案，为客户网络创造新价值。')">
+    </div>
+
+    <div th:replace="layout/breadNav :: nav('首页,最新动态,陕西高校信息化专家来蒲城县指导工作','/pageindex,/pagenews-news,/pagenews-news_01')"></div>
+
+    <div class="container content-detail">
+        <div class="content-top">
+            <div class="content-title">陕西高校信息化专家来蒲城县指导工作!</div>
+            <div class="content-info">作者：admin &nbsp; 发布日期：2017/12/29 &nbsp; 关注次数：229</div>
+        </div>
+        <div class="content-bottom">
+            <p>12月27日，陕西高校信息化专家一行来蒲城县指导“互联网+政务服务”和电子政务等信息化工作。副县长张武军出席会议。县电子政务办、行政服务中心管理办公室主要负责人及相关工作人员参加会议。</p>
+
+            <div class="content-img"><img src="/static/images/news/news_03_01.jpg" alt="01"></div>
+
+            <p>座谈会上，电子政务办和行政服务中心管理办公室对蒲城县政府网站、电子政务外网、网络安全、行政服务中心建设等情况作了介绍，并向专家提出了开展信息化工作过程中遇到的问题。专家组对我县提出的相关问题，作了详细解答，并给予了指导性意见。</p>
+            <p>张武军首先感谢信息化专家对我县“互联网+政务服务”和电子政务工作给予的支持。他希望，行政服务中心和电子政务办能够借此机会，与专家建立长效交流沟通机制，进一步加强学习，做好我县“互联网+政务服务”和电子政务工作；同时要借助电视台、政府网站等平台宣传“互联网+政务服务”工作的内容和网上操作流程，进一步扩大政策影响力，保障“互联网+政务服务”稳步推进，确保政务大厅运行达到便民利企目的。</p>
+            <p>随后，专家组一行实地调研了紫荆街道办黄家村党建工作展示馆、尧山镇闫家村党群服务中心、尧山镇闫家村金银花产业园区等，并向村委会送去了慰问品和慰问金。</p>
+
+            <div class="content-img"><img src="/static/images/news/news_03_02.jpg" alt="02"></div>
+        </div>
+    </div>
+
+</div>
+</body>
+</html>

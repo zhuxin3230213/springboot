@@ -1,0 +1,23 @@
+
+<div id="showNav">
+    <div class="header">
+        <img src="/static/images/logo.png" width="225px" style="float:left;margin-left:2%;margin-top:20px;">
+        <div style="display: none;">测试乱码</div>
+
+        <ul id="firstMenu">
+            <li th:each="firstMenu:${listMenus}">
+                <a th:href="@{${firstMenu.url}}" th:text="${firstMenu.name}" target="_blank"></a>
+                <ul class="secondMenu">
+                    <li th:each="secondMenu:${firstMenu.children}" th:if="${not #lists.isEmpty(firstMenu.children)}">
+                        <a th:href="@{${secondMenu.url}}" th:text="${secondMenu.name}" target="_blank"></a>
+                    </li>
+                </ul>
+            </li>
+        </ul>
+
+        <div class="nav">
+            <input id="searchAll" class="searchAll" name="searchAll" placeholder="Search..." value="">
+            <img id="searchIcon" src="/static/images/search-icon.png"/>
+        </div>
+    </div>
+</div>

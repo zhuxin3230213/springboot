@@ -1,0 +1,176 @@
+body{
+    background-color: #f2f0f7;
+    font-family: "Microsoft YaHei UI";
+    min-width: 240px;
+    margin: 0px;
+}
+div{
+    background-color: #ffffff;
+    width: 100%;
+    display: block;
+}
+.hairDryer_main_container{
+    background-color: #f2f0f7;
+}
+.hairDryer_tip{
+    padding: 20px 10px 15px 10px;
+    font-size: 14px;
+    color: #999999;
+    display: inline-block;
+}
+.hairDryer_select_value{
+    display: inline-block;
+    width: calc(33% - 25px);
+    margin-left: 10px;
+    margin-right: 10px;
+    height: 45px;
+    vertical-align: middle;
+    line-height: 45px;
+    text-align: center;
+    border-radius: 5px;
+    border: 1px solid #27d0ae;
+    background: none;
+}
+.hairDryer_select_text{
+    color: #27d0ae;
+    font-size: 16px;
+}
+.hairDryer_value_selected{
+    border: 1px solid #ff4800;
+    background:url(/app/image/icon_xuanze.png) no-repeat  right -2px top -2px;
+}
+.hairDryer_text_selected{
+    color: #ff4800;
+}
+
+.hairDryer_paymentWay{
+    width: 100%;
+    height: 35px;
+    line-height: 35px;
+    vertical-align: middle;
+    margin-top: 10px;
+}
+.hairDryer_paymentWay_tip{
+    font-size: 14px;
+    color: #333333;
+    margin-left: 10px;
+}
+.hairDryer_select_paymentWay{
+    width: 100%;
+    height: 55px;
+    margin-top: 1px;
+}
+.payment_way_img{
+    margin-left: 10px;
+    height: 29px;
+    width: 29px;
+    margin-top: 13px;
+    float: left;
+}
+.hairDryer_paymentWay_container{
+    width: calc(100% - 77px);
+    height: 30px;
+    margin-left: 46px;
+    padding-top: 10px;
+}
+.hairDryer_paymentWay_detail{
+    font-size: 14px;
+    color: #333333;
+    display: block;
+    margin-left: 0;
+}
+.hairDryer_paymentWay_desc{
+    font-size: 10px;
+    color: #999999;
+    display: block;
+}
+.hairDryer_paymentWay_detail::after{
+    content: "";
+    background-image: url(/app/image/biaoqian.png);
+    background-size: contain;
+    display: inline-block;
+    margin-left: 5px;
+    width: 30px;
+    height: 10px;
+    background-repeat: no-repeat;
+}
+.hairDryer_payment_radio{
+    width: 20px;
+    height: 20px;
+    float: right;
+    margin-right: 10px;
+    margin-top: -23px;
+}
+#submit_payment_info{
+    width: calc(100% - 30px);
+    background: #27d0ae;
+    border: 1px solid #27d0ae;
+    border-radius: 5px;
+    margin-top: 35px;
+    height: 40px;
+    margin-left: 15px;
+    margin-right: 15px;
+    color: #ffffff;
+    font-size: 14px;
+    outline: none;
+}
+#hairDryer_custom_jin_e{
+    background: transparent;
+    border: none;
+    width: calc(100% - 4px);
+    height: 95%;
+    font-size: 16px;
+    padding-left: 2px;
+    padding-right: 2px;
+    outline: none;
+}
+
+
+
+.hairDryer_timeCash{
+    width: 100%;
+    height: 55px;
+    line-height: 55px;
+    padding-left: 10px;
+    font-size: 16px;
+    font-family: PingFang-SC-Regular;
+    border-top: 1px solid #eee;
+    margin-top: 20px;
+    color: #ff4800;
+}
+input[type=radio]{
+    display: inline-block;
+    vertical-align: middle;
+    width: 20px;
+    height: 20px;
+    margin-left: 2px;
+    -webkit-appearance: none;
+    background-color: transparent;
+    border: 0;
+    outline: 0 !important;
+    line-height: 20px;
+    color: #28d0ae;
+}
+input[type=radio]:after  {
+    content: "";
+    display:block;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    text-align: center;
+    line-height: 14px;
+    font-size: 16px;
+    color: #28d0ae;
+    border: 2px solid #28d0ae;
+    background-color: #fff;
+    box-sizing:border-box;
+    padding-left: 3px;
+    padding-top: 1px;
+}
+input[type=radio]:checked:after  {
+    content: "L";
+    transform:matrix(-0.766044,-0.642788,-0.642788,0.766044,0,0);
+    -webkit-transform:matrix(-0.766044,-0.642788,-0.642788,0.766044,0,0);
+    border-color: #28d0ae;
+    background-color: #ffffff;
+}

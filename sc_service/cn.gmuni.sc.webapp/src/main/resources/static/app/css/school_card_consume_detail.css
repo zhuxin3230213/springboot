@@ -1,0 +1,43 @@
+html,body{
+    padding:0;
+    margin:0;
+    width: 100%;
+    overflow-x: hidden;
+    height: 100%;
+    background-color: #f2f0f7;
+}
+
+
+
+.school_card_consume_item{
+    background: #fff;
+    padding: 13px 10px 13px 9px;
+    display: table;
+    width: 100%;
+    box-sizing: border-box;
+    color: #333333;
+}
+
+
+.school_card_consume_info{
+    float: left;
+    display: table-cell;
+    vertical-align: middle;
+}
+
+.school_card_consume_label{
+    display: block;
+    margin-bottom:5px;
+}
+
+.school_card_consume_money{
+    display: table-cell;
+    vertical-align: middle;
+    text-align: right;
+}
+
+.school_card_consume_cut_line{
+    background-color: #f2f0f7;
+    height:1px;
+    width:100%;
+}

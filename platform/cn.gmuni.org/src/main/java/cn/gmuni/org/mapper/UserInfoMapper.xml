@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.gmuni.org.mapper.UserInfoMapper">
+  <resultMap id="BaseResultMap" type="cn.gmuni.org.model.UserInfo">
+    <id column="ID" jdbcType="VARCHAR" property="id" />
+    <result column="user_id" jdbcType="VARCHAR" property="userId" />
+    <result column="password" jdbcType="VARCHAR" property="password" />
+    <result column="state" jdbcType="CHAR" property="state" />
+    <result column="code" jdbcType="VARCHAR" property="code" />
+    <result column="username" jdbcType="VARCHAR" property="username" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="dept_id" jdbcType="VARCHAR" property="deptId"/>
+    <result column="dept_name" jdbcType="VARCHAR" property="deptName"/>
+  </resultMap>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from pf_gmuni_userinfo
+    where ID = #{id,jdbcType=VARCHAR}
+  </delete>
+  <delete id="deleteByIdsIn" parameterType="java.lang.String">
+    DELETE  ui ,r
+    FROM pf_gmuni_userinfo ui
+    LEFT JOIN pf_gmuni_role_user r ON ui.ID = r.user_id
+    WHERE ui.ID IN
+    <foreach item="item" collection="list" open="(" separator="," close=")">
+      #{item}
+    </foreach>
+  </delete>
+  <insert id="insert" parameterType="cn.gmuni.org.model.UserInfo">
+    insert into pf_gmuni_userinfo (ID, user_id, password,
+      state, code, username, 
+      create_time)
+    values (#{id,jdbcType=VARCHAR}, #{userId,jdbcType=VARCHAR}, #{password,jdbcType=VARCHAR}, 
+      #{state,jdbcType=CHAR}, #{code,jdbcType=VARCHAR}, #{username,jdbcType=VARCHAR}, 
+      #{createTime,jdbcType=TIMESTAMP})
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="cn.gmuni.org.model.UserInfo">
+    update pf_gmuni_userinfo
+    set user_id = #{userId,jdbcType=VARCHAR},
+      password = #{password,jdbcType=VARCHAR},
+      state = #{state,jdbcType=CHAR},
+      code = #{code,jdbcType=VARCHAR},
+      username = #{username,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=TIMESTAMP}
+    where ID = #{id,jdbcType=VARCHAR}
+  </update>
+  <update id="initializePwd" parameterType="java.lang.String">
+    update pf_gmuni_userinfo
+    set password = #{pwd,jdbcType=VARCHAR}
+    where ID  IN
+    <foreach item="item" collection="list" open="(" separator="," close=")">
+      #{item}
+    </foreach>
+  </update>
+  <update id="changeState" parameterType="java.lang.String">
+    update pf_gmuni_userinfo
+    set state = #{state,jdbcType=VARCHAR}
+    where ID IN
+    <foreach item="item" collection="list" open="(" separator="," close=")">
+      #{item}
+    </foreach>
+  </update>
+  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select ID, user_id, state, code, username, create_time
+    from pf_gmuni_userinfo
+    where ID = #{id,jdbcType=VARCHAR}
+  </select>
+  <select id="login" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select ID, user_id, state, code,password, username, create_time
+    from pf_gmuni_userinfo
+    where code = #{code,jdbcType=VARCHAR}
+  </select>
+  <select id="selectAll" resultMap="BaseResultMap" parameterType="java.util.Map">
+    select ID, user_id, state, code, username, create_time
+    from pf_gmuni_userinfo where 1=1
+    <if test="name!=null and name!=''">
+      and username like CONCAT('%',#{name,jdbcType=VARCHAR},'%')
+    </if>
+    <if test="code!=null and code!=''">
+      and code like CONCAT('%',#{code,jdbcType=VARCHAR},'%')
+    </if>
+  </select>
+  <select id="listUserForAuthorize" resultMap="BaseResultMap">
+    select u.ID, u.user_id, u.state, u.code, u.username, u.create_time ,b.dept_id,b.dept_name
+    FROM pf_gmuni_userinfo u LEFT JOIN pf_gmuni_role_user r ON u.ID=r.user_id
+    LEFT JOIN (select u.id as user_id,d.id as dept_id,d.name as dept_name from pf_gmuni_user u inner join pf_gmuni_department d on u.dept_id = d.id) b
+    ON b.user_id = u.user_id
+    WHERE r.role_id=#{roleId}
+    and u.code != 'admin'
+  </select>
+  <select id="selectAllPageByDeptId" resultMap="BaseResultMap">
+    SELECT ui.ID, ui.user_id, ui.state, ui.code, ui.username, ui.create_time,d.id as dept_id,d.name as dept_name
+    FROM pf_gmuni_userinfo ui LEFT JOIN pf_gmuni_user u ON ui.user_id= u.ID
+    LEFT JOIN pf_gmuni_department d ON u.dept_id = d.ID
+    WHERE d.dLevel_code LIKE
+     CONCAT((SELECT dLevel_code FROM pf_gmuni_department WHERE id = #{deptId,jdbcType=VARCHAR}),'%')
+    and ui.code != 'admin'
+    <if test="name!=null and name!=''">
+      and ui.username like CONCAT('%',#{name,jdbcType=VARCHAR},'%')
+    </if>
+    <if test="code!=null and code!=''">
+      and ui.code like CONCAT('%',#{code,jdbcType=VARCHAR},'%')
+    </if>
+    order by ui.username, ui.code
+  </select>
+  <select id="checkOldPwd" resultType="java.lang.Integer">
+    select count(1) from pf_gmuni_userinfo
+    where code = #{code}
+    and password = #{pwd}
+  </select>
+
+  <update id="changePwd" parameterType="java.lang.String">
+    update pf_gmuni_userinfo
+    set password = #{pwd,jdbcType=VARCHAR}
+    where code = #{code,jdbcType=VARCHAR}
+
+  </update>
+
+  <update id="updateUserName"  parameterType="cn.gmuni.org.model.User" >
+    update pf_gmuni_userinfo set username=#{name} where user_id=#{id}
+  </update>
+
+</mapper>

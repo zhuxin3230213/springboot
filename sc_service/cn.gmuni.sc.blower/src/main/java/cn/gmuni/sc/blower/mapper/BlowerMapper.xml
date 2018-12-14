@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.gmuni.sc.blower.mapper.BlowerMapper">
+
+    <select id="getBlowerStatus" parameterType="java.util.Map" resultType="java.util.Map">
+        select status,user_code as userCode,update_time as updateTime,work_time as workTime from sc_gmuni_device where school_code=#{schoolCode,jdbcType=VARCHAR} and code=#{blowerCode,jdbcType=VARCHAR}
+    </select>
+
+    <update id="updateBlowerStatus" parameterType="java.util.Map" >
+        update sc_gmuni_device set
+        status =#{status,jdbcType=VARCHAR}
+        where school_code=#{schoolCode,jdbcType=VARCHAR} and code=#{blowerCode,jdbcType=VARCHAR}
+    </update>
+
+    <update id="lockStatus" parameterType="java.util.Map" >
+        update sc_gmuni_device set
+        status =#{status,jdbcType=VARCHAR},
+        user_code =#{userCode,jdbcType=VARCHAR},
+        update_time =#{updateTime,jdbcType=TIMESTAMP},
+        work_time =#{workTime,jdbcType=VARCHAR}
+        where school_code=#{schoolCode,jdbcType=VARCHAR} and code=#{blowerCode,jdbcType=VARCHAR}
+    </update>
+
+
+    <update id="initStatus" parameterType="java.util.Map" >
+        update sc_gmuni_device set
+        status ='1',
+        user_code =NULL,
+        update_time =NULL,
+        work_time =NULL
+        where school_code=#{schoolCode,jdbcType=VARCHAR} and code=#{blowerCode,jdbcType=VARCHAR}
+    </update>
+
+    <select id="selectOneCardJinE" parameterType="java.util.Map" resultType="java.lang.String">
+        SELECT amount FROM sc_gmuni_wallet WHERE user_code=#{userCode,jdbcType=VARCHAR}
+    </select>
+
+
+    <update id="oneCardPayment" parameterType="java.util.Map" >
+        update sc_gmuni_wallet set
+        amount = (amount - #{chargeJinE,jdbcType=DECIMAL})
+        where school_code=#{schoolCode,jdbcType=VARCHAR} and user_code=#{userCode,jdbcType=VARCHAR}
+    </update>
+
+    <update id="oneCardrefund" parameterType="java.util.Map" >
+        update sc_gmuni_wallet set
+        amount = (amount + #{chargeJinE,jdbcType=DECIMAL})
+        where school_code=#{schoolCode,jdbcType=VARCHAR} and user_code=#{userCode,jdbcType=VARCHAR}
+    </update>
+
+    <select id="selectDeviceByCode" parameterType="java.lang.String" resultType="java.util.Map">
+         SELECT  d.device_ip AS ip,d.usb_port AS usbPort,d.serial_number AS serialNumber,ds.url AS url FROM  sc_gmuni_device d INNER JOIN sc_gmuni_device_services ds ON
+        d.school_code = ds.code WHERE d.code=#{blowerCode,jdbcType=VARCHAR}
+    </select>
+
+
+</mapper>

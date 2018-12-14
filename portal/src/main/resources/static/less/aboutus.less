@@ -1,0 +1,265 @@
+.aboutus-content {
+  margin-top: 50px;
+  .aboutus-nav{
+    width: 148px;
+    display: inline-block;
+    background-color: #001020;
+    .aboutus-nav-ul{
+      width: 100%;
+      font-size: 18px;
+      text-align: center;
+      font-family: "Microsoft Yahei";
+
+      .aboutus-nav-li{
+        padding-top:20px;
+
+        a{
+          display: inline-block;
+          border-bottom: 2px solid #2e363d;
+
+          color: rgba(255,255,255,0.3);
+          border-radius: 0;
+          padding:0 0 20px 0;
+          &:hover{
+            background-color: transparent;
+            color: #f7f1e6;
+          }
+        }
+
+        &.active a{
+          color: #f7f1e6;
+          background-color: transparent;
+        }
+
+        &:first-of-type{
+          padding-top:26px;
+        }
+
+        &.aboutus-nav-li-last a{
+          border-bottom: none;
+        }
+      }
+
+
+    }
+  }
+  .tab-content{
+    display: inline-block;
+    width: calc(100% - 168px);
+    float: right;
+    color: rgba(255,255,255,0.6);
+    font-size: 14px;
+    .introduction{
+      .comp_img{
+        display: inline-block;
+        width: 320px;
+        vertical-align: top;
+      }
+      .info_content{
+        display: inline-block;
+        width: calc(100% - 325px);
+        margin-top: 15px;
+        padding-left: 20px;
+        p{
+          text-indent:2em;
+        }
+        p:not(:first-of-type){
+          margin-top: 40px;
+        }
+      }
+    }
+    .contact-info{
+      margin-top: 50px;
+    }
+
+
+    .abus-recruit-container{
+      width: 100%;
+
+      .panel{
+        border:none;
+        background-color: transparent;
+        &:not(:first-of-type){
+          margin-top: 10px;
+        }
+        .panel-heading{
+          color: rgba(255,255,255,.6);
+          font-size: 18px;
+          background-color: #1c3045;
+          border-radius: 4px;
+
+          a{
+            text-decoration-line: none;
+          }
+
+          a + .abus-recruit-arrow{
+            width: 8px;
+            height: 8px;
+            float: right;
+            border: 2px solid #ffffff;
+            border-left: none;
+            border-top: none;
+            display: inline-block;
+            transform: rotate(45deg);
+            -ms-transform: rotate(45deg);
+            margin-top: 3px;
+
+            &.abus-recruit-arrow-in{
+              transform: rotate(-135deg);
+              -ms-transform: rotate(-135deg);
+              margin-top: 6px;
+
+            }
+          }
+        }
+
+        .panel-collapse{
+          .panel-body{
+            border-top: none;
+          }
+        }
+
+        .panel-body{
+          padding-top: 20px;
+          padding-left: 14px;
+          //height: 400px;
+        }
+      }
+
+      .abus-recruit-info{
+        padding-bottom: 32px;
+      }
+
+      .abus-recruit-info-title{
+        font-size: 18px;
+        color: #f7f1e6;
+        font-family: "Microsoft Yahei";
+        margin: 0 0 10px 0;
+
+      }
+
+      .abus-recruit-info-content{
+        font-size: 14px;
+        font-family: "Microsoft Yahei";
+        color: rgba(255,255,255,.6);
+
+        li{
+          height: 26px;
+          line-height: 26px;
+        }
+      }
+
+
+      .abus-recruit-conus{
+        border:4px solid #1c3045;
+        border-radius:4px;
+        width: 100%;
+        height: 122px;
+        padding-left: 24px;
+        margin-top: 30px;
+
+        .abus-recruit-conus-email{
+          font-size: 18px;
+          color: #f7f1e6;
+          font-family: "Microsoft Yahei";
+          margin-top: 30px;
+        }
+
+        .abus-recruit-conus-source{
+          margin-top: 14px;
+          font-size: 14px;
+          color: rgba(255,255,255,.6);
+          font-family: "Microsoft Yahei";
+
+        }
+      }
+    }
+
+    /* 企业相册 */
+    .album-content{
+      .album-info{
+        font-size: 14px;
+        color: rgba(255,255,255,.6);
+        text-indent: 2em;
+        margin-bottom: 42px;
+      }
+      .album-list{
+        .album-list-img{
+          position: relative;
+          margin-bottom: 50px;
+          padding-bottom: 50px;
+          border-bottom: 2px solid #2e363d;
+          .album-list-img-info{
+            position: absolute;
+            top: 196px;
+            width: 100%;
+            height: 44px;
+            line-height: 44px;
+            background: rgba(0,0,0,.6);
+            font-size: 16px;
+            color: #f7f1e6;
+            text-align: center;
+          }
+        }
+      }
+    }
+  }
+}
+
+.album-maskLayer{
+  display: none;
+  position:absolute;
+  width:0;
+  height:0;
+  background:#00060b;
+  z-index:100;
+
+  .album-maskLayer-close{
+    float: right;
+    margin-top: 75px;
+    margin-right: 90px;
+  }
+  .album-maskLayer-content{
+    /*max-height: 520px;*/
+    height: 520px;
+    margin-top: 170px;
+    >div{
+      display: inline-block;
+    }
+    .maskLayer-content-list{
+      width: 1170px;
+      background: #fff;
+      margin-left: 260px;
+      margin-right: 260px;
+    }
+    .maskLayer-content-leftBtn{
+      margin-top: 240px;
+      margin-left: 90px;
+    }
+    .maskLayer-content-rightBtn{
+      margin-top:240px;
+    }
+  }
+}
+.album-maskLayer-bottom{
+  margin-top: 68px;
+  text-align: center;
+  .maskLayer-bottom-num{
+    color: #fff;
+    font-size: 16px;
+    span{
+      font-size: 30px;
+      color: #f6ac27;
+    }
+  }
+  .maskLayer-bottom-detail{
+    font-size: 22px;
+    color: #f7f1e6;
+    margin-top: 16px;
+  }
+  .maskLayer-bottom-info{
+    font-size: 16px;
+    color: rgba(255,255,255,.5);
+    margin-top: 15px;
+  }
+}

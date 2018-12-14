@@ -1,0 +1,248 @@
+/*
+- Created by cyj
+- 2018/7/23
+*/
+
+/* 轮播图 */
+.carousel {
+    height: 686px;
+}
+.carousel .item {
+    height: 686px;
+    background-color: #000;
+}
+.carousel .item img {
+    width: 100%;
+}
+.carousel-inner>.item>a>img{
+    height: 100%;
+}
+
+/* 响应式布局 */
+@media (max-width: 768px) {
+    .carousel {
+        height: 300px;
+    }
+    .carousel .item {
+        height: 300px;
+    }
+    .carousel .item img {
+        min-height: 300px;
+    }
+}
+
+/* 公司简介部分 */
+.companyInfo{
+    background: rgba(4,12,19,.8);
+    >div{
+        max-width: 1200px;
+        margin: 0 auto;
+        padding-top: 42px;
+        text-align: center;
+        h3{
+            margin: 10px;
+        }
+        p{
+            width: 730px;
+            margin: 0 auto;
+            margin-top: 26px;
+            font-size: 12px;
+            color: rgba(255,255,255,.6);
+        }
+        .companyInfo-contact{
+            margin-top: 46px;
+            margin-bottom: 42px;
+            a{
+                display: inline-block;
+                width: 100px;
+                height: 35px;
+                padding: 10px;
+                font-size: 12px;
+                border: 1px solid rgb(246,172,39);
+                border-radius: 4px;
+                color: rgb(246,172,39);
+                text-decoration: none;
+                margin-right: 20px;
+            }
+        }
+    }
+}
+
+/* 解决方案部分 */
+.index-solution{
+    margin-bottom: 98px;
+    h3{
+        margin-top: 52px;
+    }
+    .schoolNet-img{
+        width:46.9%;
+        margin-top:52px;
+        margin-right:20px;
+    }
+    .index-schoolNet{
+        position: relative;
+        height: 550px;
+        background:linear-gradient(to bottom, rgba(0, 0, 0, 0.05), rgba(0, 0, 0, 0.4)), url(../images/img_01.png) no-repeat;
+    }
+    .content{
+        transition: 0.33s ease all;
+       /* position: absolute;
+        z-index: 100;*/
+    }
+    .col-md-4,.col-md-6,.col-md-12{
+        padding:0;
+    }
+    .index-maskLayer a{
+        text-decoration: none;
+    }
+}
+.solution-right{
+    .solution-top{
+        margin-top: 52px;
+    }
+    .index-schoolInfo{
+        margin-top: 20px;
+    }
+    .solution-top,index-schoolInfo{
+        position: relative;
+        float: left;
+    }
+    .index-schoolInfo .content{
+        transition: 0.33s ease all;
+    }
+    index-smartSchool,index-wifi{
+        position: relative;
+        width: 200px;
+        float: left;
+        .content{
+            transition: 0.33s ease all;
+        }
+    }
+}
+.index-smartSchool{
+    position: relative;
+    height: 260px;
+    background:linear-gradient(to bottom, rgba(0, 0, 0, 0.05), rgba(0, 0, 0, 0.4)), url(../images/img_02.png) no-repeat;
+}
+.index-wifi{
+    position: relative;
+    height: 260px;
+    background:linear-gradient(to bottom, rgba(0, 0, 0, 0.05), rgba(0, 0, 0, 0.4)), url(../images/img_03.png) no-repeat;
+}
+.index-schoolInfo{
+    position: relative;
+    height: 270px;
+    background:linear-gradient(to bottom, rgba(0, 0, 0, 0.05), rgba(0, 0, 0, 0.4)), url(../images/img_04.png) no-repeat;
+}
+
+/* 3大非凡优势 */
+.index-advantage {
+    background: rgba(4,12,19,.8);
+    padding-right: 15px;
+    padding-left: 15px;
+    h3{
+        margin-top: 52px;
+    }
+    .row{
+        margin-top: 50px;
+        margin-bottom: 20px;
+    }
+    .col-md-4 {
+        margin-bottom: 20px;
+        text-align: center;
+        padding-left: 10px;
+        padding-right: 10px;
+    }
+    p{
+        color: rgba(255,255,255,.7);
+        margin-top: 20px;
+    }
+    .advantage-outerImg{
+        position: absolute;
+        top:0;
+        left:75px;
+        transition: all 0.5s ease-in-out;
+        -webkit-transition: all 0.5s ease-in-out;
+        -moz-transition: all 0.5s ease-in-out;
+        -o-transition: all 0.5s ease-in-out;
+    }
+    .col-md-4:hover .advantage-outerImg{
+        transform: rotate(360deg);
+        -webkit-transform: rotate(360deg);
+        -moz-transform: rotate(360deg);
+        -o-transform: rotate(360deg);
+        -ms-transform: rotate(360deg);
+    }
+    .advantage-innerImg{
+        position: absolute;
+        top:65px;
+        left:135px;
+    }
+}
+
+/* 5大服务承诺 */
+.index-service {
+    h3{
+        margin-top: 52px;
+    }
+    .col-md-2 {
+        background: rgba(4,12,19,.8);
+        text-align: center;
+        margin: 50px 0 60px 32px;
+        img{
+            margin-top: 36px;
+        }
+        p{
+            font-size: 16px;
+            color: rgba(255,255,255,.7);
+            margin-top: 24px;
+            margin-bottom: 24px;
+        }
+    }
+}
+
+/* 5大服务承诺 */
+.index-successCase{
+    .col-md-4 {
+        padding-left: 10px;
+    }
+}
+
+/* 粒子动态插件 */
+#animatePointer {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+
+/* 动态效果 */
+.index-successCase img{
+    cursor: pointer;
+    transition: all 0.6s;
+    -webkit-transition: all 0.6s;
+    -moz-transition: all 0.6s;
+    -o-transition: all 0.6s;
+    -ms-transition: all 0.6s;
+}
+.index-successCase img:hover{
+    transform: scale(1.15);
+    -webkit-transform: scale(1.15);
+    -moz-transform: scale(1.15);
+    -o-transform: scale(1.15);
+    -ms-transform: scale(1.15);
+}
+.service-detail .col-md-2 img{
+    cursor: pointer;
+    transition: all 0.5s ease-in-out;
+    -webkit-transition: all 0.5s ease-in-out;
+    -moz-transition: all 0.5s ease-in-out;
+    -o-transition: all 0.5s ease-in-out;
+    -ms-transition: all 0.5s ease-in-out;
+}
+.service-detail .col-md-2:hover img{
+    transform: rotateY(360deg);
+    -webkit-transform: rotateY(360deg);
+    -moz-transform: rotateY(360deg);
+    -o-transform: rotateY(360deg);
+    -ms-transform: rotateY(360deg);
+}

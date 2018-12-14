@@ -1,0 +1,26 @@
+<!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-4.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width,initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+    <title>缴费明细</title>
+    <link type="text/css" rel="stylesheet" th:href="@{/app/css/net_pay_detail.css}">
+    <script th:src="@{/app/js/simJQ-1.4.min.js}"></script>
+</head>
+<body>
+    <div th:each="detailData,iterStat:${data}">
+        <div class="net_pay_detail_cut_line" th:if="iterStat.index !=0"></div>
+        <div class="net_pay_detail_list">
+            <div class="net_pay_detail_item">
+                <span class="net_pay_detail_info">
+                        <span class="net_pay_detail_label" th:text="${detailData.pay_way}"></span>
+                        <span class="net_pay_detail_time" th:text="${detailData.pay_time}"></span>
+                    </span>
+                <span class="net_pay_detail_money" th:text="${detailData.total_amount}">
+                </span>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
