@@ -29,6 +29,10 @@
     <select id="getByNotifyId" resultType="java.lang.Integer" parameterType="java.lang.String">
         select count(1) from sc_gmuni_pay_log_ali where notify_id = #{notifyId,jdbcType=TIMESTAMP}
     </select>
+
+    <select id="getByOutTradeNo" resultType="java.lang.Integer" parameterType="java.lang.String">
+        select count(1) from sc_gmuni_pay_log_ali where out_trade_no = #{outTradeNo,jdbcType=VARCHAR}
+    </select>
     <select id="getPayDetails" resultType="java.util.Map" parameterType="java.lang.String">
         SELECT
           trade_no AS trade_no,

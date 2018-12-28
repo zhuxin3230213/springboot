@@ -7,7 +7,7 @@ import java.util.Map;
 @Service
 public interface BlowerMapper {
     //查询一卡余额
-    String selectOneCardJinE(Map<String, Object> params);
+    Map<String, Object> selectOneCardJinE(Map<String, Object> params);
 
     //一卡通扣费
     int oneCardPayment(Map<String, Object> params);
@@ -29,5 +29,8 @@ public interface BlowerMapper {
 
     //查询设备详细信息
     Map<String,Object> selectDeviceByCode(String blowerCode);
+
+    //查询支付宝交易信息
+    Map<String,Object> selectALiBody(Map<String, Object> params);
 
 }

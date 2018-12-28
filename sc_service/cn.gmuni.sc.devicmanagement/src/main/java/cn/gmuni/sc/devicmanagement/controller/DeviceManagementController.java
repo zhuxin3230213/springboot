@@ -1,8 +1,11 @@
 package cn.gmuni.sc.devicmanagement.controller;
 
+import cn.gmuni.sc.base.response.BaseResponse;
 import cn.gmuni.sc.base.response.Content;
 import cn.gmuni.sc.devicmanagement.model.Device;
+import cn.gmuni.sc.devicmanagement.model.Repair;
 import cn.gmuni.sc.devicmanagement.service.IDeviceManagementService;
+import cn.gmuni.sc.user.utils.UserUtils;
 import cn.gmuni.utils.PageUtils;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
@@ -63,6 +66,19 @@ public class DeviceManagementController {
         PageUtils page = PageUtils.getPage(params);
         PageHelper.startPage(page.getPage(),page.getSize());
         return new PageInfo<>(deviceManagementServiceImpl.listDevice(params));
+    }
+
+    @ApiOperation(value = "报修")
+    @PostMapping("/repair")
+    public BaseResponse<Map<String,Object>> repair(@RequestBody Repair repair){
+        repair.setUserR(UserUtils.getLoginUserInfo().getIndentifier());
+        return new BaseResponse<>(deviceManagementServiceImpl.repair(repair));
+    }
+
+    @ApiOperation(value = "维修")
+    @PostMapping("/maintenance")
+    public Content maintenance(@RequestBody Repair repair){
+        return deviceManagementServiceImpl.maintenance(repair);
     }
 
 }

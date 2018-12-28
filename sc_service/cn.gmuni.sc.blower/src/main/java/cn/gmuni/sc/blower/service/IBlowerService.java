@@ -15,6 +15,7 @@ public interface IBlowerService {
 
     Map<String,Object> blowerPayByCard(Map<String, Object> params);
 
-
     boolean saveBlowerPayInfo(Map<String, String[]> payInfo);
+
+    Map<String,Object> refundALi(String outTradeNo,String sig);
 }

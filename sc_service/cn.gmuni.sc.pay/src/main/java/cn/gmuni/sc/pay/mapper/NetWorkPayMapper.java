@@ -35,6 +35,8 @@ public interface NetWorkPayMapper {
      */
     int getByNotifyId(@Param("notifyId") String notifyId);
 
+    int getByOutTradeNo(@Param("outTradeNo") String outTradeNo);
+
     List<Map<String, Object>> getPayDetails(@Param("schoolCode") String schoolCode, @Param("stuCode") String stuCode);
 
     /**

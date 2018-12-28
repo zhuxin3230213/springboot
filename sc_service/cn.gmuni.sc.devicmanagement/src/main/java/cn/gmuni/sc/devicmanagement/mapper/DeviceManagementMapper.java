@@ -1,6 +1,7 @@
 package cn.gmuni.sc.devicmanagement.mapper;
 
 import cn.gmuni.sc.devicmanagement.model.Device;
+import cn.gmuni.sc.devicmanagement.model.Repair;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -22,4 +23,9 @@ public interface DeviceManagementMapper {
     //校验设备id唯一
      int checkCode(Device device);
 
+     //报修
+     int repair(Repair repair);
+
+    //维护
+    int maintenance(Repair repair);
 }

@@ -42,8 +42,6 @@ public class DeviceServiceBean {
 
     private String col10;
 
-
-
     public String getId() {
         return id;
     }

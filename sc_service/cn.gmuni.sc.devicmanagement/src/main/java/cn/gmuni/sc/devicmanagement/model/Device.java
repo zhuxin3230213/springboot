@@ -31,6 +31,18 @@ public class Device {
     //设备地址
     private String address;
 
+    //设备厂家
+    private String vender;
+
+    //品牌型号
+    private String brandModel;
+
+    //功率
+    private String power;
+
+    //供应商
+    private String supplier;
+
     public String getId() {
         return id;
     }
@@ -101,5 +113,37 @@ public class Device {
 
     public void setAddress(String address) {
         this.address = address;
+    }
+
+    public String getVender() {
+        return vender;
+    }
+
+    public void setVender(String vender) {
+        this.vender = vender;
+    }
+
+    public String getBrandModel() {
+        return brandModel;
+    }
+
+    public void setBrandModel(String brandModel) {
+        this.brandModel = brandModel;
+    }
+
+    public String getPower() {
+        return power;
+    }
+
+    public void setPower(String power) {
+        this.power = power;
+    }
+
+    public String getSupplier() {
+        return supplier;
+    }
+
+    public void setSupplier(String supplier) {
+        this.supplier = supplier;
     }
 }

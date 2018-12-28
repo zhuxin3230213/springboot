@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gmunidata.student.mapper.StudentLocationMapper">
+
+    <resultMap id="BaseResultMap" type="com.gmunidata.student.model.StudentLocation">
+        <id column="id" jdbcType="VARCHAR" property="id"/>
+        <result column="user_info" jdbcType="VARCHAR" property="userInfo"/>
+        <result column="school" jdbcType="VARCHAR" property="school"/>
+        <result column="student_id" jdbcType="VARCHAR" property="studentId"/>
+        <result column="gprs_time" jdbcType="VARCHAR" property="gprsTime"/>
+        <result column="longitude" jdbcType="VARCHAR" property="longitude"/>
+        <result column="latitude" jdbcType="VARCHAR" property="latitude"/>
+        <result column="altitude" jdbcType="VARCHAR" property="altitude"/>
+        <result column="gprs_city" jdbcType="VARCHAR" property="city"/>
+        <result column="gprs_address" jdbcType="VARCHAR" property="address"/>
+        <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
+        <result column="stu_sign_time" jdbcType="VARCHAR" property="stuSignTime"/>
+    </resultMap>
+
+    <delete id="delete" parameterType="java.lang.String">
+          DELETE FROM sc_gmuni_stu_location
+	      WHERE
+	      id = #{id,jdbcType=VARCHAR}
+    </delete>
+    <insert id="add" parameterType="com.gmunidata.student.model.StudentLocation">
+       INSERT INTO sc_gmuni_stu_location
+	(id,user_info,school,student_id,gprs_time,longitude,latitude,altitude,gprs_city,gprs_address,create_time,stu_sign_time)
+	VALUES
+	(#{id,jdbcType=VARCHAR},#{userInfo,jdbcType=VARCHAR},#{school,jdbcType=VARCHAR},#{studentId,jdbcType=VARCHAR},
+	#{gprsTime,jdbcType=VARCHAR},#{longitude,jdbcType=VARCHAR},#{latitude,jdbcType=VARCHAR},#{altitude,jdbcType=VARCHAR},
+	#{city,jdbcType=VARCHAR},#{address,jdbcType=VARCHAR},#{createTime,jdbcType=TIMESTAMP},#{stuSignTime,jdbcType=VARCHAR}
+	)
+    </insert>
+    <update id="update" parameterType="com.gmunidata.student.model.StudentLocation">
+UPDATE sc_gmuni_stu_location
+	SET
+	longitude = #{longitude,jdbcType=VARCHAR} ,
+	latitude = #{latitude,jdbcType=VARCHAR} ,
+	altitude = #{altitude,jdbcType=VARCHAR} ,
+	WHERE
+	id = #{id,jdbcType=VARCHAR} ;
+    </update>
+
+    <select id="getStu" parameterType="java.util.Map" resultMap="BaseResultMap">
+        SELECT s.id as id,
+        s.user_info as userInfo,
+        s.school as school,
+        s.student_id as studentId,
+        s.gprs_time as gprsTime,
+        s.longitude,
+        s.latitude,
+        s.altitude,
+        s.gprs_city,
+        s.gprs_address,
+        s.create_time as createTime,
+        s.stu_sign_time as stuSignTime
+        FROM
+        sc_gmuni_stu_location s
+        where
+        <if test="studentId != null and studentId != ''">
+            s.student_id = #{studentId,jdbcType=VARCHAR}
+        </if>
+        order by s.create_time desc
+        LIMIT 0,1;
+    </select>
+
+    <select id="list" parameterType="java.util.Map" resultType="java.util.Map">
+        SELECT
+        s.gprs_address as address,
+        s.stu_sign_time as stuSignTime
+        FROM
+        sc_gmuni_stu_location s
+        where
+        <if test="userInfo != null and userInfo != ''">
+            s.user_info = #{userInfo,jdbcType=VARCHAR}
+        </if>
+        <if test="school != null and school != ''">
+            and s.school = #{school,jdbcType=VARCHAR}
+        </if>
+        <if test="studentId != null and studentId != ''">
+            and s.student_id = #{studentId,jdbcType=VARCHAR}
+        </if>
+        <if test="stuSignTime != null and stuSignTime != ''">
+            and s.stu_sign_time LIKE concat(concat('%',#{stuSignTime}),'%')
+        </if>
+        order by s.create_time desc
+    </select>
+
+    <select id="addressList" parameterType="java.util.Map" resultType="java.util.Map">
+        SELECT
+        s.gprs_address as address,
+        s.stu_sign_time as stuSignTime
+        FROM
+        sc_gmuni_stu_location s
+        where
+        <if test="studentId != null and studentId != ''">
+             s.student_id = #{studentId,jdbcType=VARCHAR}
+        </if>
+        order by s.create_time desc
+    </select>
+</mapper>

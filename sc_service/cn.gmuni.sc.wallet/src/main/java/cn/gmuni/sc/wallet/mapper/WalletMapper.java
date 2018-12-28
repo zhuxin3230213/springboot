@@ -33,6 +33,13 @@ public interface WalletMapper {
     int getByNotifyId(@Param("notifyId") String notifyId);
 
     /**
+     * 根据订单id是否已处理
+     * @param outTradeNo
+     * @return
+     */
+    int getByOutTradeNo(@Param("outTradeNo") String outTradeNo);
+
+    /**
      * 保存钱包充值信息
      * @param recharge
      * @return
@@ -62,4 +69,10 @@ public interface WalletMapper {
      * @return
      */
    int saveBlowerPayment(WalletPayment walletPayment);
+
+    /**
+     * 修改退款记录状态
+     * @return
+     */
+    int updatePayment(WalletPayment walletPayment);
 }

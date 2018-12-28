@@ -3,38 +3,61 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width,initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
-    <title>吹风机付款成功</title>
-    <link type="text/css" rel="stylesheet" href="../static/app/css/net_pay_success.css">
-    <script src="../static/app/js/simJQ-1.4.min.js"></script>
-    <script>
+    <title>交易状态</title>
+    <link type="text/css" rel="stylesheet" th:href="@{/app/css/net_pay_success.css}">
+    <script th:src="@{/app/js/simJQ-1.4.min.js}"></script>
+    <script src="https://cdn.bootcss.com/jquery/1.11.3/jquery.js"></script>
+    <script th:inline="javascript">
+        var workTime = [[${msg.workTime}]]
+        var startTime = [[${msg.time}]]
         $(function(){
-            var payType = GetQueryString("payType")
-            var cash = GetQueryString("cash")
+            /* 倒计时 */
+            var m = '',s = 0;
+            if ([[${msg.mark}]]=='IsUsing') {
+                var date = new Date()
+                var timeDiff = new Date(startTime).getTime() - date.getTime();
+                var leave1=timeDiff%(24*3600*1000)
+                var leave2=leave1%(3600*1000)
+                var minutes=Math.floor(leave2/(60*1000)) //分钟差额
+                var leave3=leave2%(60*1000)
+                var seconds=Math.round(leave3/1000) //秒数差额
 
-            if(payType == 'wallet'){
-                $("#walletShow").show()
-                $("#alipayShow").hide()
-                $("#walletValue").text(cash)
-            }else{
-                $("#walletShow").hide()
-                $("#alipayShow").show()
-                $("#alipayValue").text(cash)
+                if (seconds == 0) {
+                    m = workTime - minutes
+                    s = 0
+                } else {
+                    m = workTime - minutes - 1
+                    s = 60 - seconds
+                }
+            } else {
+                m = workTime;
+                s = 0
+            }
+            if ([[${msg.flag}]] == 'true') {
+                getCountdown();
+                var timeout = setInterval(function(){
+                    getCountdown()
+                },1000);
+            }
+            function getCountdown (){
+                $("#hairDryer_countdown").html("倒计时 <span>"+(m>9?m:'0'+m)+"</span>:<span>"+(s>9?s:'0'+s)+"</span>")
+                if( m == 0 && s == 0 ){
+                    alert("使用结束")
+                    clearInterval(timeout);
+                }else if( m >= 0 ){
+                    if( s > 0 ){
+                        s--;
+                    }else if( s == 0 ){
+                        m--;
+                        s = 59;
+                    }
+                }
             }
         })
-        function GetQueryString(name) {
-            var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)", "i");
-            var r = window.location.search.substr(1).match(reg);
-            var context = "";
-            if (r != null)
-                context = r[2];
-            reg = null;
-            r = null;
-            return context == null || context == "" || context == "undefined" ? "" : context;
-        }
     </script>
 </head>
 <body>
-    <div id="walletShow" class="net_pay_success_wrap" style="display:none">
+    <div id="walletShow" th:if="${msg.flag == 'true' && msg.type == '我的钱包'}" class="net_pay_success_wrap">
         <img th:src="@{/app/image/icon_yue.png}" class="net_pay_success_icon">
         <span class="net_pay_success_label">付款成功</span>
         <span class="net_pay_success_money" id="walletValue">1</span>
@@ -44,14 +67,23 @@
         </div>
     </div>
 
-    <div id="alipayShow" class="net_pay_success_wrap" style="display:none">
+    <div id="alipayShow" th:if="${msg.flag eq 'true' && msg.type eq '支付宝'}" class="net_pay_success_wrap">
         <img th:src="@{/app/image/zhifubao.png}" class="net_pay_success_icon">
         <span class="net_pay_success_label">付款成功</span>
         <span class="net_pay_success_money" id="alipayValue">1</span>
-        <div class="net_pay_success_way">
+            <div class="net_pay_success_way">
             <span>付款方式</span>
             <span>支付宝</span>
         </div>
+    </div>
+
+    <div class="net_pay_success_wrap" th:if="${msg.flag eq 'true'}" style="padding-top:30px;padding-bottom:30px">
+        <span id="hairDryer_countdown" style="color:#ff4800;"></span>
+    </div>
+
+    <div class="net_pay_success_wrap" th:if="${msg.flag eq 'false'}" style="padding-top:30px;padding-bottom:30px">
+        <!--<img th:src="@{/app/image/zhifubao.png}" class="net_pay_success_icon">-->
+        <span class="net_pay_success_label" th:text="${msg.msg}"></span>
     </div>
 </body>
 </html>

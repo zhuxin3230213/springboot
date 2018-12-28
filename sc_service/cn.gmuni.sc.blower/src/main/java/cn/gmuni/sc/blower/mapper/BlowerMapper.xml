@@ -31,8 +31,8 @@
         where school_code=#{schoolCode,jdbcType=VARCHAR} and code=#{blowerCode,jdbcType=VARCHAR}
     </update>
 
-    <select id="selectOneCardJinE" parameterType="java.util.Map" resultType="java.lang.String">
-        SELECT amount FROM sc_gmuni_wallet WHERE user_code=#{userCode,jdbcType=VARCHAR}
+    <select id="selectOneCardJinE" parameterType="java.util.Map" resultType="java.util.Map">
+        SELECT amount,pwd FROM sc_gmuni_wallet WHERE user_code=#{userCode,jdbcType=VARCHAR}
     </select>
 
 
@@ -51,6 +51,11 @@
     <select id="selectDeviceByCode" parameterType="java.lang.String" resultType="java.util.Map">
          SELECT  d.device_ip AS ip,d.usb_port AS usbPort,d.serial_number AS serialNumber,ds.url AS url FROM  sc_gmuni_device d INNER JOIN sc_gmuni_device_services ds ON
         d.school_code = ds.code WHERE d.code=#{blowerCode,jdbcType=VARCHAR}
+    </select>
+
+    <select id="selectALiBody" parameterType="java.util.Map" resultType="java.util.Map">
+        SELECT buyer_id as buyerId,seller_id as sellerId,body,receipt_amount as amount,trade_no as tradeNo FROM sc_gmuni_pay_log_ali
+        WHERE out_trade_no=#{outTradeNo,jdbcType=VARCHAR}
     </select>
 
 

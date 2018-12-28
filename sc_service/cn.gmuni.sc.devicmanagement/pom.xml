@@ -34,7 +34,16 @@
             <artifactId>cn.gmuni.sc.utils</artifactId>
             <version>${project.version}</version>
         </dependency>
-
+        <dependency>
+            <groupId>cn.gmuni</groupId>
+            <artifactId>cn.gmuni.sc.user</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>cn.gmuni</groupId>
+            <artifactId>cn.gmuni.sc.blower</artifactId>
+            <version>${project.version}</version>
+        </dependency>
     </dependencies>
 
 </project>

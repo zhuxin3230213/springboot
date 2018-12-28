@@ -327,8 +327,8 @@ public class NetWorkPayServiceImpl extends BaseNetworkFeeService {
 
     @Override
     public boolean savePayInfo(Map<String, String[]> payInfo) {
-        String notify_id = payInfo.get("notify_id")[0];
-        int hasPayFlag = mapper.getByNotifyId(notify_id);
+        String outTradeNo = payInfo.get("out_trade_no")[0];
+        int hasPayFlag = mapper.getByOutTradeNo(outTradeNo);
         if (hasPayFlag > 0) {
             System.out.println("该订单已处理过");
             return true;

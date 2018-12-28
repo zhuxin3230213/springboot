@@ -1,23 +1,26 @@
 package cn.gmuni.sc.blower.service.impl;
 
+import cn.gmuni.sc.blower.cache.BlowerCache;
 import cn.gmuni.sc.blower.control.BlowerThread;
 import cn.gmuni.sc.blower.control.BlowerThreadHardware;
 import cn.gmuni.sc.blower.mapper.BlowerMapper;
 import cn.gmuni.sc.blower.service.IBlowerService;
 import cn.gmuni.sc.device.controller.BlowerDervice;
-import cn.gmuni.sc.log.anntation.SysLog;
-import cn.gmuni.sc.log.constant.SysLogModule;
-import cn.gmuni.sc.log.constant.SysLogType;
 import cn.gmuni.sc.pay.mapper.NetWorkPayMapper;
+import cn.gmuni.sc.utils.AliPayUtil;
+import cn.gmuni.sc.utils.DateUtils;
+import cn.gmuni.sc.utils.httputils.JsonUtil;
 import cn.gmuni.sc.wallet.mapper.WalletMapper;
 import cn.gmuni.sc.wallet.model.WalletPayment;
 import cn.gmuni.utils.IdGenerator;
+import cn.gmuni.utils.Md5Util;
 import com.alibaba.fastjson.JSON;
+import com.alipay.api.AlipayApiException;
 import org.apache.maven.shared.utils.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import java.net.URLDecoder;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
@@ -47,21 +50,22 @@ public class BlowerServiceImpl implements IBlowerService {
     @Autowired
     BlowerMapper mapper;
 
-
-
     @Autowired
     NetWorkPayMapper netWorkPayMapper;
 
     @Override
     public Map<String, Object> getBlowerStatus(Map<String, Object> params) {
         Map mapStatus =mapper.getBlowerStatus(params);
-        String status = String.valueOf(mapStatus.get("status"));
         Map<String,Object> map = new HashMap<>();
+        if(mapStatus==null){
+            return map;
+        }
+        String status = String.valueOf(mapStatus.get("status"));
         if (status.equals("1")){
-            map.put("flag",true);
             params.put("status","3");
             params.put("updateTime",new Date());
             params.put("workTime",1);
+            map.put("flag",true);
             //吹风机锁定
             mapper.lockStatus(params);
             thread = new BlowerThread(params,mapper);
@@ -82,13 +86,24 @@ public class BlowerServiceImpl implements IBlowerService {
                 }
             }else {
                 map.put("flag",false);
-                map.put("time",mapStatus.get("updateTime"));
-                map.put("workTime",mapStatus.get("workTime"));
                 if (status.equals("2")){
                     map.put("status","2");
+                    map.put("time",mapStatus.get("updateTime"));
+                    map.put("workTime",mapStatus.get("workTime"));
                 }
                 if (status.equals("3")){
+
+                    try {
+                        thread.interrupt();
+                    }catch (Exception e){}
+                    params.put("status","3");
+                    params.put("updateTime",new Date());
+                    params.put("workTime",1);
+                    mapper.lockStatus(params);
+                    thread = new BlowerThread(params,mapper);
+                    thread.start();
                     map.put("status","3");
+
                 }
             }
         }
@@ -103,10 +118,10 @@ public class BlowerServiceImpl implements IBlowerService {
         int f = mapper.initStatus(params);
         Map<String,Object> map =new HashMap<>();
         if (f > 0){
-            map.put("flag",true);
+            map.put("flag","true");
             map.put("message","取消锁定成功！");
         }else {
-            map.put("flag",false);
+            map.put("flag","false");
             map.put("message","取消锁定失败！");
         }
         return map;
@@ -114,19 +129,25 @@ public class BlowerServiceImpl implements IBlowerService {
 
     @Override
     public Map<String, Object> endBlowerStatus(Map<String, Object> params) {
+        Map<String,Object> map =new HashMap<>();
         try {
             thread.interrupt();
         }catch (Exception e){}
         String blowerCode =(String) params.get("blowerCode");
         Map<String,Object> maps = mapper.selectDeviceByCode(blowerCode);
-        new BlowerDervice().requestDevice("close",maps);
+        Map res = new BlowerDervice().requestDevice("close",maps);
+        if (res.get("flag").equals("false")){
+            BlowerCache.addBlowerClose(maps);
+            map.put("flag","false");
+            map.put("message","吹风机关闭异常！");
+            return map;
+        }
         int f = mapper.initStatus(params);
-        Map<String,Object> map =new HashMap<>();
         if (f > 0){
-            map.put("flag",true);
+            map.put("flag","true");
             map.put("message","吹风机中断成功！");
         }else {
-            map.put("flag",false);
+            map.put("flag","false");
             map.put("message","吹风机中断失败！");
         }
         return map;
@@ -136,19 +157,28 @@ public class BlowerServiceImpl implements IBlowerService {
   /*  @SysLog(desc = "吹风机一卡通支付", module = SysLogModule.CONSUME_LOG, type = SysLogType.OPERATOR_LOG)*/
     public Map<String,Object> blowerPayByCard(Map<String, Object> params){
         Map<String,Object> map = new HashMap<>();
-        params.put("workTime",3);
+
         //查询余额是否够支付，如果不够则返回
-        Double yue = Double.valueOf(mapper.selectOneCardJinE(params));
+        Map<String,Object> temp = mapper.selectOneCardJinE(params);
+        String pwd = (String) temp.get("pwd");
+        if (!pwd.equals(Md5Util.encode(String.valueOf(params.get("password"))))){
+            map.put("flag","false");
+            map.put("msg","密码错误");
+            return map;
+        }
+        Double yue = Double.valueOf(String.valueOf(temp.get("amount")));
         Double chargeJinE = Double.valueOf((String) params.get("chargeJinE"));
         if (yue >=  chargeJinE){
           int  i =  mapper.oneCardPayment(params);
           if (i > 0){
-              Double yue1 = Double.valueOf(mapper.selectOneCardJinE(params));
+              Double yue1 = Double.valueOf(String.valueOf( mapper.selectOneCardJinE(params).get("amount")));
               if (yue1 < 0){
                   mapper.oneCardrefund(params);
+                  map.put("flag","false");
+                  map.put("msg","交易失败！");
+                  return map;
               }else {
                   WalletPayment payment= new WalletPayment();
-                      //调用网络缴费接口
                       String id =IdGenerator.getId();
                       payment.setId(id);
                       payment.setAmount(String.valueOf(params.get("chargeJinE")));
@@ -169,35 +199,57 @@ public class BlowerServiceImpl implements IBlowerService {
                       walletMapper.saveBlowerPayment(payment);
                       String blowerCode =(String) params.get("blowerCode");
                       Map<String,Object> maps = mapper.selectDeviceByCode(blowerCode);
-                      new BlowerDervice().requestDevice("open",maps);
+                      Map<String,String> res = new BlowerDervice().requestDevice("open",maps);
+                      map.put("flag",res.get("flag"));
+                        //异常,退费，关闭
+                      if (res.get("flag").equals("false")){
+                          mapper.oneCardrefund(params);
+                          mapper.initStatus(params);
+                          payment.setId(IdGenerator.getId());
+                          payment.setAmount("-"+String.valueOf(params.get("chargeJinE")));
+                          payment.setBuyerId("gmuni");
+                          payment.setSellerId((String) params.get("userCode"));
+                          payment.setTitle("共享吹风机-"+chargeJinE+"元");
+                          payment.setRemark("退款成功");
+                          Date currentTime1 = new Date();
+                          payment.setPayTime(currentTime1);
+                          payment.setCreateTime(currentTime1);
+                          payment.setEndTime(currentTime1);
+                          payment.setSeriesNumber("gmuni"+params.get("userCode")+ currentTime1.getTime());
+                          walletMapper.saveBlowerPayment(payment);
+                          map.put("msg",res.get("msg"));
+                          return map;
+                      }
                     //定时关掉
                      params.put("status","2");
                      params.put("updateTime",new Date());
                      mapper.lockStatus(params);
-                     try {
-                         thread.interrupt();
-                     }catch (Exception e){}
+                        try {
+                          thread.interrupt();
+                        }catch (Exception e){}
                      thread=new BlowerThreadHardware(params,mapper);
                      thread.start();
               }
           }else {
-              map.put("flag",false);
-              map.put("message","扣费失败!");
+              map.put("flag","false");
+              map.put("msg","扣费失败");
           }
-
         }else {
-            map.put("flag",false);
-            map.put("message","余额不足!");
-
+            map.put("flag","false");
+            map.put("msg","余额不足");
         }
+        Map tempMap = mapper.getBlowerStatus(params);
+        map.put("msg","交易成功");
+        map.put("time",tempMap.get("updateTime"));
+        map.put("workTime",tempMap.get("workTime"));
         return map;
 
     }
 
     @Override
     public boolean saveBlowerPayInfo(Map<String, String[]> payInfo) {
-        String notify_id = payInfo.get("notify_id")[0];
-        int hasPayFlag = netWorkPayMapper.getByNotifyId(notify_id);
+        String outTradeNo = payInfo.get("out_trade_no")[0];
+        int hasPayFlag = netWorkPayMapper.getByOutTradeNo(outTradeNo);
         if (hasPayFlag > 0) {
             System.out.println("该订单已处理过");
             return true;
@@ -236,13 +288,13 @@ public class BlowerServiceImpl implements IBlowerService {
         WalletPayment payment= new WalletPayment();
         //保存缴费信息
         String tradeNo = payInfo.get("trade_no")[0];
-        try {
+        //try {
             String totalAmount = payInfo.get("total_amount")[0];
             Map<String, String> body = (Map) JSON.parse(payInfo.get("body")[0]);
             //调用网络缴费接口
             payment.setId(IdGenerator.getId());
             payment.setAmount(totalAmount);
-            payment.setBuyerId(String.valueOf(param.get("buyer_logon_id")));
+            payment.setBuyerId(String.valueOf(param.get("buyer_id")));
             payment.setSellerId(String.valueOf(param.get("seller_id")));
             payment.setPaymentType("共享吹风机");
             payment.setStatus("1");
@@ -258,28 +310,87 @@ public class BlowerServiceImpl implements IBlowerService {
             payment.setPayMode("0");
             //先将数据保存
             walletMapper.saveBlowerPayment(payment);
-            String blowerCode = body.get("blowerId");
-            Map<String,Object> maps = mapper.selectDeviceByCode(blowerCode);
-            System.out.println(maps.size());
-            new BlowerDervice().requestDevice("open",maps);
-            //定时关掉
-            Map<String,Object> params = new HashMap<>();
-            params.put("userCode",body.get("loginCode"));
-            params.put("status","2");
-            params.put("updateTime",new Date());
-            params.put("workTime",body.get("workTime"));
-            params.put("schoolCode",body.get("schoolCode"));
-            params.put("blowerCode",blowerCode);
-            mapper.lockStatus(params);
-            try {
-                thread.interrupt();
-            }catch (Exception e){}
-            thread=new BlowerThreadHardware(params,mapper);
-            thread.start();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return true;
+           return true;
     }
 
+    @Override
+    public Map<String,Object> refundALi(String outTradeNo,String sign) {
+        Map<String, Object> result = new HashMap<>();
+        Map<String, Object> params = new HashMap<>();
+        params.put("outTradeNo",outTradeNo);
+        Map<String,Object> map = mapper.selectALiBody(params);
+        String amount = String.valueOf(map.get("amount"));
+        String tradeNo = String.valueOf(map.get("tradeNo"));
+        Map<String, String> body = JsonUtil.json2Object((String) map.get("body"),Map.class);
+        String blowerCode = body.get("blowerId");
+        //定时关掉
+        params.put("userCode", body.get("loginCode"));
+        params.put("status", "2");
+        Date date = new Date();
+        params.put("updateTime", date);
+        params.put("workTime", body.get("workTime"));
+        params.put("schoolCode", body.get("schoolCode"));
+        params.put("blowerCode", blowerCode);
+        Map<String, Object> maps = mapper.selectDeviceByCode(blowerCode);
+        Map res = new BlowerDervice().requestDevice("open", maps);
+        if (res.get("flag").equals("false")) {
+            try {
+                thread.interrupt();
+                mapper.initStatus(params);
+            } catch (Exception e) {
+            }
+            //吹风机通知失败，支付宝退款
+            //先插入一条退款记录状态为失败
+            String id = IdGenerator.getId();
+            WalletPayment payment = new WalletPayment();
+            payment.setId(id);
+            payment.setAmount("-" + amount);
+            payment.setBuyerId(String.valueOf(map.get("sellerId")));
+            payment.setSellerId(String.valueOf(map.get("buyerId")));
+            payment.setTitle("共享吹风机-" + amount+ "元");
+            payment.setRemark("退款失败");
+            payment.setStatus("2");
+            Date currentTime1 = new Date();
+            payment.setPayTime(currentTime1);
+            payment.setCreateTime(currentTime1);
+            payment.setEndTime(currentTime1);
+            payment.setPaymentType("共享吹风机");
+            payment.setPayMode("0");
+            payment.setSign(sign);
+            payment.setOrderNumber(tradeNo);
+            payment.setSeriesNumber("gmuni"+body.get("loginCode")+ currentTime1.getTime());
+            walletMapper.saveBlowerPayment(payment);
+            boolean flag = false;
+            try {
+                flag = AliPayUtil.execute(outTradeNo,tradeNo,amount);
+            } catch (AlipayApiException e) {
+                result.put("flag", "false");
+                result.put("msg", "交易退款失败，请联系人工客服。");
+                return result;
+            }
+            if (flag) {
+                payment.setRemark("退款成功");
+                payment.setStatus("1");
+                walletMapper.updatePayment(payment);
+                result.put("msg", "交易退款成功，请在两小时内在支付宝查收。");
+            } else {
+                result.put("msg", "交易退款失败，请联系人工客服。");
+            }
+            result.put("flag", "false");
+            return result;
+        }
+        //定时关闭
+        mapper.lockStatus(params);
+        try {
+            thread.interrupt();
+        } catch (Exception e) {
+        }
+        thread = new BlowerThreadHardware(params, mapper);
+        thread.start();
+        result.put("flag", "true");
+        result.put("msg", "交易成功");
+        result.put("time",DateUtils.date2String(date,DateUtils.COMMON_DATETIME));
+        result.put("workTime", body.get("workTime"));
+        return result;
+    }
 }

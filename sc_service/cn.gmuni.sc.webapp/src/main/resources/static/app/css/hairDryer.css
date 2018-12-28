@@ -101,12 +101,16 @@ div{
     margin-right: 10px;
     margin-top: -23px;
 }
+.hairDryer_timeFlow{
+    display: block;
+    text-align: center;
+    margin-top: 25px;
+}
 #submit_payment_info{
     width: calc(100% - 30px);
     background: #27d0ae;
     border: 1px solid #27d0ae;
     border-radius: 5px;
-    margin-top: 35px;
     height: 40px;
     margin-left: 15px;
     margin-right: 15px;

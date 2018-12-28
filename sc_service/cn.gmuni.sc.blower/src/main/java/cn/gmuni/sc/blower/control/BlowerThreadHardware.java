@@ -1,5 +1,6 @@
 package cn.gmuni.sc.blower.control;
 
+import cn.gmuni.sc.blower.cache.BlowerCache;
 import cn.gmuni.sc.blower.mapper.BlowerMapper;
 import cn.gmuni.sc.device.controller.BlowerDervice;
 
@@ -38,7 +39,10 @@ public class BlowerThreadHardware extends Thread {
              try {
                  Map maps =mapper.selectDeviceByCode((String) params.get("blowerCode"));
                   Thread.sleep(1000*60*time);
-                   new BlowerDervice().requestDevice("close",maps);
+                  Map res = new BlowerDervice().requestDevice("close",maps);
+                  if (res.get("flag").equals("false")){
+                      BlowerCache.addBlowerClose(maps);
+                  }
                    mapper.initStatus(params);
                    } catch (InterruptedException e) {
                             //设置中断状态

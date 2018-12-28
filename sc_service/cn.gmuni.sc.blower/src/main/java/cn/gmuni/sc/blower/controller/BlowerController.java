@@ -18,11 +18,10 @@ import org.apache.maven.shared.utils.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.ModelAndView;
 import springfox.documentation.annotations.ApiIgnore;
 
 import javax.servlet.ServletOutputStream;
@@ -33,7 +32,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Api(value = "/blower",description = "吹风机支付模块")
-@RestController
+@Controller
 @RequestMapping("/blower")
 public class BlowerController {
 
@@ -77,7 +76,7 @@ public class BlowerController {
             String subject = "共享吹风机" + jine + "元";
             //吹风机任务
             body.put("subject",subject);
-            AliPayUtil.doPay(response, "", productCode, serverAddr + "net/net_pay_success", serverAddr + "blower/blowerNotice", jine, subject, JSON.toJSONString(body));
+            AliPayUtil.doPay(response, "", productCode, serverAddr + "hairDryer/hairDryer_success", serverAddr + "blower/blowerNotice", jine, subject, JSON.toJSONString(body));
     }
 
     /**
@@ -102,6 +101,8 @@ public class BlowerController {
         } catch (Exception e) {
             e.printStackTrace();
         }
+
+
     }
 
     @ApiOperation(value = "一卡通收费吹风机")
@@ -109,17 +110,36 @@ public class BlowerController {
     @ApiImplicitParams({
             @ApiImplicitParam(value = "blowerCode", name = "吹风机编码", required = true),
             @ApiImplicitParam(value = "workTime", name = "工作时间", required = true),
-            @ApiImplicitParam(value = "chargeJinE", name = "收费金额", required = true)
+            @ApiImplicitParam(value = "chargeJinE", name = "收费金额", required = true),
+            @ApiImplicitParam(value = "password", name = "密码", required = true)
     })
-    public void blowerPayByCard(@RequestBody @ApiIgnore Map<String, Object> params){
+    public ModelAndView blowerPayByCard( HttpServletRequest request){
+        Map<String, Object> params = new HashMap<>();
+        params.put("blowerCode",request.getParameter("blowerCode"));
+        params.put("workTime",request.getParameter("workTime"));
+        params.put("chargeJinE",request.getParameter("chargeJinE"));
+        params.put("password",request.getParameter("password"));
         params.put("schoolCode", UserUtils.getLoginUser().getSchool());
         params.put("userCode", UserUtils.getLoginUserInfo().getIndentifier());
-        params.put("userCode", UserUtils.getLoginUserInfo().getIndentifier());
-        blowerServiceImpl.blowerPayByCard(params);
+        Map map = blowerServiceImpl.blowerPayByCard(params);
+        ModelAndView model = new ModelAndView();
+        map.put("type","我的钱包");
+        map.put("mark", "");
+        if (map.get("workTime")==""||map.get("workTime")==null){
+            map.put("workTime","");
+        }
+        model.addObject("msg",map);
+        if (map.get("msg").equals("密码错误")||map.get("msg").equals("扣费失败")||map.get("msg").equals("余额不足")){
+            model.setViewName("hairDryer");
+        }else {
+            model.setViewName("hairDryer_success");
+        }
+        return model;
     }
 
     @ApiOperation(value = "查询吹风机状态")
     @PostMapping("/getBlowerStatus")
+    @ResponseBody
     @ApiImplicitParams({
             @ApiImplicitParam(value = "blowerCode", name = "吹风机编码", required = true)
     })
@@ -131,6 +151,7 @@ public class BlowerController {
 
     @ApiOperation(value = "取消吹风机锁定")
     @PostMapping("/cancelBlowerLock")
+    @ResponseBody
     @ApiImplicitParams({
             @ApiImplicitParam(value = "blowerCode", name = "吹风机编码", required = true)
     })
@@ -141,6 +162,7 @@ public class BlowerController {
 
     @ApiOperation(value = "中断吹风机使用")
     @PostMapping("/endBlowerStatus")
+    @ResponseBody
     @ApiImplicitParams({
             @ApiImplicitParam(value = "blowerCode", name = "吹风机编码", required = true)
     })
