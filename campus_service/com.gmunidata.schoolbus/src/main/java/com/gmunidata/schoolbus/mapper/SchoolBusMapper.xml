@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gmunidata.schoolbus.mapper.SchoolBusMapper">
+
+    <insert id="addSchoolBus" parameterType="com.gmunidata.schoolbus.model.SchoolBus">
+      INSERT INTO sc_gmuni_school_bus (id,code,bus_type,volume,bus_series,parking_space,status,driving_time,create_time,remarks) VALUES(
+          #{id,jdbcType=VARCHAR},#{code,jdbcType=VARCHAR},#{busType,jdbcType=VARCHAR},#{volume,jdbcType=VARCHAR},#{busSeries,jdbcType=VARCHAR},
+          #{parkingSpace,jdbcType=VARCHAR},#{status,jdbcType=VARCHAR},#{drivingTime,jdbcType=VARCHAR},#{createTime,jdbcType=VARCHAR},#{remarks,jdbcType=VARCHAR})
+    </insert>
+
+    <update id="updateSchoolBus" parameterType="com.gmunidata.schoolbus.model.SchoolBus">
+        update sc_gmuni_school_bus set
+        bus_type=#{busType,jdbcType=VARCHAR},
+        volume=#{volume,jdbcType=VARCHAR},
+        bus_series=#{busSeries,jdbcType=VARCHAR},
+        parking_space=#{parkingSpace,jdbcType=VARCHAR},
+        status=#{status,jdbcType=VARCHAR},
+        driving_time=#{drivingTime,jdbcType=TIMESTAMP},
+        create_time=#{createTime,jdbcType=TIMESTAMP},
+        remarks=#{remarks,jdbcType=VARCHAR}
+        where id=#{id,jdbcType=VARCHAR}
+    </update>
+
+    <delete id="delSchoolBus" parameterType="java.lang.String">
+        delete from sc_gmuni_school_bus where id in(
+        <foreach collection="list" item="item" separator=",">
+            #{item}
+        </foreach>
+        )
+    </delete>
+
+</mapper>
