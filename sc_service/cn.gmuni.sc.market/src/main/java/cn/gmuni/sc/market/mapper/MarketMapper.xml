@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.gmuni.sc.market.mapper.MarketMapper">
+
+    <insert id="addMarket" parameterType="cn.gmuni.sc.market.model.Market">
+        insert into sc_gmuni_market(id,school_code,user,title,introduce,img_s,img_b,price,type,sale_status,create_time,update_time,status) VALUES(
+        #{id,jdbcType=VARCHAR},#{schoolCode,jdbcType=VARCHAR},#{user,jdbcType=VARCHAR},#{title,jdbcType=VARCHAR},#{introduce,jdbcType=VARCHAR},
+        #{imgS,jdbcType=VARCHAR},#{imgB,jdbcType=VARCHAR}, #{price,jdbcType=DECIMAL},#{type,jdbcType=VARCHAR}, #{saleStatus,jdbcType=VARCHAR},
+          #{createTime,jdbcType=TIMESTAMP},#{updateTime,jdbcType=TIMESTAMP},#{status,jdbcType=VARCHAR})
+    </insert>
+
+    <update id="updateMarket" parameterType="cn.gmuni.sc.market.model.Market">
+        update sc_gmuni_market set
+        title=#{title,jdbcType=VARCHAR},
+        introduce=#{introduce,jdbcType=VARCHAR},
+        img_s=#{imgS,jdbcType=VARCHAR},
+        img_b=#{imgB,jdbcType=VARCHAR},
+        price=#{price,jdbcType=DECIMAL},
+        type=#{type,jdbcType=VARCHAR},
+        update_time=#{updateTime,jdbcType=TIMESTAMP}
+        where id =#{id,jdbcType=VARCHAR}
+    </update>
+
+    <update id="updateSaleStatus" parameterType="java.util.Map">
+        update sc_gmuni_market set
+        sale_status='1',
+        update_time=#{updateTime,jdbcType=TIMESTAMP}
+        where id =#{id,jdbcType=VARCHAR}
+    </update>
+
+    <delete id="delMarket" parameterType="java.lang.String">
+        delete from sc_gmuni_market where id  in
+        <foreach collection="list" item="item" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </delete>
+
+    <delete id="delLeaveMessageByMerked" parameterType="java.lang.String">
+        delete from sc_gmuni_leave_message where market_id  in
+        <foreach collection="list" item="item" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </delete>
+
+    <select id="listMarket" parameterType="java.util.Map" resultType="java.util.Map">
+        SELECT m.id,m.title,m.introduce,m.img_s as imgS,m.price,m.type,m.sale_status as saleStatus,DATE_FORMAT(m.update_time,'%Y-%m-%d %H:%i:%s') as updateTime,u.name AS userName,ci.name as schoolName,u.avatar as avatar,ui.indentifier as indentifier FROM sc_gmuni_market m left join sc_gmuni_thirdpart_userinfo ui
+         on m.user=ui.indentifier left join sc_gmuni_thirdpart_user u on ui.user_id=u.id left join sc_gmuni_college_info ci on u.school=ci.code
+            where m.status='0'
+            <if test="type!=null and type!=''">
+               and  m.type=#{type,jdbcType=VARCHAR}
+            </if>
+        <if test="user!=null and user!=''">
+           and m.user=#{user,jdbcType=VARCHAR}
+        </if>
+        <if test="saleStatus!=null and saleStatus!=''">
+            and m.sale_status=#{saleStatus,jdbcType=VARCHAR}
+        </if>
+        <if test="queryType=='up' and updateTime!=null and updateTime!=''">
+            AND  m.update_time <![CDATA[<]]> #{updateTime,jdbcType=TIMESTAMP}
+        </if>
+        <if test="queryType=='down' and updateTime!=null and updateTime!=''">
+            AND  m.update_time <![CDATA[>]]> #{updateTime,jdbcType=TIMESTAMP}
+        </if>
+        <if test="id!=null and id!=''">
+            AND  m.id=#{id,jdbcType=VARCHAR}
+        </if>
+         ORDER BY m.update_time DESC  LIMIT 0,11
+    </select>
+
+    <select id="getMarketById" parameterType="java.lang.String" resultType="java.util.Map">
+        select img_b as imgB,type,DATE_FORMAT(create_time,'%Y-%m-%d %H:%i:%s') as createTime from sc_gmuni_market where id=#{id,jdbcType=VARCHAR}
+    </select>
+
+</mapper>

@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.gmuni.sc.information.mapper.InformationMapper">
+
+    <select id="findUserInfoByStudentIdAndSchool" parameterType="java.util.Map" resultType="java.util.Map">
+        SELECT f.indentifier
+        FROM sc_gmuni_thirdpart_userinfo f
+        WHERE f.user_id = (SELECT u.id AS userId
+        FROM sc_gmuni_thirdpart_user u
+        WHERE 1=1
+        <if test="studentId !=null and studentId!=''">
+            and u.student_id = #{studentId,jdbcType=VARCHAR}
+        </if>
+        <if test="school !=null and school !=''">
+            and  u.school = #{school,jdbcType=VARCHAR}
+        </if>)
+    </select>
+</mapper>

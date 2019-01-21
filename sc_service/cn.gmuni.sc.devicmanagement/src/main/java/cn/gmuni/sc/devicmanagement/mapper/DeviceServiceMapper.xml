@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.gmuni.sc.devicmanagement.mapper.DeviceServiceMapper">
+
+    <insert id="addDeviceService" parameterType="cn.gmuni.sc.devicmanagement.model.DeviceServiceBean">
+        insert into sc_gmuni_device_services (id,name,code,url,create_time,col1,col2,col3,col4,col5,col6,col7,col8,col9,col10)
+        values (#{id,jdbcType=VARCHAR},#{name,jdbcType=VARCHAR},#{code,jdbcType=VARCHAR},#{url,jdbcType=VARCHAR},
+        #{createTime,jdbcType=TIMESTAMP},#{col1,jdbcType=VARCHAR},#{col2,jdbcType=VARCHAR},#{col3,jdbcType=VARCHAR},#{col4,jdbcType=VARCHAR},
+        #{col5,jdbcType=VARCHAR},#{col6,jdbcType=VARCHAR},#{col7,jdbcType=VARCHAR},#{col8,jdbcType=VARCHAR},#{col9,jdbcType=VARCHAR},#{col10,jdbcType=VARCHAR})
+    </insert>
+
+    <update id="updateDeviceService" parameterType="cn.gmuni.sc.devicmanagement.model.DeviceServiceBean">
+        update sc_gmuni_device_services set
+            name =#{name,jdbcType=VARCHAR},
+            code =#{code,jdbcType=VARCHAR},
+            url=#{url,jdbcType=VARCHAR},
+            col1 =#{col1,jdbcType=VARCHAR},
+            col2 =#{col2,jdbcType=VARCHAR},
+            col3 =#{col3,jdbcType=VARCHAR},
+            col4 =#{col4,jdbcType=VARCHAR},
+            col5 =#{col5,jdbcType=VARCHAR},
+            col6 =#{col6,jdbcType=VARCHAR},
+            col7 =#{col7,jdbcType=VARCHAR},
+            col8 =#{col8,jdbcType=VARCHAR},
+            col9 =#{col9,jdbcType=VARCHAR},
+            col10 =#{col10,jdbcType=VARCHAR}
+            where id =#{id,jdbcType=VARCHAR}
+    </update>
+
+    <delete id="delDeviceService" parameterType="java.util.List">
+        delete from sc_gmuni_device_services where id in
+        <foreach item="item" collection="list" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </delete>
+
+    <select id="listDeviceService" parameterType="java.util.Map" resultType="cn.gmuni.sc.college.model.College">
+        select id,name,simple_name as simpleName,code,url,create_time as
+        createTime,col1,col2,col3,col4,col5,col6,col7,col8,col9,col10 from sc_gmuni_device_services
+        <where>
+            <if test="name != null and name !=''">
+                and  name like CONCAT('%',#{name,jdbcType=VARCHAR} ,'%')
+            </if>
+            <if test="code != null and code !=''">
+                and  code like CONCAT('%',#{code,jdbcType=VARCHAR} ,'%')
+            </if>
+        </where>
+        order by createTime desc
+    </select>
+
+    <select id="checkUrl" parameterType="cn.gmuni.sc.devicmanagement.model.DeviceServiceBean" resultType="java.lang.Integer" >
+        select count(1) from sc_gmuni_device_services where url =#{url,jdbcType=VARCHAR}
+        <if test="id != null and id != ''">
+            and  id!=#{id,jdbcType=VARCHAR}
+        </if>
+    </select>
+</mapper>

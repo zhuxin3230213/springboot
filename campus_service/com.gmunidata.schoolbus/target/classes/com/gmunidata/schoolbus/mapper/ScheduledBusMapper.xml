@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gmunidata.schoolbus.mapper.ScheduledBusMapper">
+
+    <insert id="addScheduledBus" parameterType="com.gmunidata.schoolbus.model.ScheduledBus">
+        INSERT INTO sc_gmuni_scheduled_bus (id,season,running_time_type,origin,destination,riding_point,time,bus_code,driver_code) VALUES(
+          #{id,jdbcType=VARCHAR},#{season,jdbcType=VARCHAR},#{runningTimeType,jdbcType=VARCHAR},#{origin,jdbcType=VARCHAR},#{destination,jdbcType=VARCHAR},
+          #{ridingPoint,jdbcType=VARCHAR},#{time,jdbcType=VARCHAR},#{busCode,jdbcType=VARCHAR},#{driverCode,jdbcType=VARCHAR})
+    </insert>
+
+    <update id="updateScheduledBus">
+        update sc_gmuni_scheduled_bus set
+        season=#{season,jdbcType=VARCHAR},
+        running_time_type=#{runningTimeType,jdbcType=VARCHAR},
+        origin=#{origin,jdbcType=VARCHAR},
+        destination=#{destination,jdbcType=VARCHAR},
+        riding_point=#{ridingPoint,jdbcType=VARCHAR},
+        time=#{time,jdbcType=VARCHAR},
+        bus_code=#{busCode,jdbcType=VARCHAR},
+        driver_code=#{driverCode,jdbcType=VARCHAR},
+        where id=#{idjdbcType=VARCHAR}
+    </update>
+
+    <delete id="delScheduledBus" parameterType="java.lang.String">
+        delete from sc_gmuni_scheduled_bus where id in(
+        <foreach collection="list" item="item" separator=",">
+            #{item}
+        </foreach>
+        )
+    </delete>
+
+    <select id="listScheduledBus" parameterType="java.util.Map" resultType="java.util.Map">
+        SELECT db.id AS id,db.season,db.running_time_type AS runningTimeType,db.origin,db.destination,db.riding_point AS ridingPoint,
+        db.time,db.bus_code AS busCode,db.driver_code AS driverCode,lb.bus_type AS busType,lb.volume AS volume,d.name as driverName FROM sc_gmuni_scheduled_bus db
+        LEFT JOIN sc_gmuni_school_bus lb ON db.bus_code=lb.code
+        LEFT JOIN sc_gmuni_driver d ON db.driver_code=d.code
+    </select>
+
+    <select id="getSchoolBusCode" resultType="java.lang.String">
+        select code from sc_gmuni_school_bus order by code
+    </select>
+
+    <select id="getSchoolBusDrivceCode" resultType="java.util.Map">
+        select code,name from sc_gmuni_driver order by code
+    </select>
+
+    <select id="checkSeason" parameterType="com.gmunidata.schoolbus.model.ScheduledBus" resultType="java.lang.String">
+        SELECT season FROM sc_gmuni_scheduled_bus
+        WHERE(running_time_type=#{runningTimeType,jdbcType=VARCHAR} AND time=#{time,jdbcType=VARCHAR}
+        AND (bus_code=#{busCode,jdbcTye=VARCHAR} or driver_code=#{driverCode,jdbcTye=VARCHAR}))
+        <if test="id != null  and id !=''">
+            and  id!=#{id,jdbcType=VARCHAR}
+        </if>
+    </select>
+
+    <select id="outScheduledBus" resultType="java.util.Map">
+        select db.season,db.running_time_type as runningTimetype,db.origin,db.destination,db.riding_point as ridingPoint,db.time,lb.volume from  sc_gmuni_scheduled_bus db
+        inner JOIN sc_gmuni_school_bus lb ON db.bus_code=lb.code ORDER BY HOUR(db.time),MINUTE(db.time) ASC
+    </select>
+
+
+    <select id="getSchoolSeasonList" resultType="java.lang.String">
+
+                   SELECT
+	                     season
+	                FROM
+	                     sc_gmuni_scheduled_bus
+   </select>
+
+    <select id="getSchoolBusTimeList" parameterType="java.util.Map" resultType="java.util.Map">
+
+        SELECT
+        s.riding_point as address,
+        s.time as sTime
+        FROM
+        sc_gmuni_scheduled_bus s
+        where
+        <if test="season != null and season != ''">
+            s.season != #{season,jdbcType=VARCHAR}
+        </if>
+        <if test="week != null and week != ''">
+            and s.running_time_type = #{week,jdbcType=VARCHAR}
+        </if>
+        <if test="startCampus != null and startCampus != ''">
+            and s.origin = #{startCampus,jdbcType=VARCHAR}
+        </if>
+        <if test="endCampus != null and endCampus != ''">
+            and s.destination = #{endCampus,jdbcType=VARCHAR}
+        </if>
+    </select>
+    <select id="getSchoolCampusList" resultType="java.util.Map">
+                   SELECT
+                          l.code AS code,
+                          l.name AS name
+                   FROM pf_gmuni_lookup l
+                   WHERE l.parent_id = (SELECT
+                                           id
+                                          FROM pf_gmuni_lookup
+                                          WHERE CODE = 'xq')
+    </select>
+
+</mapper>

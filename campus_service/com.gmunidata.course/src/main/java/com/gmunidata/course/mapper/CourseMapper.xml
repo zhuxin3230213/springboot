@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gmunidata.course.mapper.CourseMapper">
+
+    <resultMap id="CourseMap" type="com.gmunidata.course.model.Course">
+        <id column="id" jdbcType="VARCHAR" property="id"/>
+        <result column="name" jdbcType="VARCHAR" property="name"/>
+        <result column="code" jdbcType="VARCHAR" property="code"/>
+        <result column="c_type" jdbcType="VARCHAR" property="cType"/>
+        <result column="s_type" jdbcType="VARCHAR" property="sType"/>
+        <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
+        <result column="periods" jdbcType="INTEGER" property="periods"/>
+        <result column="credit" jdbcType="DECIMAL" property="credit"/>
+        <result column="requires" jdbcType="VARCHAR" property="requires"/>
+        <result column="total_period" jdbcType="INTEGER" property="totalPeriod"/>
+        <result column="base_c" jdbcType="VARCHAR" property="baseC"/>
+        <result column="semester" jdbcType="VARCHAR" property="semester"/>
+    </resultMap>
+
+  <insert id="addCourse" parameterType="com.gmunidata.course.model.Course">
+    insert into sc_gmuni_course (id, name,code,c_type, s_type,create_time,periods,credit,requires,total_period,base_c,semester)
+    values (#{id,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR}, #{code,jdbcType=VARCHAR},
+       #{cType,jdbcType=VARCHAR}, #{sType,jdbcType=VARCHAR},#{createTime,jdbcType=TIMESTAMP},
+       #{periods,jdbcType=INTEGER},#{credit,jdbcType=DECIMAL},#{requires,jdbcType=VARCHAR},
+       #{totalPeriod,jdbcType=INTEGER},#{baseC,jdbcType=VARCHAR},#{semester,jdbcType=VARCHAR})
+  </insert>
+
+  <update id="updateCourse" parameterType="com.gmunidata.course.model.Course">
+    update sc_gmuni_course set
+     name = #{name,jdbcType=VARCHAR},
+     code = #{code,jdbcType=VARCHAR},
+     c_type = #{cType,jdbcType=VARCHAR},
+     s_type = #{sType,jdbcType=VARCHAR},
+     periods = #{periods,jdbcType=INTEGER},
+     credit = #{credit,jdbcType=DECIMAL},
+     requires = #{requires,jdbcType=VARCHAR},
+     total_period = #{totalPeriod,jdbcType=INTEGER},
+     base_c = #{baseC,jdbcType=VARCHAR},
+     semester = #{semester,jdbcType=VARCHAR}
+     where id = #{id,jdbcType=VARCHAR}
+  </update>
+
+  <delete id="delCourse" parameterType="java.lang.String">
+    delete from sc_gmuni_course where id in
+    <foreach item="item" collection="list" open="(" separator="," close=")">
+      #{item}
+    </foreach>
+  </delete>
+
+  <select id="checkCodeAndNum" resultType="java.lang.Long" parameterType="com.gmunidata.course.model.Course" >
+      select count(1) from sc_gmuni_course
+      where   (code = #{code,jdbcType=VARCHAR} or name = #{name,jdbcType=VARCHAR})
+          <if test="id!=null and id!=''">
+             and id != (#{id,jdbcType=VARCHAR})
+          </if>
+  </select>
+
+    <select id="checkSchedule" resultType="java.lang.Long" parameterType="java.lang.String" >
+        select count(1) from sc_gmuni_schedule where course_code in
+        <foreach item="item" collection="list" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </select>
+
+    <select id="listCourse" parameterType="java.util.Map" resultMap="CourseMap">
+     select id, name,code,c_type, s_type,create_time,periods,credit,requires,total_period,base_c,semester from sc_gmuni_course
+      <where>
+      <if test="name!=null and name!=''">
+          and  name like CONCAT('%',#{name,jdbcType=VARCHAR} ,'%')
+
+      </if>
+       <if test="code!=null and code!=''">
+           and code like CONCAT('%',#{code,jdbcType=VARCHAR} ,'%')
+       </if>
+      </where>
+        order by name,create_time asc
+    </select>
+
+     <select id="selectCodeById" parameterType="java.lang.String" resultType="java.lang.String">
+        select  code from sc_gmuni_course where id in
+         <foreach item="item" collection="list" open="(" separator="," close=")">
+             #{item}
+         </foreach>
+     </select>
+
+</mapper>

@@ -1,0 +1,340 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.gmuni.sc.log.mapper.LogMapper">
+
+    <select id="listLog" parameterType="java.util.Map" resultType="cn.gmuni.sc.log.model.OperatorLog">
+        select o.id as id,o.url as url,o.module as module,o.ip as ip,o.method as method,o.type as type ,
+         o.request_method as requestMethod,o.create_time as createTime,o.username as username,o.school_code as schoolCode,c.name as schoolName
+        from sc_gmuni_operator_log o  left join sc_gmuni_college_info c on o.school_code = c.code
+        <where>
+            <if test="module != null and module != ''">
+                o.module =#{module,jdbcType=VARCHAR}
+            </if>
+            <if test="type != null  and type != ''">
+               and o.type =#{type,jdbcType=VARCHAR}
+            </if>
+            <if test="schoolCode != null  and schoolCode != ''">
+                and o.school_code =#{schoolCode,jdbcType=VARCHAR}
+            </if>
+            <if test="userName != null  and userName != ''">
+                and o.username =#{userName,jdbcType=VARCHAR}
+            </if>
+            <if test="startTime != null and startTime != ''">
+                <![CDATA[
+               and  DATE_FORMAT(o.create_time,'%Y-%m-%d')>= #{startTime}
+              ]]>
+            </if>
+            <if test="endTime != null and endTime != ''">
+                <![CDATA[
+               and  DATE_FORMAT(o.create_time,'%Y-%m-%d')<= #{endTime}
+              ]]>
+            </if>
+        </where>
+        order by o.create_time desc
+    </select>
+
+    <select id="getMessage" parameterType="java.lang.String" resultType="java.util.Map">
+        select params,log_desc as logDesc from sc_gmuni_operator_log where id=#{id,jdbcType=VARCHAR}
+    </select>
+
+    <select id="getDayPeopleNum" parameterType="java.util.Map" resultType="java.util.Map">
+      SELECT DATE_FORMAT(create_time,'%Y-%m-%d') as time,
+        COUNT(DISTINCT username) as num FROM sc_gmuni_operator_log
+        <where>
+        <if test="schoolCode != null  and schoolCode !=''">
+            and  school_code =#{schoolCode,jdbcType=VARCHAR}
+        </if>
+        <if test="data == 0">
+            <![CDATA[
+             and  TO_DAYS(create_time) = TO_DAYS(NOW())
+                ]]>
+        </if>
+        <if test="data == 1">
+            <![CDATA[
+               and  DATE_SUB(CURDATE(), INTERVAL 7 DAY) <= DATE(create_time)
+                ]]>
+        </if>
+        <if test="data == 2">
+            <![CDATA[
+                and DATE_SUB(CURDATE(), INTERVAL 30 DAY) <= DATE(create_time)
+                ]]>
+        </if>
+         <if test="data == 3">
+                <![CDATA[
+                and DATE_SUB(CURDATE(), INTERVAL 90 DAY) <= DATE(create_time)
+                ]]>
+            </if>
+        </where>
+        GROUP BY DATE_FORMAT(create_time,'%Y-%m-%d')
+    </select>
+
+    <select id="getTimePeopleNum" parameterType="java.util.Map" resultType="java.util.Map">
+        SELECT ti AS time,COUNT(1) AS num  FROM (SELECT  DATE_FORMAT(create_time,'%H:00') AS ti FROM  sc_gmuni_operator_log
+        <where>
+            <if test="data != null  and data !=''">
+                <![CDATA[
+                DATE_FORMAT(create_time,'%Y-%m-%d')= #{data}
+              ]]>
+            </if>
+            <if test="schoolCode != null  and schoolCode !=''">
+                and  school_code =#{schoolCode,jdbcType=VARCHAR}
+            </if>
+        </where>
+        ) tab GROUP BY ti
+    </select>
+
+
+    <select id="getModulePeopleNum" parameterType="java.util.Map" resultType="java.util.Map">
+         select module,count(1) as num from sc_gmuni_operator_log
+        <where>
+            <if test="schoolCode != null  and schoolCode !=''">
+                and  school_code =#{schoolCode,jdbcType=VARCHAR}
+            </if>
+            <if test="date == 0">
+                <![CDATA[
+             and  TO_DAYS(create_time) = TO_DAYS(NOW())
+                ]]>
+            </if>
+            <if test="date == 1">
+                <![CDATA[
+               and  DATE_SUB(CURDATE(), INTERVAL 7 DAY) <= DATE(create_time)
+                ]]>
+            </if>
+            <if test="date == 2">
+                <![CDATA[
+                and DATE_SUB(CURDATE(), INTERVAL 30 DAY) <= DATE(create_time)
+                ]]>
+            </if>
+        </where>
+         GROUP BY module
+    </select>
+
+    <select id="geTypePeopleNum" parameterType="java.util.Map" resultType="java.util.Map">
+        select type,count(1) as num from sc_gmuni_operator_log
+        <where>
+            <if test="schoolCode != null  and schoolCode !=''">
+                and  school_code =#{schoolCode,jdbcType=VARCHAR}
+            </if>
+            <if test="date == 0">
+                <![CDATA[
+             and    TO_DAYS(create_time) = TO_DAYS(NOW())
+                ]]>
+            </if>
+            <if test="date == 1">
+                <![CDATA[
+               and  DATE_SUB(CURDATE(), INTERVAL 7 DAY) <= DATE(create_time)
+                ]]>
+            </if>
+            <if test="date == 2">
+                <![CDATA[
+                and DATE_SUB(CURDATE(), INTERVAL 30 DAY) <= DATE(create_time)
+                ]]>
+            </if>
+        </where>
+        GROUP BY type
+    </select>
+
+    <select id="allPeopleNum" parameterType="java.util.Map" resultType="java.lang.Long">
+        SELECT COUNT(DISTINCT username) AS num FROM sc_gmuni_operator_log
+        <where>
+            <if test="schoolCode != null  and schoolCode !=''">
+               school_code =#{schoolCode,jdbcType=VARCHAR}
+            </if>
+        </where>
+    </select>
+
+    <select id="listLoginLog" parameterType="java.util.Map" resultType="cn.gmuni.sc.log.model.LoginLog">
+        select l.id as id,l.username as username,l.login_type as loginType,
+        l.operator as operator ,l.log_type as logType,l.create_time as createTime,l.ip as ip,l.token as token,
+        l.mac as mac ,l.method as method,l.first_login as firstLogin,l.request_method as requestMethod,l.school_code as schoolCode,c.name as schoolName
+        from sc_gmuni_login_log l left join sc_gmuni_college_info c on l.school_code = c.code
+        <where>
+            <if test="schoolCode != null  and schoolCode != ''">
+                and l.school_code =#{schoolCode,jdbcType=VARCHAR}
+            </if>
+            <if test="userName != null  and userName != ''">
+                and l.username =#{userName,jdbcType=VARCHAR}
+            </if>
+            <if test="logType != null  and logType != ''">
+                and l.log_type =#{logType,jdbcType=VARCHAR}
+            </if>
+            <if test="firstLogin != null  and firstLogin != ''">
+                and l.first_login =#{firstLogin,jdbcType=VARCHAR}
+            </if>
+            <if test="startTime != null and startTime != ''">
+                <![CDATA[
+               and  DATE_FORMAT(l.create_time,'%Y-%m-%d')>=#{startTime}
+              ]]>
+            </if>
+            <if test="endTime != null and endTime != ''">
+                <![CDATA[
+               and  DATE_FORMAT(l.create_time,'%Y-%m-%d')<=#{endTime}
+              ]]>
+            </if>
+        </where>
+        order by l.create_time desc
+    </select>
+
+    <select id="getLoginMessage" parameterType="java.lang.String" resultType="java.util.Map">
+        select params,log_desc as logDesc from sc_gmuni_login_log where id=#{id,jdbcType=VARCHAR}
+    </select>
+    
+    <select id="getLoginType" parameterType="java.util.Map" resultType="java.util.Map" >
+         SELECT  login_type as loginType,COUNT(1) as num FROM sc_gmuni_login_log
+        where login_type != 'null' and login_type != ''
+            <if test="schoolCode != null and schoolCode != ''">
+              and  school_code =#{schoolCode,jdbcType=VARCHAR}
+            </if>
+            <if test="startTime != null and startTime != ''">
+                <![CDATA[
+               and  DATE_FORMAT(create_time,'%Y-%m')>= #{startTime}
+              ]]>
+            </if>
+            <if test="endTime != null and endTime != ''">
+                <![CDATA[
+               and  DATE_FORMAT(create_time,'%Y-%m')<= #{endTime}
+              ]]>
+            </if>
+            <if test="date != null  and date !=''">
+                <if test="date == 0">
+                    <![CDATA[
+                    and    TO_DAYS(create_time) = TO_DAYS(NOW())
+                    ]]>
+                </if>
+                <if test="date == 1">
+                    <![CDATA[
+                    and  DATE_SUB(CURDATE(), INTERVAL 7 DAY) <= DATE(create_time)
+                    ]]>
+                </if>
+                <if test="date == 2">
+                    <![CDATA[
+                    and DATE_SUB(CURDATE(), INTERVAL 30 DAY) <= DATE(create_time)
+                    ]]>
+                </if>
+                    <if test="date == 3">
+                        <![CDATA[
+                    and DATE_SUB(CURDATE(), INTERVAL 90 DAY) <= DATE(create_time)
+                    ]]>
+                </if>
+            </if>
+         GROUP BY  login_type
+    </select>
+
+    <select id="getLogType" parameterType="java.util.Map" resultType="java.util.Map" >
+        SELECT  log_type as logType,COUNT(1) as num FROM sc_gmuni_login_log
+        <where>
+            <if test="schoolCode != null and schoolCode != ''">
+               and school_code =#{schoolCode,jdbcType=VARCHAR}
+            </if>
+            <if test="startTime != null and startTime != ''">
+                <![CDATA[
+               and  DATE_FORMAT(create_time,'%Y-%m')>= #{startTime}
+              ]]>
+            </if>
+            <if test="endTime != null and endTime != ''">
+                <![CDATA[
+               and  DATE_FORMAT(create_time,'%Y-%m')<= #{endTime}
+              ]]>
+            </if>
+            <if test="date != null  and date !=''">
+            <if test="date == 0">
+                <![CDATA[
+                 and    TO_DAYS(create_time) = TO_DAYS(NOW())
+                    ]]>
+            </if>
+            <if test="date == 1">
+                <![CDATA[
+                    and  DATE_SUB(CURDATE(), INTERVAL 7 DAY) <= DATE(create_time)
+                    ]]>
+            </if>
+            <if test="date == 2">
+                <![CDATA[
+                    and DATE_SUB(CURDATE(), INTERVAL 30 DAY) <= DATE(create_time)
+                    ]]>
+            </if>
+            <if test="date == 3">
+                <![CDATA[
+                    and DATE_SUB(CURDATE(), INTERVAL 90 DAY) <= DATE(create_time)
+                    ]]>
+             </if>
+            </if>
+
+        </where>
+        GROUP BY  log_type
+    </select>
+    
+    <select id="getTimeLoginPeopleNum" parameterType="java.util.Map" resultType="java.util.Map">
+        SELECT  DATE_FORMAT(create_time,'%H:00') AS time,login_type AS loginType,COUNT(login_type) AS num FROM  sc_gmuni_login_log
+           where  TO_DAYS(create_time) = TO_DAYS(NOW())
+            <if test="schoolCode != null  and schoolCode !=''">
+                and  school_code =#{schoolCode,jdbcType=VARCHAR}
+            </if>
+        GROUP BY DATE_FORMAT(create_time,'%H:00'),login_type
+    </select>
+
+    <select id="getDayLoginPeopleNum" parameterType="java.util.Map" resultType="java.util.Map">
+        SELECT DATE_FORMAT(create_time,'%Y-%m-%d') as time,login_type as loginType,COUNT(login_type) as num from sc_gmuni_login_log
+        where   login_type != 'null' and login_type != ''
+        <if test="schoolCode != null  and schoolCode !=''">
+            and  school_code =#{schoolCode,jdbcType=VARCHAR}
+        </if>
+        <if test="date != null and date !=''">
+
+            <if test="date == 1">
+                    <![CDATA[
+                      and  DATE_SUB(CURDATE(), INTERVAL 7 DAY) <= DATE(create_time)
+                       ]]>
+            </if>
+            <if test="date == 2">
+                    <![CDATA[
+                        and DATE_SUB(CURDATE(), INTERVAL 30 DAY) <= DATE(create_time)
+                        ]]>
+            </if>
+            <if test="date == 3">
+                     <![CDATA[
+                        and DATE_SUB(CURDATE(), INTERVAL 90 DAY) <= DATE(create_time)
+                        ]]>
+            </if>
+        </if>
+        GROUP BY DATE_FORMAT(create_time,'%Y-%m-%d'),login_type
+    </select>
+
+    <select id="getUserNum" parameterType="java.util.Map" resultType="java.util.Map">
+      SELECT  DATE_FORMAT(create_time, '%Y-%m-%d') AS time,first_login AS firstLogin,COUNT(first_login) AS num FROM sc_gmuni_login_log
+        WHERE  (first_login != 'null'  AND first_login!='')
+
+        <if test="startTime != null and startTime != ''">
+            <![CDATA[
+               and  DATE_FORMAT(create_time,'%Y-%m')>= #{startTime}
+              ]]>
+        </if>
+        <if test="endTime != null and endTime != ''">
+            <![CDATA[
+               and  DATE_FORMAT(create_time,'%Y-%m')<= #{endTime}
+              ]]>
+        </if>
+        <if test="date != null  and date !=''">
+            <if test="date == 1">
+                <![CDATA[
+                      and  DATE_SUB(CURDATE(), INTERVAL 7 DAY) <= DATE(create_time)
+                       ]]>
+            </if>
+            <if test="date == 2">
+                <![CDATA[
+                        and DATE_SUB(CURDATE(), INTERVAL 30 DAY) <= DATE(create_time)
+                        ]]>
+            </if>
+            <if test="date == 3">
+                <![CDATA[
+                        and DATE_SUB(CURDATE(), INTERVAL 90 DAY) <= DATE(create_time)
+                        ]]>
+            </if>
+        </if>
+         <if test="schoolCode != null  and schoolCode !=''">
+                 and  school_code =#{schoolCode,jdbcType=VARCHAR}
+         </if>
+
+           GROUP BY DATE_FORMAT(create_time, '%Y-%m-%d'),first_login
+    </select>
+
+</mapper>

@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.gmuni.sc.integral.mapper.IntegralStatisticsMapper">
+
+    <delete id="delete" parameterType="java.lang.String">
+         DELETE FROM sc_gmuni_integral_statistics
+              WHERE id= #{id,jdbcType=VARCHAR}
+    </delete>
+    <insert id="add" parameterType="cn.gmuni.sc.integral.model.IntegralStatistics">
+ INSERT INTO sc_gmuni_integral_statistics
+	(id,user_info,integral_total,integral_remaining,count_inte,cu_time,create_time,click_through,task_code,TYPE,sort)
+	VALUES
+	(#{id,jdbcType=VARCHAR},#{userInfo,jdbcType=VARCHAR},
+	#{integralTotal,jdbcType=DECIMAL},#{integralRemaining,jdbcType=DECIMAL},#{countInte,jdbcType=DECIMAL},
+	#{currentTime,jdbcType=TIMESTAMP},#{createTime,jdbcType=TIMESTAMP},
+	#{clickThrough,jdbcType=DECIMAL},
+	#{taskCode,jdbcType=VARCHAR},
+	#{type,jdbcType=VARCHAR},
+	#{sort,jdbcType=DECIMAL});
+    </insert>
+
+    <update id="update" parameterType="cn.gmuni.sc.integral.model.IntegralStatistics">
+   UPDATE sc_gmuni_integral_statistics SET
+	integral_total = #{integralTotal,jdbcType=DECIMAL} ,
+	integral_remaining = #{integralRemaining,jdbcType=DECIMAL} ,
+	count_inte = #{countInte,jdbcType=DECIMAL} ,
+	cu_time = #{currentTime,jdbcType=TIMESTAMP} ,
+	click_through = #{clickThrough,jdbcType=DECIMAL}
+	WHERE
+	id = #{id,jdbcType=VARCHAR};
+    </update>
+
+    <select id="findIntegralStatisticsById" parameterType="java.lang.String" resultType="java.util.Map">
+SELECT 	id AS id,
+	user_info As userInfo,
+	integral_total As integralTotal,
+	integral_remaining As integralRemaining ,
+	count_inte As countInte,
+	cu_time As currentTime,
+	create_time As createTime ,
+	click_through As clickThrough,
+	task_code As taskCode,
+	TYPE,
+	sort
+	FROM
+    sc_gmuni_integral_statistics
+	WHERE
+	id = #{id,jdbcType=VARCHAR};
+	</select>
+
+
+    <select id="findByUserInfoAndTaskCode" parameterType="java.util.Map"
+            resultType="cn.gmuni.sc.integral.model.IntegralStatistics">
+        SELECT id AS id,
+        user_info As userInfo,
+        integral_total As integralTotal,
+        integral_remaining As integralRemaining ,
+        count_inte As countInte,
+        cu_time As currentTime,
+        create_time As createTime ,
+        click_through As clickThrough,
+        task_code As taskCode,
+        TYPE,
+        sort
+        FROM
+        sc_gmuni_integral_statistics
+        WHERE
+        user_info = #{userInfo,jdbcType=VARCHAR}
+        and task_code = #{taskCode,jdbcType=VARCHAR}
+        <if test="currentTime!=null and currentTime!=''">
+            and cu_time LIKE '%${currentTime}%'
+        </if>
+
+    </select>
+    <select id="list" parameterType="java.util.Map" resultType="java.lang.String">
+SELECT 	id AS id
+	FROM
+    sc_gmuni_integral_statistics
+    where
+    task_code = #{taskCode,jdbcType=VARCHAR}
+    <if test="currentTime!=null and currentTime!=''">
+            and cu_time LIKE '%${currentTime}%'
+    </if>
+    order BY cu_time ASC;
+    </select>
+</mapper>

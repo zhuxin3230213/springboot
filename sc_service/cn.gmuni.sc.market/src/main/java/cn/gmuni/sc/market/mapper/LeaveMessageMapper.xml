@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.gmuni.sc.market.mapper.LeaveMessageMapper">
+
+        <insert id="addLeaveMessage" parameterType="cn.gmuni.sc.market.model.LeaveMessage">
+            insert into sc_gmuni_leave_message(id,market_id,message_user,create_time,school_code,message,replier) values (
+             #{id,jdbcType=VARCHAR},#{marketId,jdbcType=VARCHAR}, #{messageUser,jdbcType=VARCHAR},#{createTime,jdbcType=VARCHAR}, #{schoolCode,jdbcType=VARCHAR},
+            #{message,jdbcType=VARCHAR},#{replier,jdbcType=VARCHAR})
+        </insert>
+
+    <delete id="delLeaveMessage" parameterType="java.lang.String">
+        delete from sc_gmuni_leave_message where id  in
+        <foreach collection="list" item="item" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </delete>
+
+    <select id="getLeaveMessage" parameterType="java.util.Map" resultType="java.util.Map">
+        SELECT lm.id,lm.market_id AS marketId,lm.message_user AS messageUser,DATE_FORMAT(lm.create_time,'%Y-%m-%d %H:%i:%s') AS createTime,lm.school_code AS schoolCode,lm.message,lm.replier,u.name AS userName,u.avatar,ui.name as schoolName
+        FROM sc_gmuni_leave_message lm LEFT JOIN sc_gmuni_thirdpart_userinfo tu ON tu.indentifier=lm.message_user LEFT JOIN sc_gmuni_thirdpart_user u ON tu.user_id=u.id  LEFT JOIN sc_gmuni_college_info ui ON u.school=ui.code
+        <where>
+            <if test="marketId!=null and marketId!=''">
+                and lm.market_id=#{marketId,jdbcType=VARCHAR}
+            </if>
+            <if test="id!=null and id!=''">
+                AND lm.id=#{id,jdbcType=VARCHAR}
+            </if>
+            <if test="queryType=='up' and createTime!=null and createTime!=''">
+                AND lm.create_time <![CDATA[<]]> #{createTime,jdbcType=TIMESTAMP}
+            </if>
+            <if test="queryType=='down' and createTime!=null and createTime!=''">
+                AND  lm.create_time<![CDATA[>]]> #{createTime,jdbcType=TIMESTAMP}
+            </if>
+        </where>
+       order by lm.create_time DESC  LIMIT 0,11
+    </select>
+
+    <select id="getMyLeaveMessage" parameterType="java.util.Map" resultType="java.util.Map">
+        SELECT lm.id,lm.market_id AS marketId,lm.message_user AS messageUser,DATE_FORMAT(lm.create_time,'%Y-%m-%d %H:%i:%s') AS createTime,lm.school_code AS schoolCode,lm.message,lm.replier,u.name AS userName,u.avatar,ui.name as schoolName
+        FROM sc_gmuni_leave_message lm left join sc_gmuni_market m on lm.market_id=m.id LEFT JOIN sc_gmuni_thirdpart_userinfo tu ON tu.indentifier=lm.message_user LEFT JOIN sc_gmuni_thirdpart_user u ON tu.user_id=u.id  LEFT JOIN sc_gmuni_college_info ui ON u.school=ui.code
+           where (lm.message_user=#{user,jdbcType=VARCHAR} or m.user=#{user,jdbcType=VARCHAR})
+            <if test="marketId!=null and marketId!=''">
+                and lm.market_id=#{marketId,jdbcType=VARCHAR}
+            </if>
+
+            <if test="queryType=='up' and createTime!=null and createTime!=''">
+                AND lm.create_time <![CDATA[<]]> #{createTime,jdbcType=TIMESTAMP}
+            </if>
+            <if test="queryType=='down' and createTime!=null and createTime!=''">
+                AND  lm.create_time<![CDATA[>]]> #{createTime,jdbcType=TIMESTAMP}
+            </if>
+
+        order by lm.create_time DESC  LIMIT 0,11
+    </select>
+
+
+</mapper>

@@ -1,0 +1,93 @@
+<!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-4.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <!--账号报停-->
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width,initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+    <title>账号报停</title>
+    <link type="text/css" rel="stylesheet" th:href="@{/app/css/net_stop.css}">
+    <script th:src="@{/app/js/simJQ-1.4.min.js}"></script>
+    <script>
+
+        window.addEventListener("DOMContentLoaded", function () {
+            document.getElementById("stop_delay").addEventListener("click", function (ev) {
+                datepicker.showDatePicker(false, "net_stop", "");
+            })
+        })
+
+        function selectedDatePicker(time, flag) {
+            var r = confirm("是否确定要办理预约报停业务");
+            if (r == true) {
+                $.ajax({
+                    url: "/networkPay/accountStop",
+                    method: "post",
+                    data: {'dateStr': time},
+                    success: function (data) {
+                        if (data && data.msg) {
+                            alert(data.msg);
+                        } else {
+                            alert("系统异常，请前往营业厅办理");
+                        }
+                    },
+                    error: function () {
+
+                    }
+                });
+            } else {
+
+            }
+        }
+    </script>
+</head>
+<body>
+<div class="net_stop_wrap">
+    <div class="net_stop_item">
+        <span class="net_stop_item_label">状态</span>
+        <span class="net_stop_item_value net_stop_status" th:text="${data.status} == '1' ? '正常' : ${data.stateNote}">正常</span>
+    </div>
+    <div class="net_stop_item">
+        <span class="net_stop_item_label">当前套餐</span>
+        <span class="net_stop_item_value">学生组</span>
+    </div>
+    <div class="net_stop_item">
+        <span class="net_stop_item_label">计费方式</span>
+        <span class="net_stop_item_value" th:text="${data.packageType} == '1' ? '包月' : '其他'">包月</span>
+    </div>
+    <div class="net_stop_item">
+        <span class="net_stop_item_label">下次结算日期</span>
+        <span class="net_stop_item_value" ></span>
+    </div>
+</div>
+<div class="net_stop_buttons">
+    <button id="stop" onclick="stopNow()">立即报停</button>
+    <span class="net_stop_button_split"></span>
+    <button id="stop_delay">预约报停</button>
+</div>
+</body>
+<script>
+    function stopNow() {
+        var r = confirm("是否确定要办理报停业务，建议用非校园网络办理");
+        if (r == true) {
+            $.ajax({
+                url: "/networkPay/accountStop",
+                method: "post",
+                success: function (data) {
+                    if (data && data.msg) {
+                        alert(data.msg);
+                    } else {
+                        alert("系统异常，请前往营业厅办理");
+                    }
+                },
+                error: function (data,xhr) {
+                    alert(data);
+                    alert(xhr);
+                }
+            });
+        } else {
+
+        }
+    }
+
+</script>
+</html>

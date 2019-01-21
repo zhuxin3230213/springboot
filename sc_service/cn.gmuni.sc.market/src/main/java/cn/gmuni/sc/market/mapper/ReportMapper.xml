@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.gmuni.sc.market.mapper.ReportMapper">
+
+    <insert id="addReport" parameterType="cn.gmuni.sc.market.model.Report">
+        insert into sc_gmuni_report(id,market_id,create_time,report_user,reason,school_code) values (
+         #{id,jdbcType=VARCHAR},#{marketId,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP},#{reportUser,jdbcType=VARCHAR}, #{reason,jdbcType=VARCHAR},
+        #{schoolCode,jdbcType=VARCHAR})
+    </insert>
+
+    <update id="updateMarketStatus" parameterType="java.util.Map">
+        update sc_gmuni_market set status=#{status,jdbcType=VARCHAR} where id =#{id,jdbcType=VARCHAR}
+    </update>
+
+    <select id="listReport" parameterType="java.util.Map" resultType="java.util.Map">
+      SELECT  r.market_id AS marketId,DATE_FORMAT(r.create_time,'%Y-%m-%d %H:%i:%s') AS createTime,r.reason,m.title,u.name AS reportUser,u1.name AS marketUser FROM sc_gmuni_report r LEFT JOIN sc_gmuni_market m ON r.market_id=m.id
+      LEFT JOIN sc_gmuni_thirdpart_userinfo ui ON r.report_user=ui.indentifier LEFT JOIN sc_gmuni_thirdpart_user u ON ui.user_id=u.id
+      LEFT JOIN sc_gmuni_thirdpart_userinfo ui1 ON m.user=ui1.indentifier LEFT JOIN sc_gmuni_thirdpart_user u1 ON ui1.user_id=u1.id
+      <where>
+          <if test="title!=null and title!=''">
+              and m.title like CONCAT('%',#{title,jdbcType=VARCHAR},'%')
+          </if>
+          <if test="name!=null and name!=''">
+              and u1.name like CONCAT('%',#{name,jdbcType=VARCHAR},'%')
+          </if>
+          <if test="reason!=null and reason!=''">
+              and r.reason=#{reason,jdbcType=VARCHAR}
+          </if>
+          <if test="id!=null and id!=''">
+              AND  m.id=#{id,jdbcType=VARCHAR}
+          </if>
+      </where>
+        ORDER BY r.create_time DESC
+    </select>
+
+    <select id="getMarket" parameterType="java.lang.String" resultType="java.util.Map">
+      SELECT
+  m.id,
+  m.title,
+  m.introduce,
+  m.img_b AS imgB,
+  m.price,
+  m.type,
+  m.sale_status AS saleStatus,
+  DATE_FORMAT(m.update_time,'%Y-%m-%d %H:%i:%s') AS updateTime,
+  m.status,
+  u.name AS userName,
+  ci.name AS schoolName
+FROM
+  sc_gmuni_market m
+  LEFT JOIN sc_gmuni_thirdpart_userinfo ui
+    ON m.user = ui.indentifier
+  LEFT JOIN sc_gmuni_thirdpart_user u
+    ON ui.user_id = u.id
+  LEFT JOIN sc_gmuni_college_info ci
+    ON u.school = ci.code
+    where m.id=#{id,jdbcType=VARCHAR}
+   </select>
+
+
+</mapper>
