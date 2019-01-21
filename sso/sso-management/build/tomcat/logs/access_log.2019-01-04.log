@@ -1,0 +1,6 @@
+[04/Jan/2019:16:36:10 +0800] 0:0:0:0:0:0:0:1 "GET /cas-management HTTP/1.1" 302 (0 ms)
+[04/Jan/2019:16:36:12 +0800] 0:0:0:0:0:0:0:1 "GET /cas-management/ HTTP/1.1" 302 (1877 ms)
+[04/Jan/2019:16:36:12 +0800] 0:0:0:0:0:0:0:1 "GET /cas-management/manage.html HTTP/1.1" 302 (36 ms)
+[04/Jan/2019:16:36:56 +0800] 0:0:0:0:0:0:0:1 "GET /cas-management HTTP/1.1" 302 (0 ms)
+[04/Jan/2019:16:36:56 +0800] 0:0:0:0:0:0:0:1 "GET /cas-management/ HTTP/1.1" 302 (5 ms)
+[04/Jan/2019:16:36:56 +0800] 0:0:0:0:0:0:0:1 "GET /cas-management/manage.html HTTP/1.1" 302 (6 ms)
